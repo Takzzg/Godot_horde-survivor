@@ -4,27 +4,56 @@ using System;
 public partial class MainGame : Node2D
 {
     [Export]
-    public PackedScene EnemyScene;
-
+    private PackedScene _enemyScene;
     [Export]
-    private CharacterBody2D _player;
-
+    private PackedScene _playerScene;
     [Export]
+    private PackedScene _uiScene;
+
     private Timer _spawnTimer;
 
     public override void _Ready()
     {
-        GameManager.Instance.Player = _player;
+        GD.Print($"MainGame ready!");
+
+        // create player
+        GD.Print($"creating player");
+        GameManager.Instance.Player = _playerScene.Instantiate<PlayerScene>();
+        AddChild(GameManager.Instance.Player);
+
+        // create spawner
+        GD.Print($"creating enemy spawner");
+        _spawnTimer = new Timer() { Autostart = true, WaitTime = 2 };
         _spawnTimer.Timeout += SpawnEnemy;
+        AddChild(_spawnTimer);
+
+        // create UI
+        GD.Print($"creating ui");
+        GameManager.Instance.UI = _uiScene.Instantiate<MainUi>();
+        GameManager.Instance.UI.UpdateHealthLabel(GameManager.Instance.Player.Health);
+        CanvasLayer layer = new();
+        layer.AddChild(GameManager.Instance.UI);
+        AddChild(layer);
     }
 
     public void SpawnEnemy()
     {
-        Vector2 pos = new(0, 0);
+        GD.Print($"spawning enemy");
+        EnemyScene enemy = _enemyScene.Instantiate<EnemyScene>();
 
-        Node2D enemy = EnemyScene.Instantiate<Node2D>();
+        Vector2 pos = new(0, 0);
         enemy.Position = pos;
 
         AddChild(enemy);
     }
+
+    public override void _Process(double delta)
+    {
+        if (Input.IsActionPressed("open_menu"))
+        {
+            GD.Print($"open_menu key pressed");
+            SceneManager.Instance.ChangeScene(SceneManager.SceneEnum.MAIN_MENU);
+        }
+    }
+
 }

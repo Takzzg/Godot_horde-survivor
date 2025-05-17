@@ -4,10 +4,12 @@ public partial class GameManager : Node
 {
     public static GameManager Instance { get; private set; }
 
-    public CharacterBody2D Player;
+    public PlayerScene Player;
+    public MainUi UI;
 
     public override void _Ready()
     {
+        GD.Print($"GameManager singleton ready!");
         Instance = this;
     }
 }

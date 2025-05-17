@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxci0n6go711v"]
+
+[ext_resource type="Script" uid="uid://b712xr3tn4ff0" path="res://loading_screen/LoadingScreen.cs" id="1_knpss"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8x0ei"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0, 0, 0, 0.501961)
+
+[node name="Control" type="Control" node_paths=PackedStringArray("Bar")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_knpss")
+Bar = NodePath("PanelContainer/BoxContainer/ProgressBar")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8x0ei")
+
+[node name="BoxContainer" type="BoxContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 24
+alignment = 1
+vertical = true
+
+[node name="Label" type="Label" parent="PanelContainer/BoxContainer"]
+layout_mode = 2
+text = "Loading..."
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="PanelContainer/BoxContainer"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
