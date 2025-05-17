@@ -12,6 +12,11 @@ public partial class MainGame : Node2D
 
     private Timer _spawnTimer;
 
+    public double GetCurrentTimeStamp()
+    {
+        return Time.GetUnixTimeFromSystem();
+    }
+
     public override void _Ready()
     {
         GD.Print($"MainGame ready!");
@@ -19,6 +24,7 @@ public partial class MainGame : Node2D
         // create player
         GD.Print($"creating player");
         GameManager.Instance.Player = _playerScene.Instantiate<PlayerScene>();
+        GameManager.Instance.Player.Name = "PlayerNode";
         AddChild(GameManager.Instance.Player);
 
         // create spawner
@@ -43,6 +49,7 @@ public partial class MainGame : Node2D
 
         Vector2 pos = new(0, 0);
         enemy.Position = pos;
+        enemy.Name = "Enemy" + GetCurrentTimeStamp();
 
         AddChild(enemy);
     }
