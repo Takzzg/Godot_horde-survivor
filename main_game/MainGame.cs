@@ -29,7 +29,7 @@ public partial class MainGame : Node2D
 
         // create spawner
         GD.Print($"creating enemy spawner");
-        _spawnTimer = new Timer() { Autostart = true, WaitTime = 2 };
+        _spawnTimer = new Timer() { Autostart = true, OneShot = false, WaitTime = 2 };
         _spawnTimer.Timeout += SpawnEnemy;
         AddChild(_spawnTimer);
 

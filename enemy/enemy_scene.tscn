@@ -3,28 +3,28 @@
 [ext_resource type="Texture2D" uid="uid://c0q6t6e1tc33b" path="res://enemy/enemy_sphere.png" id="1_42yky"]
 [ext_resource type="Script" uid="uid://bdn3er1uek131" path="res://enemy/EnemyScene.cs" id="1_tloig"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_tloig"]
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_y24ee"]
 radius = 6.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_tloig"]
-
-[node name="Node2D" type="CharacterBody2D" node_paths=PackedStringArray("_nav")]
-collision_layer = 2
-collision_mask = 3
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("_hurtBox", "_hitBox", "_nav")]
 script = ExtResource("1_tloig")
+_hurtBox = NodePath("HurtBox")
+_hitBox = NodePath("HitBox")
 _nav = NodePath("NavigationAgent2D")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 5.0
+target_desired_distance = 1.0
+path_postprocessing = 1
+avoidance_enabled = true
+radius = 5.0
+neighbor_distance = 100.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
 texture = ExtResource("1_42yky")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_y24ee")
-debug_color = Color(0.413909, 0.605557, 0, 0.42)
-
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-path_desired_distance = 5.0
-path_postprocessing = 1
 
 [node name="HurtBox" type="Area2D" parent="."]
 collision_layer = 4
@@ -32,3 +32,10 @@ collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 shape = SubResource("CircleShape2D_tloig")
+
+[node name="HitBox" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource("CircleShape2D_y24ee")
+debug_color = Color(0.413909, 0.605557, 0, 0.42)
