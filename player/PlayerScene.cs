@@ -31,12 +31,12 @@ public partial class PlayerScene : CharacterBody2D
         if (Health > 0) return;
 
         Alive = false;
+        Velocity = new Vector2(0, 0);
         _sprite.Rotate(1);
     }
 
     public void GetInput()
     {
-
         if (!Alive) return;
         Vector2 inputDirection = Input.GetVector("left", "right", "up", "down");
         Velocity = inputDirection * Speed;
