@@ -5,6 +5,8 @@ public partial class LoadingScreen : Control
 {
     [Export]
     public ProgressBar Bar;
+    [Export]
+    public double TweenSpeed = 0.25;
 
     public Tween Tween;
 
@@ -23,7 +25,7 @@ public partial class LoadingScreen : Control
 
         GD.Print($"creating tween");
         Tween = GetTree().CreateTween();
-        Tween.TweenProperty(Bar, "value", percentage, 0.5);
+        Tween.TweenProperty(Bar, "value", percentage, TweenSpeed);
 
         if (callback != null)
         {

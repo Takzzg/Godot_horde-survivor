@@ -62,18 +62,11 @@ public partial class SceneManager : Node
     {
         GD.Print($"InstantiateScene()");
 
-        GD.Print($"creating delay");
-        Timer delay = new() { Autostart = true, OneShot = true, WaitTime = 0.5 };
-        GetTree().Root.AddChild(delay);
-        delay.Timeout += () =>
-        {
-            PackedScene scene = ResourceLoader.LoadThreadedGet(_loadDir) as PackedScene;
-            _currentNode = scene.Instantiate();
-            GetTree().Root.AddChild(_currentNode);
+        PackedScene scene = ResourceLoader.LoadThreadedGet(_loadDir) as PackedScene;
+        _currentNode = scene.Instantiate();
+        GetTree().Root.AddChild(_currentNode);
 
-            _loadingScreen.QueueFree();
-            delay.QueueFree();
-        };
+        _loadingScreen.QueueFree();
     }
 
     public void ChangeScene(SceneEnum scene)
