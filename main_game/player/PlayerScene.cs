@@ -1,17 +1,20 @@
 using Godot;
 using System;
+using System.Linq;
 
 public partial class PlayerScene : CharacterBody2D
 {
     [Export]
     public bool Alive = true;
     [Export]
-    public int Health = 100;
+    public int Health = 50;
     [Export]
-    public int Speed = 100;
+    public int Speed = 50;
 
     [Export]
     private Sprite2D _sprite;
+    [Export]
+    private Node2D _weapons;
 
     [Signal]
     public delegate void PlayerReceiveDamageEventHandler(int amount);
@@ -40,9 +43,16 @@ public partial class PlayerScene : CharacterBody2D
 
     private void OnPlayerDeath()
     {
+        GD.Print($"PlayerScene OnPlayerDeath()");
         Alive = false;
         Velocity = new Vector2(0, 0);
         _sprite.Rotate((float)(Math.PI / 2));
+
+        Godot.Collections.Array<Node> weapons = _weapons.GetChildren();
+        foreach (BasicWeapon weapon in weapons.Cast<BasicWeapon>())
+        {
+            weapon.Timer.Stop();
+        }
     }
 
     private void GetInput()

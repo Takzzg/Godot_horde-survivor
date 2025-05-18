@@ -6,7 +6,7 @@ public partial class EnemyScene : CharacterBody2D
     [Export]
     public int Health = 50;
     [Export]
-    public int Speed = 50;
+    public int Speed = 25;
     [Export]
     public int Damage = 5;
     [Export]
@@ -19,13 +19,25 @@ public partial class EnemyScene : CharacterBody2D
 
     public override void _Ready()
     {
-        _hitBox.BodyEntered += OnBodyEntered;
-        _hitBox.BodyExited += OnBodyExited;
+        _hitBox.BodyEntered += OnPlayerBodyEntered;
+        _hitBox.BodyExited += OnPlayerBodyExited;
 
         GameManager.Instance.Player.PlayerDeath += OnPlayerDeath;
     }
 
-    private void OnBodyEntered(Node2D body)
+    public override void _ExitTree()
+    {
+        GameManager.Instance.Player.PlayerDeath -= OnPlayerDeath;
+    }
+
+    public void ReceiveDamage(int amount)
+    {
+        Health -= amount;
+        if (Health > 0) return;
+        QueueFree();
+    }
+
+    private void OnPlayerBodyEntered(Node2D body)
     {
         DealDamage();
         _damageTimer = new Timer() { Autostart = true, OneShot = false, WaitTime = _damageInterval };
@@ -33,9 +45,9 @@ public partial class EnemyScene : CharacterBody2D
         AddChild(_damageTimer);
     }
 
-    public void OnBodyExited(Node2D body)
+    public void OnPlayerBodyExited(Node2D body)
     {
-        _damageTimer.QueueFree();
+        _damageTimer?.QueueFree();
     }
 
     private void DealDamage()

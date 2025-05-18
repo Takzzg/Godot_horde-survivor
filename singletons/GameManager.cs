@@ -4,6 +4,8 @@ public partial class GameManager : Node
 {
     public static GameManager Instance { get; private set; }
 
+    public RandomNumberGenerator RNG;
+
     public PlayerScene Player;
     public MainUI UI;
 
@@ -11,5 +13,7 @@ public partial class GameManager : Node
     {
         GD.Print($"GameManager singleton ready!");
         Instance = this;
+
+        RNG = new RandomNumberGenerator();
     }
 }

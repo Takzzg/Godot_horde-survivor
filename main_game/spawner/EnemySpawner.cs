@@ -22,22 +22,19 @@ public partial class EnemySpawner : Node2D
 
     public void SetUpSignals()
     {
-        GameManager.Instance.Player.PlayerDeath += _spawnTimer.Stop;
+        GameManager.Instance.Player.PlayerDeath += () =>
+        {
+            GD.Print($"EnemySpawner OnPLayerDeath()");
+            _spawnTimer.Stop();
+        };
     }
 
     private void SpawnEnemy()
     {
         // GD.Print($"spawning enemy");
 
-        float angle = rng.RandiRange(0, 359);
-        Vector2 player = GameManager.Instance.Player.Position;
-        Vector2 target = new(
-            player.X + _spawnRadius * (float)Math.Cos(angle),
-            player.Y + _spawnRadius * (float)Math.Sin(angle)
-        );
-
         EnemyScene enemy = _enemyScene.Instantiate<EnemyScene>();
-        enemy.Position = target;
+        enemy.Position = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, _spawnRadius);
         enemy.Name = "Enemy" + Time.GetUnixTimeFromSystem();
 
         _enemiesContainer.AddChild(enemy);

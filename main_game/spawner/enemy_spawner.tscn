@@ -11,7 +11,7 @@ _enemiesContainer = NodePath("Enemies")
 _enemyScene = ExtResource("2_epdrs")
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.25
 autostart = true
 
 [node name="Enemies" type="Node2D" parent="."]
