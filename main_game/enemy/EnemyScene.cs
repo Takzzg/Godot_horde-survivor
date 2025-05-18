@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class EnemyScene : Node2D
+public partial class EnemyScene : CharacterBody2D
 {
     [Export]
     public int Health = 50;
@@ -19,7 +19,6 @@ public partial class EnemyScene : Node2D
 
     public override void _Ready()
     {
-        _nav.VelocityComputed += OnVelocityComputed;
         _hitBox.BodyEntered += OnBodyEntered;
         _hitBox.BodyExited += OnBodyExited;
 
@@ -54,35 +53,10 @@ public partial class EnemyScene : Node2D
         AddChild(delay);
     }
 
-    // -------------------------------------------- Navigation --------------------------------------------
-    [Export]
-    private NavigationAgent2D _nav;
-    private float _movementDelta;
-
-    private void OnVelocityComputed(Vector2 safeVelocity)
-    {
-        GlobalPosition = GlobalPosition.MoveToward(GlobalPosition + safeVelocity, _movementDelta);
-    }
-
-    private void SetMovementTarget(Vector2 movementTarget)
-    {
-        _nav.TargetPosition = movementTarget;
-    }
-
     public override void _PhysicsProcess(double delta)
     {
-        // Do not query when the map has never synchronized and is empty.
-        if (NavigationServer2D.MapGetIterationId(_nav.GetNavigationMap()) == 0) return;
-
-        // if (_nav.IsNavigationFinished()) return;
-        if (GameManager.Instance.Player == null) return;
-        _nav.TargetPosition = GameManager.Instance.Player.Position;
-
-        _movementDelta = Speed * (float)delta;
-        Vector2 nextPathPosition = _nav.GetNextPathPosition();
-        Vector2 newVelocity = GlobalPosition.DirectionTo(nextPathPosition) * _movementDelta;
-
-        if (_nav.AvoidanceEnabled) _nav.Velocity = newVelocity;
-        else OnVelocityComputed(newVelocity);
+        Vector2 target = GameManager.Instance.Player.Position;
+        Velocity = Position.DirectionTo(target) * Speed;
+        MoveAndSlide();
     }
 }
