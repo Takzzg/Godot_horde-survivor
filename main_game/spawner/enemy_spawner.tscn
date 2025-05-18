@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://dply881m227n7"]
+
+[ext_resource type="Script" uid="uid://dmx2lnreq7hab" path="res://main_game/spawner/EnemySpawner.cs" id="1_v8pwy"]
+[ext_resource type="PackedScene" uid="uid://bk2xxfodm4fw6" path="res://main_game/enemy/enemy_scene.tscn" id="2_epdrs"]
+
+[node name="EnemySpawner" type="Node2D" node_paths=PackedStringArray("_spawnTimer", "_enemiesContainer")]
+script = ExtResource("1_v8pwy")
+_spawnRadius = 200
+_spawnTimer = NodePath("Timer")
+_enemiesContainer = NodePath("Enemies")
+_enemyScene = ExtResource("2_epdrs")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[node name="Enemies" type="Node2D" parent="."]

@@ -1,24 +1,20 @@
 [gd_scene load_steps=5 format=3 uid="uid://t6bekk5m7dx0"]
 
 [ext_resource type="Script" uid="uid://ss1nruo6en2i" path="res://main_game/MainGame.cs" id="1_oie4c"]
-[ext_resource type="PackedScene" uid="uid://bk2xxfodm4fw6" path="res://main_game/enemy/enemy_scene.tscn" id="2_0xtkn"]
 [ext_resource type="PackedScene" uid="uid://bniavmmdkqyl5" path="res://main_game/player/player_scene.tscn" id="2_oec27"]
 [ext_resource type="PackedScene" uid="uid://ds2ftrfmhdcqp" path="res://main_game/UI/main_ui.tscn" id="3_0j7gl"]
+[ext_resource type="PackedScene" uid="uid://dply881m227n7" path="res://main_game/spawner/enemy_spawner.tscn" id="4_0xtkn"]
 
-[node name="MainGame" type="Node2D" node_paths=PackedStringArray("_mainUI", "_spawnTimer", "_enemiesContainer")]
+[node name="MainGame" type="Node2D" node_paths=PackedStringArray("_player", "_mainUI", "_spawner")]
 script = ExtResource("1_oie4c")
-_enemyScene = ExtResource("2_0xtkn")
-_playerScene = ExtResource("2_oec27")
+_player = NodePath("PlayerScene")
 _mainUI = NodePath("CanvasLayer/MainUI")
-_spawnTimer = NodePath("SpawnTimer")
-_enemiesContainer = NodePath("Enemies")
-
-[node name="Enemies" type="Node2D" parent="."]
-
-[node name="SpawnTimer" type="Timer" parent="."]
-wait_time = 0.5
-autostart = true
+_spawner = NodePath("EnemySpawner")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MainUI" parent="CanvasLayer" instance=ExtResource("3_0j7gl")]
+
+[node name="PlayerScene" parent="." instance=ExtResource("2_oec27")]
+
+[node name="EnemySpawner" parent="." instance=ExtResource("4_0xtkn")]

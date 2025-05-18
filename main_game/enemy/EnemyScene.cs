@@ -27,7 +27,6 @@ public partial class EnemyScene : CharacterBody2D
 
     private void OnBodyEntered(Node2D body)
     {
-        if (body.Name != "PlayerNode") return;
         DealDamage();
         _damageTimer = new Timer() { Autostart = true, OneShot = false, WaitTime = _damageInterval };
         _damageTimer.Timeout += DealDamage;
@@ -36,7 +35,6 @@ public partial class EnemyScene : CharacterBody2D
 
     public void OnBodyExited(Node2D body)
     {
-        if (body.Name != "PlayerNode") return;
         _damageTimer.QueueFree();
     }
 
