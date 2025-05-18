@@ -22,6 +22,8 @@ public partial class EnemyScene : Node2D
         _nav.VelocityComputed += OnVelocityComputed;
         _hitBox.BodyEntered += OnBodyEntered;
         _hitBox.BodyExited += OnBodyExited;
+
+        GameManager.Instance.Player.PlayerDeath += OnPlayerDeath;
     }
 
     private void OnBodyEntered(Node2D body)
@@ -42,6 +44,14 @@ public partial class EnemyScene : Node2D
     private void DealDamage()
     {
         GameManager.Instance.Player.EmitSignal(PlayerScene.SignalName.PlayerReceiveDamage, Damage);
+    }
+
+    private void OnPlayerDeath()
+    {
+        RandomNumberGenerator rng = new();
+        Timer delay = new() { Autostart = true, WaitTime = rng.RandfRange(0.5f, 1.5f) };
+        delay.Timeout += QueueFree;
+        AddChild(delay);
     }
 
     // -------------------------------------------- Navigation --------------------------------------------

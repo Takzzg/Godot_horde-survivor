@@ -1,14 +1,14 @@
 [gd_scene load_steps=5 format=3 uid="uid://bk2xxfodm4fw6"]
 
-[ext_resource type="Texture2D" uid="uid://c0q6t6e1tc33b" path="res://enemy/enemy_sphere.png" id="1_42yky"]
-[ext_resource type="Script" uid="uid://bdn3er1uek131" path="res://enemy/EnemyScene.cs" id="1_tloig"]
+[ext_resource type="Texture2D" uid="uid://c0q6t6e1tc33b" path="res://main_game/enemy/enemy_sphere.png" id="1_42yky"]
+[ext_resource type="Script" uid="uid://bdn3er1uek131" path="res://main_game/enemy/EnemyScene.cs" id="1_tloig"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tloig"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_y24ee"]
 radius = 6.0
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("_hurtBox", "_hitBox", "_nav")]
+[node name="EnemyScene" type="Node2D" node_paths=PackedStringArray("_hurtBox", "_hitBox", "_nav")]
 script = ExtResource("1_tloig")
 _hurtBox = NodePath("HurtBox")
 _hitBox = NodePath("HitBox")

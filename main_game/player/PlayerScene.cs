@@ -15,27 +15,37 @@ public partial class PlayerScene : CharacterBody2D
 
     [Signal]
     public delegate void PlayerReceiveDamageEventHandler(int amount);
+    [Signal]
+    public delegate void PlayerDeathEventHandler();
 
-    public override void _Ready()
+    public void SetUpSignals()
     {
-        PlayerReceiveDamage += ReceiveDamage;
+        PlayerReceiveDamage += OnReceiveDamage;
+        PlayerDeath += OnPlayerDeath;
+
+        GameManager.Instance.UI.GameplayUI.UpdateHealthLabel(Health);
     }
 
-    public void ReceiveDamage(int amount)
+    private void OnReceiveDamage(int amount)
     {
-        GD.Print($"player received {amount} damage");
+        if (!Alive) return;
+
+        // GD.Print($"player received {amount} damage");
         Health -= amount;
         if (Health < 0) Health = 0;
 
-        GameManager.Instance.UI.UpdateHealthLabel(Health);
         if (Health > 0) return;
-
-        Alive = false;
-        Velocity = new Vector2(0, 0);
-        _sprite.Rotate(1);
+        EmitSignal(SignalName.PlayerDeath);
     }
 
-    public void GetInput()
+    private void OnPlayerDeath()
+    {
+        Alive = false;
+        Velocity = new Vector2(0, 0);
+        _sprite.Rotate((float)(Math.PI / 2));
+    }
+
+    private void GetInput()
     {
         if (!Alive) return;
         Vector2 inputDirection = Input.GetVector("left", "right", "up", "down");
@@ -46,11 +56,5 @@ public partial class PlayerScene : CharacterBody2D
     {
         GetInput();
         MoveAndSlide();
-
-        // for (int i = 0; i < GetSlideCollisionCount(); i++)
-        // {
-        //     var collision = GetSlideCollision(i);
-        //     GD.Print("I collided with ", ((Node)collision.GetCollider()).Name);
-        // }
     }
 }

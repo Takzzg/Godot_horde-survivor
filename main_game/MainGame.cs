@@ -8,50 +8,46 @@ public partial class MainGame : Node2D
     [Export]
     private PackedScene _playerScene;
     [Export]
-    private PackedScene _uiScene;
+    private MainUI _mainUI;
 
+    [Export]
     private Timer _spawnTimer;
-
-    public double GetCurrentTimeStamp()
-    {
-        return Time.GetUnixTimeFromSystem();
-    }
+    [Export]
+    private Node2D _enemiesContainer;
 
     public override void _Ready()
     {
         GD.Print($"MainGame ready!");
 
         // create player
-        GD.Print($"creating player");
-        GameManager.Instance.Player = _playerScene.Instantiate<PlayerScene>();
-        GameManager.Instance.Player.Name = "PlayerNode";
-        AddChild(GameManager.Instance.Player);
+        PlayerScene player = _playerScene.Instantiate<PlayerScene>();
+        player.Name = "PlayerNode";
+        player.PlayerDeath += _spawnTimer.Stop;
 
-        // create spawner
-        GD.Print($"creating enemy spawner");
-        _spawnTimer = new Timer() { Autostart = true, OneShot = false, WaitTime = 2 };
+        AddChild(player);
+
+        // bind spawner timer
+        // GD.Print($"creating enemy spawner");
         _spawnTimer.Timeout += SpawnEnemy;
-        AddChild(_spawnTimer);
 
-        // create UI
-        GD.Print($"creating ui");
-        GameManager.Instance.UI = _uiScene.Instantiate<MainUi>();
-        GameManager.Instance.UI.UpdateHealthLabel(GameManager.Instance.Player.Health);
-        CanvasLayer layer = new();
-        layer.AddChild(GameManager.Instance.UI);
-        AddChild(layer);
+        // save node refs to singleton
+        GameManager.Instance.Player = player;
+        GameManager.Instance.UI = _mainUI;
+
+        player.SetUpSignals();
+        _mainUI.SetUpSignals();
     }
 
-    public void SpawnEnemy()
+    private void SpawnEnemy()
     {
         GD.Print($"spawning enemy");
         EnemyScene enemy = _enemyScene.Instantiate<EnemyScene>();
 
         Vector2 pos = new(0, 0);
         enemy.Position = pos;
-        enemy.Name = "Enemy" + GetCurrentTimeStamp();
+        enemy.Name = "Enemy" + Time.GetUnixTimeFromSystem();
 
-        AddChild(enemy);
+        _enemiesContainer.AddChild(enemy);
     }
 
     public override void _Process(double delta)

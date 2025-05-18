@@ -5,7 +5,7 @@ public partial class GameManager : Node
     public static GameManager Instance { get; private set; }
 
     public PlayerScene Player;
-    public MainUi UI;
+    public MainUI UI;
 
     public override void _Ready()
     {
