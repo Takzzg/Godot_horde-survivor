@@ -3,10 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://c0q6t6e1tc33b" path="res://main_game/enemy/enemy_sphere.png" id="1_42yky"]
 [ext_resource type="Script" uid="uid://bdn3er1uek131" path="res://main_game/enemy/EnemyScene.cs" id="1_tloig"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_tbm58"]
-radius = 8.0
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_tloig"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tbm58"]
+radius = 5.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_y24ee"]
 radius = 6.0
@@ -18,19 +18,19 @@ script = ExtResource("1_tloig")
 _hurtBox = NodePath("HurtBox")
 _hitBox = NodePath("HitBox")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture_filter = 1
-texture = ExtResource("1_42yky")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_tbm58")
-
 [node name="HurtBox" type="Area2D" parent="."]
 collision_layer = 4
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 shape = SubResource("CircleShape2D_tloig")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_42yky")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_tbm58")
 
 [node name="HitBox" type="Area2D" parent="."]
 collision_layer = 2

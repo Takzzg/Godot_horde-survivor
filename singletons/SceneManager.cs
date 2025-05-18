@@ -11,7 +11,7 @@ public partial class SceneManager : Node
         GD.Print($"SceneManager singleton ready!");
         Instance = this;
         _currentNode = GetTree().Root.GetChildren().Last();
-        GD.Print($"_currentNode: {_currentNode.Name}");
+        // GD.Print($"_currentNode: {_currentNode.Name}");
     }
 
     // packed scene paths
@@ -50,7 +50,7 @@ public partial class SceneManager : Node
                 if (_loadingScreen.Tween.IsRunning()) return;
             }
 
-            GD.Print($"creating final tween");
+            // GD.Print($"creating final tween");
             _isloading = false;
             _loadingScreen.TweenProgressBar(percentage, InstantiateScene);
         }
@@ -66,6 +66,7 @@ public partial class SceneManager : Node
         _currentNode = scene.Instantiate();
         GetTree().Root.AddChild(_currentNode);
 
+        GD.Print($"free loading screen");
         _loadingScreen.QueueFree();
     }
 
@@ -73,7 +74,7 @@ public partial class SceneManager : Node
     {
         GD.Print($"ChangeScene()");
 
-        GD.Print($"_isloading: {_isloading}");
+        // GD.Print($"_isloading: {_isloading}");
         if (_isloading) return;
 
         _isloading = true;
@@ -92,7 +93,7 @@ public partial class SceneManager : Node
         GD.Print($"request load {scene} packed scene");
         ResourceLoader.LoadThreadedRequest(_loadDir);
 
-        GD.Print($"free current node");
+        GD.Print($"free current node {_currentNode.Name}");
         _currentNode?.QueueFree();
     }
 }

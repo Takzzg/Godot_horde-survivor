@@ -16,6 +16,7 @@ _enemiesContainer = NodePath("Enemies")
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="SpawnTimer" type="Timer" parent="."]
+wait_time = 0.5
 autostart = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

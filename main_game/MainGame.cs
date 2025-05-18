@@ -40,7 +40,7 @@ public partial class MainGame : Node2D
 
     private void SpawnEnemy()
     {
-        GD.Print($"spawning enemy");
+        // GD.Print($"spawning enemy");
         EnemyScene enemy = _enemyScene.Instantiate<EnemyScene>();
 
         Vector2 pos = new(0, 0);

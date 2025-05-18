@@ -12,25 +12,23 @@ public partial class LoadingScreen : Control
 
     public void TweenProgressBar(double percentage, Action callback = null)
     {
-        GD.Print($"TweenProgressBar()");
+        // GD.Print($"TweenProgressBar()");
 
-        GD.Print($"Bar: {Bar.Value}, percent: {percentage}");
         if (Bar.Value == percentage) return;
 
         if (Tween != null)
         {
-            GD.Print($"tween running: {Tween.IsRunning()}");
+            // GD.Print($"tween running: {Tween.IsRunning()}");
             if (Tween.IsRunning()) return;
         }
 
         GD.Print($"creating tween");
+        GD.Print($"Bar: {Bar.Value}, percent: {percentage}");
+
         Tween = GetTree().CreateTween();
         Tween.TweenProperty(Bar, "value", percentage, TweenSpeed);
 
-        if (callback != null)
-        {
-            GD.Print($"callback: {callback}");
-            Tween.TweenCallback(Callable.From(callback));
-        }
+        if (callback == null) return;
+        Tween.TweenCallback(Callable.From(callback));
     }
 }
