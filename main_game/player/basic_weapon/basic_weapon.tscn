@@ -12,7 +12,6 @@ _basicBulletScene = ExtResource("2_6181x")
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.25
-autostart = true
 
 [node name="BulletOrigin" type="Node2D" parent="."]
 

@@ -21,9 +21,14 @@ public partial class PlayerScene : CharacterBody2D
     [Signal]
     public delegate void PlayerDeathEventHandler();
 
+    public override void _PhysicsProcess(double delta)
+    {
+        MovePlayer();
+    }
+
     public void SetUpSignals()
     {
-        PlayerReceiveDamage += OnReceiveDamage;
+        // PlayerReceiveDamage += OnReceiveDamage;
         PlayerDeath += OnPlayerDeath;
 
         GameManager.Instance.UI.GameplayUI.UpdateHealthLabel(Health);
@@ -55,16 +60,11 @@ public partial class PlayerScene : CharacterBody2D
         }
     }
 
-    private void GetInput()
+    private void MovePlayer()
     {
         if (!Alive) return;
         Vector2 inputDirection = Input.GetVector("left", "right", "up", "down");
         Velocity = inputDirection * Speed;
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        GetInput();
         MoveAndSlide();
     }
 }

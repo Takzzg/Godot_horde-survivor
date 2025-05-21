@@ -3,13 +3,13 @@ using System;
 
 public partial class EnemySpawner : Node2D
 {
-    [Export]
-    private int _spawnRadius = 100;
+    // [Export]
+    // private int _spawnRadius = 100;
 
     [Export]
     private Timer _spawnTimer;
     [Export]
-    private Node2D _enemiesContainer;
+    public Node2D EnemiesContainer;
     [Export]
     private PackedScene _enemyScene;
 
@@ -31,12 +31,16 @@ public partial class EnemySpawner : Node2D
 
     private void SpawnEnemy()
     {
+        // skip if too many enemies
+        // if (EnemiesContainer.GetChildCount() > 400) return;
+
         // GD.Print($"spawning enemy");
-
         EnemyScene enemy = _enemyScene.Instantiate<EnemyScene>();
-        enemy.Position = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, _spawnRadius);
+        enemy.Position = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
         enemy.Name = "Enemy" + Time.GetUnixTimeFromSystem();
+        EnemiesContainer.AddChild(enemy);
 
-        _enemiesContainer.AddChild(enemy);
+        // update ui
+        GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();
     }
 }

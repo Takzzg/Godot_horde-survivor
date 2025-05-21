@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class EnemyScene : CharacterBody2D
+public partial class EnemyScene : Node2D
 {
     [Export]
     public int Health = 50;
@@ -13,21 +13,36 @@ public partial class EnemyScene : CharacterBody2D
     private Area2D _hurtBox;
     [Export]
     private Area2D _hitBox;
-
+    [Export]
     private Timer _damageTimer;
-    private double _damageInterval = 0.5;
 
     public override void _Ready()
     {
-        _hitBox.BodyEntered += OnPlayerBodyEntered;
-        _hitBox.BodyExited += OnPlayerBodyExited;
-
+        _hurtBox.BodyEntered += OnBulletHit;
+        _hitBox.BodyEntered += OnBodyEntered;
         GameManager.Instance.Player.PlayerDeath += OnPlayerDeath;
+
+        RandomNumberGenerator rng = GameManager.Instance.RNG;
+        Speed += rng.RandiRange(-5, 5);
     }
 
     public override void _ExitTree()
     {
         GameManager.Instance.Player.PlayerDeath -= OnPlayerDeath;
+        GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        MoveEnemy(delta);
+    }
+
+    private void OnBulletHit(Node2D body)
+    {
+        BasicBullet bullet = body as BasicBullet;
+
+        int damage = bullet.DealDamage();
+        ReceiveDamage(damage);
     }
 
     public void ReceiveDamage(int amount)
@@ -37,36 +52,46 @@ public partial class EnemyScene : CharacterBody2D
         QueueFree();
     }
 
-    private void OnPlayerBodyEntered(Node2D body)
+    private void OnBodyEntered(Node2D body)
     {
-        DealDamage();
-        _damageTimer = new Timer() { Autostart = true, OneShot = false, WaitTime = _damageInterval };
-        _damageTimer.Timeout += DealDamage;
-        AddChild(_damageTimer);
+        // if (!body.IsInGroup("player")) return;
+
+        DealDamage(body as PlayerScene);
+        GD.Print($"player collision with {Name}");
     }
 
-    public void OnPlayerBodyExited(Node2D body)
+    private void DealDamage(PlayerScene player)
     {
-        _damageTimer?.QueueFree();
-    }
+        if (!_damageTimer.IsStopped()) return;
 
-    private void DealDamage()
-    {
-        GameManager.Instance.Player.EmitSignal(PlayerScene.SignalName.PlayerReceiveDamage, Damage);
+        player.EmitSignal(PlayerScene.SignalName.PlayerReceiveDamage, Damage);
+        _damageTimer.Start();
     }
 
     private void OnPlayerDeath()
     {
+        // despawn after random delay
         RandomNumberGenerator rng = new();
         Timer delay = new() { Autostart = true, WaitTime = rng.RandfRange(0.5f, 1.5f) };
         delay.Timeout += QueueFree;
         AddChild(delay);
     }
 
-    public override void _PhysicsProcess(double delta)
+    private void MoveEnemy(double delta)
     {
+        // destroy enemy if too far
+        if (Position.DistanceTo(GameManager.Instance.Player.Position) > GameManager.RENDER_DISTANCE * 2)
+        {
+            QueueFree();
+            return;
+        }
+
         Vector2 target = GameManager.Instance.Player.Position;
-        Velocity = Position.DirectionTo(target) * Speed;
-        MoveAndSlide();
+        var velocity = Position.DirectionTo(target) * Speed;
+
+        Position = new Vector2(
+            (float)(Position.X + velocity.X * delta),
+            (float)(Position.Y + velocity.Y * delta)
+        );
     }
 }

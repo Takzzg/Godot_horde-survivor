@@ -16,6 +16,7 @@ public partial class MainGame : Node2D
 
         GameManager.Instance.Player = _player;
         GameManager.Instance.UI = _mainUI;
+        GameManager.Instance.Spawner = _spawner;
 
         _player.SetUpSignals();
         _mainUI.SetUpSignals();
@@ -29,5 +30,4 @@ public partial class MainGame : Node2D
             SceneManager.Instance.ChangeScene(SceneManager.SceneEnum.MAIN_MENU);
         }
     }
-
 }

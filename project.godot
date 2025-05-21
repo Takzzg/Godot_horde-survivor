@@ -29,6 +29,10 @@ window/stretch/aspect="expand"
 
 project/assembly_name="horde survivor"
 
+[global_group]
+
+player=""
+
 [input]
 
 left={
