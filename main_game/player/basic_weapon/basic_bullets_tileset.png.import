@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bykd2pdbo6h5n"
-path="res://.godot/imported/basic_bullet_tileset.png-1d50c33cf0a4bd7ae1de512e6c11ad6d.ctex"
+uid="uid://0v5t6mkgocui"
+path="res://.godot/imported/basic_bullets_tileset.png-a60ec6755b8c708ec2e223c1060326ae.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://main_game/player/basic_weapon/basic_bullet/basic_bullet_tileset.png"
-dest_files=["res://.godot/imported/basic_bullet_tileset.png-1d50c33cf0a4bd7ae1de512e6c11ad6d.ctex"]
+source_file="res://main_game/player/basic_weapon/basic_bullets_tileset.png"
+dest_files=["res://.godot/imported/basic_bullets_tileset.png-a60ec6755b8c708ec2e223c1060326ae.ctex"]
 
 [params]
 

@@ -11,6 +11,5 @@ _enemyScene = ExtResource("2_epdrs")
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.05
-autostart = true
 
 [node name="EnemiesContainer" type="Node2D" parent="."]

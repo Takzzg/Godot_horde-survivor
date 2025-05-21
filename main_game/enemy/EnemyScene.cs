@@ -39,10 +39,10 @@ public partial class EnemyScene : Node2D
 
     private void OnBulletHit(Node2D body)
     {
-        BasicBullet bullet = body as BasicBullet;
+        // BasicBullet bullet = body as BasicBullet;
 
-        int damage = bullet.DealDamage();
-        ReceiveDamage(damage);
+        // int damage = bullet.DealDamage();
+        // ReceiveDamage(damage);
     }
 
     public void ReceiveDamage(int amount)

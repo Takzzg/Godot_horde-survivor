@@ -36,7 +36,7 @@ public partial class EnemySpawner : Node2D
 
         // GD.Print($"spawning enemy");
         EnemyScene enemy = _enemyScene.Instantiate<EnemyScene>();
-        enemy.Position = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
+        enemy.Position = Utils.VectorMath.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
         enemy.Name = "Enemy" + Time.GetUnixTimeFromSystem();
         EnemiesContainer.AddChild(enemy);
 

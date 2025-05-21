@@ -56,7 +56,7 @@ public partial class PlayerScene : CharacterBody2D
         Godot.Collections.Array<Node> weapons = _weapons.GetChildren();
         foreach (BasicWeapon weapon in weapons.Cast<BasicWeapon>())
         {
-            weapon.Timer.Stop();
+            weapon.Delay.Stop();
         }
     }
 
