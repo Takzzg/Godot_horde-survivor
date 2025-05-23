@@ -4,24 +4,36 @@ using System;
 public partial class MainGame : Node2D
 {
     [Export]
-    private PlayerScene _player;
+    public PlayerScene Player;
     [Export]
-    private MainUI _mainUI;
+    public MainUI MainUI;
     [Export]
-    private EnemySpawner _spawner;
+    public EnemySpawner EnemySpawner;
+
+    public BulletsManager BulletsManager;
 
     public override void _Ready()
     {
         GD.Print($"MainGame ready!");
 
-        GameManager.Instance.Player = _player;
-        GameManager.Instance.UI = _mainUI;
-        GameManager.Instance.Spawner = _spawner;
+        // setup main game
+        GameManager.Instance.MainGame = this;
+        TextureFilter = TextureFilterEnum.Nearest;
 
-        _player.SetUpSignals();
-        _mainUI.SetUpSignals();
-        _spawner.SetUpSignals();
+        // create bullet manager
+        BulletsManager = new();
+        AddChild(BulletsManager);
+
+        // setup node signals
+        Player.SetUpSignals();
+        MainUI.SetUpSignals();
+        EnemySpawner.SetUpSignals();
+
+        // create weapon
+        BasicWeapon weapon1 = new() { };
+        Player.WeaponsContainer.AddChild(weapon1);
     }
+
     public override void _Process(double delta)
     {
         if (Input.IsActionPressed("open_menu"))

@@ -12,9 +12,10 @@ public partial class PlayerScene : CharacterBody2D
     public int Speed = 50;
 
     [Export]
-    private Sprite2D _sprite;
+    public Sprite2D Sprite;
+
     [Export]
-    private Node2D _weapons;
+    public Node2D WeaponsContainer;
 
     [Signal]
     public delegate void PlayerReceiveDamageEventHandler(int amount);
@@ -31,7 +32,7 @@ public partial class PlayerScene : CharacterBody2D
         // PlayerReceiveDamage += OnReceiveDamage;
         PlayerDeath += OnPlayerDeath;
 
-        GameManager.Instance.UI.GameplayUI.UpdateHealthLabel(Health);
+        GameManager.Instance.MainGame.MainUI.GameplayUI.UpdateHealthLabel(Health);
     }
 
     private void OnReceiveDamage(int amount)
@@ -51,9 +52,9 @@ public partial class PlayerScene : CharacterBody2D
         GD.Print($"PlayerScene OnPlayerDeath()");
         Alive = false;
         Velocity = new Vector2(0, 0);
-        _sprite.Rotate((float)(Math.PI / 2));
+        Sprite.Rotate((float)(Math.PI / 2));
 
-        Godot.Collections.Array<Node> weapons = _weapons.GetChildren();
+        Godot.Collections.Array<Node> weapons = WeaponsContainer.GetChildren();
         foreach (BasicWeapon weapon in weapons.Cast<BasicWeapon>())
         {
             weapon.Delay.Stop();

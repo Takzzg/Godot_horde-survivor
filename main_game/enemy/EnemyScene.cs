@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class EnemyScene : Node2D
+public partial class EnemyScene : CharacterBody2D
 {
     [Export]
     public int Health = 50;
@@ -11,16 +11,16 @@ public partial class EnemyScene : Node2D
     public int Damage = 5;
     [Export]
     private Area2D _hurtBox;
-    [Export]
-    private Area2D _hitBox;
+    // [Export]
+    // private Area2D _hitBox;
     [Export]
     private Timer _damageTimer;
 
     public override void _Ready()
     {
         _hurtBox.BodyEntered += OnBulletHit;
-        _hitBox.BodyEntered += OnBodyEntered;
-        GameManager.Instance.Player.PlayerDeath += OnPlayerDeath;
+        // _hitBox.BodyEntered += OnBodyEntered;
+        // GameManager.Instance.MainGame.Player.PlayerDeath += OnPlayerDeath;
 
         RandomNumberGenerator rng = GameManager.Instance.RNG;
         Speed += rng.RandiRange(-5, 5);
@@ -28,8 +28,8 @@ public partial class EnemyScene : Node2D
 
     public override void _ExitTree()
     {
-        GameManager.Instance.Player.PlayerDeath -= OnPlayerDeath;
-        GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();
+        GameManager.Instance.MainGame.Player.PlayerDeath -= OnPlayerDeath;
+        GameManager.Instance.MainGame.MainUI.GameplayUI.UpdateEnemiesCountLabel();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -52,13 +52,13 @@ public partial class EnemyScene : Node2D
         QueueFree();
     }
 
-    private void OnBodyEntered(Node2D body)
-    {
-        // if (!body.IsInGroup("player")) return;
+    // private void OnBodyEntered(Node2D body)
+    // {
+    //     // if (!body.IsInGroup("player")) return;
 
-        DealDamage(body as PlayerScene);
-        GD.Print($"player collision with {Name}");
-    }
+    //     DealDamage(body as PlayerScene);
+    //     GD.Print($"player collision with {Name}");
+    // }
 
     private void DealDamage(PlayerScene player)
     {
@@ -79,19 +79,19 @@ public partial class EnemyScene : Node2D
 
     private void MoveEnemy(double delta)
     {
-        // destroy enemy if too far
-        if (Position.DistanceTo(GameManager.Instance.Player.Position) > GameManager.RENDER_DISTANCE * 2)
-        {
-            QueueFree();
-            return;
-        }
+        // // destroy enemy if too far
+        // if (Position.DistanceTo(GameManager.Instance.Player.Position) > GameManager.RENDER_DISTANCE * 2)
+        // {
+        //     QueueFree();
+        //     return;
+        // }
 
-        Vector2 target = GameManager.Instance.Player.Position;
-        var velocity = Position.DirectionTo(target) * Speed;
+        // Vector2 target = GameManager.Instance.Player.Position;
+        // var velocity = Position.DirectionTo(target) * Speed;
 
-        Position = new Vector2(
-            (float)(Position.X + velocity.X * delta),
-            (float)(Position.Y + velocity.Y * delta)
-        );
+        // Position = new Vector2(
+        //     (float)(Position.X + velocity.X * delta),
+        //     (float)(Position.Y + velocity.Y * delta)
+        // );
     }
 }

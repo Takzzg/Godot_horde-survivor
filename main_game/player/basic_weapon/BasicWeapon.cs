@@ -1,37 +1,36 @@
-using Godot;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using Godot;
 
 public partial class BasicWeapon : Node2D
 {
-    [Export]
     public Timer Delay;
 
-    [ExportCategory("Bullets")]
-    [Export]
     public int BulletRadius = 1;
-    [Export]
     public int BulletSpeed = 10;
-    [Export]
     public int BulletMaxDistance = 100;
-    [Export]
     public int BulletMaxLifetime = 10;
-    [Export]
-    public Texture2D BulletTexture;
 
     public List<BasicBullet> BulletsArr = [];
-    public Area2D SharedBulletArea;
+    public CircleShape2D SharedBulletShape;
+    public Texture2D SharedBulletTexture;
 
     public override void _Ready()
     {
         // bind shoot timer
+        Delay = new Timer() { Autostart = true, OneShot = false, WaitTime = 1 };
         Delay.Timeout += Shoot;
+        AddChild(Delay);
 
-        // create shared area2d for bullets
-        CollisionShape2D circle = new() { Shape = new CircleShape2D() { Radius = BulletRadius } };
-        SharedBulletArea = new Area2D();
-        SharedBulletArea.AddChild(circle);
+        // create shared texture
+        Texture2D BulletTileSet = GD.Load<Texture2D>("res://main_game/player/basic_weapon/basic_bullets_tileset.png");
+        Vector2 TileSize = new(8, 8);
+        Vector2 TileOffset = new(8, 8);
+        SharedBulletTexture = new AtlasTexture() { Atlas = BulletTileSet, Region = new Rect2(TileOffset, TileSize) };
+
+        // create shared shape
+        SharedBulletShape = new CircleShape2D() { Radius = BulletRadius };
+
+        GameManager.Instance.MainGame.BulletsManager.Draw += DrawBullets;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -39,91 +38,46 @@ public partial class BasicWeapon : Node2D
         if (BulletsArr.Count == 0) return;
 
         MoveBullets(delta);
-        QueueRedraw();
-    }
-
-    public override void _Draw()
-    {
-        DrawBullets();
+        GameManager.Instance.MainGame.BulletsManager.QueueRedraw();
     }
 
     public void Shoot()
     {
-        SpawnBullet();
-    }
-
-    public void SpawnBullet()
-    {
-        Vector2 dir = Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360));
-        BasicBullet bullet = new()
-        {
-            Position = Position,
-            Speed = BulletSpeed,
-            Direction = dir,
-        };
-
-        ConfigureBulletCollision(bullet);
-        BulletsArr = [.. BulletsArr, bullet];
-    }
-
-    public void ConfigureBulletCollision(BasicBullet bullet)
-    {
-        Transform2D usedTransform = Transform2D.Identity;
-        usedTransform.Rotated(0);
-        // usedTransform.Translated(bullet.Position);
-        usedTransform.Origin = bullet.Position;
-
-        Rid shape = PhysicsServer2D.CircleShapeCreate();
-        PhysicsServer2D.ShapeSetData(shape, BulletRadius);
-        PhysicsServer2D.AreaAddShape(SharedBulletArea.GetRid(), shape, usedTransform);
-
-        bullet.ShapeRid = shape;
+        Vector2 dir = Vector2.One; // .Rotated(GameManager.Instance.RNG.RandfRange(0, 360));
+        BasicBullet bullet = BulletsManager.SpawnBullet(GlobalPosition, dir, BulletSpeed);
+        BulletsArr.Add(bullet);
     }
 
     public void MoveBullets(double delta)
     {
-        Transform2D usedTransform = Transform2D.Identity;
         List<BasicBullet> bulletsQueuedForDestruction = [];
 
-        for (int i = 0; i < BulletsArr.Count; i++)
+        foreach (BasicBullet bullet in BulletsArr)
         {
-            BasicBullet bullet = BulletsArr[i];
+            // move bullet
+            BulletsManager.MoveBullet(bullet, delta);
 
-            if (bullet.Position.DistanceTo(Position) > BulletMaxDistance || bullet.LifeTime > BulletMaxLifetime)
+            // destroy if too far or lifetime elapsed
+            if (bullet.Position.DistanceTo(GlobalPosition) > BulletMaxDistance || bullet.MaxLifeTime > BulletMaxLifetime)
             {
                 bulletsQueuedForDestruction.Add(bullet);
                 continue;
             }
 
-            Vector2 offset = new(
-                (float)(bullet.Direction.X * bullet.Speed * delta),
-                (float)(bullet.Direction.Y * bullet.Speed * delta)
-            );
-
-            bullet.Position += offset;
-            usedTransform.Origin = bullet.Position;
-            PhysicsServer2D.AreaSetShapeTransform(SharedBulletArea.GetRid(), i, usedTransform);
-
-            bullet.LifeTime += delta;
+            // check bullet collision
+            GameManager.Instance.MainGame.BulletsManager.CheckCollision(bullet, SharedBulletShape);
         }
 
-        ClearBullets(bulletsQueuedForDestruction);
-    }
-
-    private void ClearBullets(List<BasicBullet> bullets)
-    {
-        if (bullets.Count == 0) return;
-        foreach (BasicBullet bullet in bullets)
-        {
-            PhysicsServer2D.FreeRid(bullet.ShapeRid);
-            BulletsArr.Remove(bullet);
-        }
-        bullets.Clear();
+        // destroy bullets
+        if (bulletsQueuedForDestruction.Count == 0) return;
+        foreach (BasicBullet bullet in bulletsQueuedForDestruction) { BulletsArr.Remove(bullet); }
     }
 
     public void DrawBullets()
     {
-        Vector2 offset = BulletTexture.GetSize() / 2;
-        foreach (BasicBullet bullet in BulletsArr) { DrawTexture(BulletTexture, bullet.Position - offset); }
+        foreach (BasicBullet bullet in BulletsArr)
+        {
+            GameManager.Instance.MainGame.BulletsManager.DrawBullet(SharedBulletTexture, bullet.Position);
+        }
     }
 }

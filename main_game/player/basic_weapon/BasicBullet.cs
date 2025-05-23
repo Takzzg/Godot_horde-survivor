@@ -6,6 +6,8 @@ public class BasicBullet
     public double Speed;
     public Vector2 Direction;
     public double LifeTime;
+    public int MaxDistance;
+    public int MaxLifeTime;
 
     public Rid ShapeRid;
 

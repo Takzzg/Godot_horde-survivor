@@ -22,7 +22,7 @@ public partial class EnemySpawner : Node2D
 
     public void SetUpSignals()
     {
-        GameManager.Instance.Player.PlayerDeath += () =>
+        GameManager.Instance.MainGame.Player.PlayerDeath += () =>
         {
             GD.Print($"EnemySpawner OnPLayerDeath()");
             _spawnTimer.Stop();
@@ -36,11 +36,11 @@ public partial class EnemySpawner : Node2D
 
         // GD.Print($"spawning enemy");
         EnemyScene enemy = _enemyScene.Instantiate<EnemyScene>();
-        enemy.Position = Utils.VectorMath.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
+        enemy.Position = Utils.VectorMath.GetRandomPointOnCircle(GameManager.Instance.MainGame.Player.Position, GameManager.RENDER_DISTANCE);
         enemy.Name = "Enemy" + Time.GetUnixTimeFromSystem();
         EnemiesContainer.AddChild(enemy);
 
         // update ui
-        GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();
+        GameManager.Instance.MainGame.MainUI.GameplayUI.UpdateEnemiesCountLabel();
     }
 }

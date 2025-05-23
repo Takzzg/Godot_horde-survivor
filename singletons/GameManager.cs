@@ -7,9 +7,7 @@ public partial class GameManager : Node
     public RandomNumberGenerator RNG;
     public const int RENDER_DISTANCE = 200;
 
-    public PlayerScene Player;
-    public MainUI UI;
-    public EnemySpawner Spawner;
+    public MainGame MainGame;
 
     public override void _Ready()
     {

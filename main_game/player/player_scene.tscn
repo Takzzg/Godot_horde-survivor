@@ -1,18 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://bniavmmdkqyl5"]
+[gd_scene load_steps=4 format=3 uid="uid://bniavmmdkqyl5"]
 
 [ext_resource type="Texture2D" uid="uid://dqkymr8x4js6u" path="res://main_game/player/player_shadow.png" id="1_6qdbv"]
 [ext_resource type="Script" uid="uid://ctyy54wj6advx" path="res://main_game/player/PlayerScene.cs" id="1_ciewh"]
-[ext_resource type="PackedScene" uid="uid://dcqd1fmjs423s" path="res://main_game/player/basic_weapon/basic_weapon.tscn" id="3_8dcr5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0khpw"]
 radius = 3.0
 
-[node name="PlayerScene" type="CharacterBody2D" node_paths=PackedStringArray("_sprite", "_weapons") groups=["player"]]
+[node name="PlayerScene" type="CharacterBody2D" node_paths=PackedStringArray("Sprite", "WeaponsContainer") groups=["player"]]
 collision_mask = 0
-motion_mode = 1
 script = ExtResource("1_ciewh")
-_sprite = NodePath("Sprite2D")
-_weapons = NodePath("Weapons")
+Sprite = NodePath("Sprite2D")
+WeaponsContainer = NodePath("Weapons")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
@@ -25,5 +23,3 @@ shape = SubResource("CircleShape2D_0khpw")
 zoom = Vector2(3, 3)
 
 [node name="Weapons" type="Node2D" parent="."]
-
-[node name="BasicWeapon" parent="Weapons" instance=ExtResource("3_8dcr5")]

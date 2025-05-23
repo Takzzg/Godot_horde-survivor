@@ -10,15 +10,15 @@ public partial class GameplayUI : Control
 
     public void UpdateHealthLabel(int _)
     {
-        HealthLabel.Text = GameManager.Instance.Player.Health.ToString();
+        HealthLabel.Text = GameManager.Instance.MainGame.Player.Health.ToString();
     }
     public void UpdateEnemiesCountLabel()
     {
-        EnemiesLabel.Text = GameManager.Instance.Spawner.EnemiesContainer.GetChildCount().ToString();
+        EnemiesLabel.Text = GameManager.Instance.MainGame.EnemySpawner.EnemiesContainer.GetChildCount().ToString();
     }
 
     public void SetUpSignals()
     {
-        GameManager.Instance.Player.PlayerReceiveDamage += UpdateHealthLabel;
+        GameManager.Instance.MainGame.Player.PlayerReceiveDamage += UpdateHealthLabel;
     }
 }

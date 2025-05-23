@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://ds2ftrfmhdcqp"]
+[gd_scene load_steps=4 format=3 uid="uid://ds2ftrfmhdcqp"]
 
-[ext_resource type="Script" uid="uid://iv0am7kfkrty" path="res://main_game/UI/MainUi.cs" id="1_exk1l"]
+[ext_resource type="Script" uid="uid://iv0am7kfkrty" path="res://main_game/UI/MainUI.cs" id="1_exk1l"]
 [ext_resource type="PackedScene" uid="uid://blddgy8nnuvcn" path="res://main_game/UI/gameplay_ui.tscn" id="2_ddsr1"]
 [ext_resource type="PackedScene" uid="uid://dc6a63f3g1okb" path="res://main_game/UI/death_ui.tscn" id="2_nde5n"]
-[ext_resource type="Script" uid="uid://7b6vdsitfmxl" path="res://main_game/UI/GameplayUi.cs" id="3_8k6ra"]
 
 [node name="MainUI" type="Control" node_paths=PackedStringArray("GameplayUI", "DeathUI")]
 texture_filter = 1
@@ -19,7 +18,6 @@ DeathUI = NodePath("DeathUI")
 
 [node name="GameplayUI" parent="." instance=ExtResource("2_ddsr1")]
 layout_mode = 1
-script = ExtResource("3_8k6ra")
 
 [node name="DeathUI" parent="." instance=ExtResource("2_nde5n")]
 layout_mode = 1
