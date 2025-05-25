@@ -18,7 +18,7 @@ public partial class EnemyScene : CharacterBody2D
 
     public override void _Ready()
     {
-        _hurtBox.BodyEntered += OnBulletHit;
+        _hurtBox.AreaEntered += OnBulletHit;
         // _hitBox.BodyEntered += OnBodyEntered;
         // GameManager.Instance.MainGame.Player.PlayerDeath += OnPlayerDeath;
 
@@ -37,8 +37,9 @@ public partial class EnemyScene : CharacterBody2D
         MoveEnemy(delta);
     }
 
-    private void OnBulletHit(Node2D body)
+    private void OnBulletHit(Area2D area)
     {
+        GD.Print("bullet entered area");
         // BasicBullet bullet = body as BasicBullet;
 
         // int damage = bullet.DealDamage();

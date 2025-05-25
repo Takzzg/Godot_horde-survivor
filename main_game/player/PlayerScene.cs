@@ -18,6 +18,8 @@ public partial class PlayerScene : CharacterBody2D
     public Node2D WeaponsContainer;
 
     [Signal]
+    public delegate void PlayerMoveEventHandler();
+    [Signal]
     public delegate void PlayerReceiveDamageEventHandler(int amount);
     [Signal]
     public delegate void PlayerDeathEventHandler();
@@ -32,6 +34,7 @@ public partial class PlayerScene : CharacterBody2D
         // PlayerReceiveDamage += OnReceiveDamage;
         PlayerDeath += OnPlayerDeath;
 
+        // update health ui
         GameManager.Instance.MainGame.MainUI.GameplayUI.UpdateHealthLabel(Health);
     }
 
@@ -64,8 +67,12 @@ public partial class PlayerScene : CharacterBody2D
     private void MovePlayer()
     {
         if (!Alive) return;
+
         Vector2 inputDirection = Input.GetVector("left", "right", "up", "down");
+        if (inputDirection.Equals(Vector2.Zero)) return;
+
         Velocity = inputDirection * Speed;
+        EmitSignal(SignalName.PlayerMove);
         MoveAndSlide();
     }
 }

@@ -5,14 +5,13 @@ public partial class BasicWeapon : Node2D
 {
     public Timer Delay;
 
-    public int BulletRadius = 1;
-    public int BulletSpeed = 10;
+    public int BulletRadius = 2;
+    public int BulletSpeed = 75;
     public int BulletMaxDistance = 100;
     public int BulletMaxLifetime = 10;
 
     public List<BasicBullet> BulletsArr = [];
-    public CircleShape2D SharedBulletShape;
-    public Texture2D SharedBulletTexture;
+    public BulletsManager BulletsManager;
 
     public override void _Ready()
     {
@@ -25,12 +24,11 @@ public partial class BasicWeapon : Node2D
         Texture2D BulletTileSet = GD.Load<Texture2D>("res://main_game/player/basic_weapon/basic_bullets_tileset.png");
         Vector2 TileSize = new(8, 8);
         Vector2 TileOffset = new(8, 8);
-        SharedBulletTexture = new AtlasTexture() { Atlas = BulletTileSet, Region = new Rect2(TileOffset, TileSize) };
+        AtlasTexture texture = new() { Atlas = BulletTileSet, Region = new Rect2(TileOffset, TileSize) };
 
-        // create shared shape
-        SharedBulletShape = new CircleShape2D() { Radius = BulletRadius };
-
-        GameManager.Instance.MainGame.BulletsManager.Draw += DrawBullets;
+        // create bullet manager
+        BulletsManager = new(texture, BulletRadius) { TopLevel = true };
+        AddChild(BulletsManager);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -38,12 +36,12 @@ public partial class BasicWeapon : Node2D
         if (BulletsArr.Count == 0) return;
 
         MoveBullets(delta);
-        GameManager.Instance.MainGame.BulletsManager.QueueRedraw();
     }
 
     public void Shoot()
     {
-        Vector2 dir = Vector2.One; // .Rotated(GameManager.Instance.RNG.RandfRange(0, 360));
+        // Vector2 dir = Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360));
+        Vector2 dir = Vector2.Right;
         BasicBullet bullet = BulletsManager.SpawnBullet(GlobalPosition, dir, BulletSpeed);
         BulletsArr.Add(bullet);
     }
@@ -63,21 +61,14 @@ public partial class BasicWeapon : Node2D
                 bulletsQueuedForDestruction.Add(bullet);
                 continue;
             }
-
-            // check bullet collision
-            GameManager.Instance.MainGame.BulletsManager.CheckCollision(bullet, SharedBulletShape);
         }
 
         // destroy bullets
         if (bulletsQueuedForDestruction.Count == 0) return;
-        foreach (BasicBullet bullet in bulletsQueuedForDestruction) { BulletsArr.Remove(bullet); }
-    }
-
-    public void DrawBullets()
-    {
-        foreach (BasicBullet bullet in BulletsArr)
+        foreach (BasicBullet bullet in bulletsQueuedForDestruction)
         {
-            GameManager.Instance.MainGame.BulletsManager.DrawBullet(SharedBulletTexture, bullet.Position);
+            BulletsManager.DestroyBullet(bullet);
+            BulletsArr.Remove(bullet);
         }
     }
 }

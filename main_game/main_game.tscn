@@ -27,7 +27,7 @@ grow_vertical = 2
 color = Color(0.325441, 0.325441, 0.325441, 1)
 
 [node name="EnemyScene" parent="." instance=ExtResource("5_0j7gl")]
-position = Vector2(-72, 0)
+position = Vector2(-100, 0)
 
 [node name="EnemySpawner" parent="." instance=ExtResource("4_0xtkn")]
 

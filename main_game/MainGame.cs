@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public partial class MainGame : Node2D
 {
@@ -10,7 +9,7 @@ public partial class MainGame : Node2D
     [Export]
     public EnemySpawner EnemySpawner;
 
-    public BulletsManager BulletsManager;
+    public EnemyManager EnemyManager;
 
     public override void _Ready()
     {
@@ -20,9 +19,11 @@ public partial class MainGame : Node2D
         GameManager.Instance.MainGame = this;
         TextureFilter = TextureFilterEnum.Nearest;
 
-        // create bullet manager
-        BulletsManager = new();
-        AddChild(BulletsManager);
+        // setup EnemyManager
+        Texture2D enemyTexture = GD.Load<Texture2D>("res://main_game/enemy/enemy_sphere.png");
+        EnemyManager = new(6, enemyTexture);
+        AddChild(EnemyManager);
+        EnemyManager.SpawnEnemy();
 
         // setup node signals
         Player.SetUpSignals();
@@ -30,8 +31,7 @@ public partial class MainGame : Node2D
         EnemySpawner.SetUpSignals();
 
         // create weapon
-        BasicWeapon weapon1 = new() { };
-        Player.WeaponsContainer.AddChild(weapon1);
+        Player.WeaponsContainer.AddChild(new BasicWeapon());
     }
 
     public override void _Process(double delta)
