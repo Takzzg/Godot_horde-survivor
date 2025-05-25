@@ -18,7 +18,7 @@ public partial class BasicWeapon : Node2D
     public override void _Ready()
     {
         // bind shoot timer
-        Timer = new Timer() { Autostart = true, OneShot = false, WaitTime = 0.25 };
+        Timer = new Timer() { Autostart = false, OneShot = false, WaitTime = 0.25 };
         Timer.Timeout += Shoot;
         AddChild(Timer);
 
@@ -43,7 +43,6 @@ public partial class BasicWeapon : Node2D
     public void OnEnemyCollision(BasicBullet bullet, BasicEnemy enemy)
     {
         GameManager.Instance.MainGame.EnemyManager.EnemyReceiveDamage(enemy, bullet.Damage);
-        GD.Print($"enemy received {bullet.Damage} damage");
 
         if (bullet.PierceCount <= 0) DestroyBullet(bullet);
         bullet.PierceCount -= 1;

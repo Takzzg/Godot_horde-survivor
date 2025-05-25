@@ -24,7 +24,7 @@ public partial class EnemyManager : Node2D
         SharedHitBox = new CircleShape2D() { Radius = SharedHitBoxSize };
         SharedHurtBox = new CircleShape2D() { Radius = SharedHurtBoxSize };
 
-        Timer = new Timer() { Autostart = false, OneShot = false, WaitTime = 0.25 };
+        Timer = new Timer() { Autostart = false, OneShot = false, WaitTime = 0.0125 };
         Timer.Timeout += SpawnEnemy;
         AddChild(Timer);
     }
@@ -36,8 +36,10 @@ public partial class EnemyManager : Node2D
 
     public void SpawnEnemy()
     {
+        if (EnemiesList.Count >= 2000) return;
+
         // get position
-        Vector2 pos = Utils.GetRandomPointOnCircle(GameManager.Instance.MainGame.Player.Position, GameManager.RENDER_DISTANCE / 2);
+        Vector2 pos = Utils.GetRandomPointOnCircle(GameManager.Instance.MainGame.Player.Position, GameManager.RENDER_DISTANCE * 2);
         Transform2D posTransform = new(0, pos);
 
         BasicEnemy enemy = new()
@@ -79,8 +81,9 @@ public partial class EnemyManager : Node2D
         // RenderingServer.CanvasItemAddCircle(enemy.SpriteRid, Vector2.Zero, SharedHitBoxSize, new Color(Colors.Blue, 0.125f));
         // RenderingServer.CanvasItemAddCircle(enemy.SpriteRid, Vector2.Zero, SharedHurtBoxSize, new Color(Colors.Pink, 0.125f));
 
-        GD.Print($"spawning enemy at {pos}");
+        // GD.Print($"spawning enemy at {pos}");
         EnemiesList.Add(enemy);
+        GameManager.Instance.MainGame.MainUI.GameplayUI.UpdateEnemiesCountLabel(EnemiesList.Count);
     }
 
     public void MoveEnemies()
@@ -123,5 +126,6 @@ public partial class EnemyManager : Node2D
         RenderingServer.FreeRid(enemy.SpriteRid);
 
         EnemiesList.Remove(enemy);
+        GameManager.Instance.MainGame.MainUI.GameplayUI.UpdateEnemiesCountLabel(EnemiesList.Count);
     }
 }

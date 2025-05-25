@@ -6,8 +6,6 @@ public partial class MainGame : Node2D
     public PlayerScene Player;
     [Export]
     public MainUI MainUI;
-    [Export]
-    public EnemySpawner EnemySpawner;
 
     public EnemyManager EnemyManager;
 
@@ -30,14 +28,13 @@ public partial class MainGame : Node2D
         // setup node signals
         Player.SetUpSignals();
         MainUI.SetUpSignals();
-        // EnemySpawner.SetUpSignals();
 
         EnemyManager.Timer.Start();
     }
 
-    public override void _Process(double delta)
+    public override void _UnhandledInput(InputEvent @event)
     {
-        if (Input.IsActionPressed("open_menu"))
+        if (@event.IsAction("open_menu"))
         {
             GD.Print($"open_menu key pressed");
             SceneManager.Instance.ChangeScene(SceneManager.SceneEnum.MAIN_MENU);

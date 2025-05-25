@@ -36,6 +36,7 @@ public partial class PlayerScene : CharacterBody2D
 
         // update health ui
         GameManager.Instance.MainGame.MainUI.GameplayUI.UpdateHealthLabel(Health);
+        GameManager.Instance.MainGame.MainUI.GameplayUI.UpdatePosLabel();
     }
 
     private void OnReceiveDamage(int amount)

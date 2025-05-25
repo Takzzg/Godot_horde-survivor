@@ -14,9 +14,9 @@ public partial class GameplayUI : Control
     {
         HealthLabel.Text = GameManager.Instance.MainGame.Player.Health.ToString();
     }
-    public void UpdateEnemiesCountLabel()
+    public void UpdateEnemiesCountLabel(int count)
     {
-        EnemiesLabel.Text = GameManager.Instance.MainGame.EnemySpawner.EnemiesContainer.GetChildCount().ToString();
+        EnemiesLabel.Text = count.ToString();
     }
     public void UpdatePosLabel()
     {
