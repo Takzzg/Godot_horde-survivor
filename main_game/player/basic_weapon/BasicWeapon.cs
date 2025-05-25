@@ -3,12 +3,14 @@ using Godot;
 
 public partial class BasicWeapon : Node2D
 {
-    public Timer Delay;
+    public Timer Timer;
 
+    public int BulletDamage = 50;
     public int BulletRadius = 2;
     public int BulletSpeed = 75;
     public int BulletMaxDistance = 100;
     public int BulletMaxLifetime = 10;
+    public int BulletPierceCount = 1;
 
     public List<BasicBullet> BulletsArr = [];
     public BulletsManager BulletsManager;
@@ -16,9 +18,9 @@ public partial class BasicWeapon : Node2D
     public override void _Ready()
     {
         // bind shoot timer
-        Delay = new Timer() { Autostart = true, OneShot = false, WaitTime = 1 };
-        Delay.Timeout += Shoot;
-        AddChild(Delay);
+        Timer = new Timer() { Autostart = true, OneShot = false, WaitTime = 0.25 };
+        Timer.Timeout += Shoot;
+        AddChild(Timer);
 
         // create shared texture
         Texture2D BulletTileSet = GD.Load<Texture2D>("res://main_game/player/basic_weapon/basic_bullets_tileset.png");
@@ -27,7 +29,7 @@ public partial class BasicWeapon : Node2D
         AtlasTexture texture = new() { Atlas = BulletTileSet, Region = new Rect2(TileOffset, TileSize) };
 
         // create bullet manager
-        BulletsManager = new(texture, BulletRadius) { TopLevel = true };
+        BulletsManager = new(texture, BulletRadius, OnEnemyCollision) { TopLevel = true };
         AddChild(BulletsManager);
     }
 
@@ -38,12 +40,38 @@ public partial class BasicWeapon : Node2D
         MoveBullets(delta);
     }
 
+    public void OnEnemyCollision(BasicBullet bullet, BasicEnemy enemy)
+    {
+        GameManager.Instance.MainGame.EnemyManager.EnemyReceiveDamage(enemy, bullet.Damage);
+        GD.Print($"enemy received {bullet.Damage} damage");
+
+        if (bullet.PierceCount <= 0) DestroyBullet(bullet);
+        bullet.PierceCount -= 1;
+    }
+
     public void Shoot()
     {
-        // Vector2 dir = Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360));
-        Vector2 dir = Vector2.Right;
-        BasicBullet bullet = BulletsManager.SpawnBullet(GlobalPosition, dir, BulletSpeed);
+        // GD.Print($"BasicWeapon Shoot()");
+        Vector2 dir = Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360));
+        // Vector2 dir = Vector2.Right;
+
+        BasicBullet bullet = new()
+        {
+            Damage = BulletDamage,
+            Position = GlobalPosition,
+            Speed = BulletSpeed,
+            Direction = dir,
+            PierceCount = BulletPierceCount,
+        };
+
+        BulletsManager.SetUpBullet(bullet);
         BulletsArr.Add(bullet);
+    }
+
+    public void DestroyBullet(BasicBullet bullet)
+    {
+        BulletsManager.DestroyBullet(bullet);
+        BulletsArr.Remove(bullet);
     }
 
     public void MoveBullets(double delta)
@@ -65,10 +93,6 @@ public partial class BasicWeapon : Node2D
 
         // destroy bullets
         if (bulletsQueuedForDestruction.Count == 0) return;
-        foreach (BasicBullet bullet in bulletsQueuedForDestruction)
-        {
-            BulletsManager.DestroyBullet(bullet);
-            BulletsArr.Remove(bullet);
-        }
+        foreach (BasicBullet bullet in bulletsQueuedForDestruction) { DestroyBullet(bullet); }
     }
 }

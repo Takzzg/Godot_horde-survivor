@@ -58,10 +58,7 @@ public partial class PlayerScene : CharacterBody2D
         Sprite.Rotate((float)(Math.PI / 2));
 
         Godot.Collections.Array<Node> weapons = WeaponsContainer.GetChildren();
-        foreach (BasicWeapon weapon in weapons.Cast<BasicWeapon>())
-        {
-            weapon.Delay.Stop();
-        }
+        foreach (BasicWeapon weapon in weapons.Cast<BasicWeapon>()) { weapon.Timer.Stop(); }
     }
 
     private void MovePlayer()

@@ -23,15 +23,16 @@ public partial class MainGame : Node2D
         Texture2D enemyTexture = GD.Load<Texture2D>("res://main_game/enemy/enemy_sphere.png");
         EnemyManager = new(6, enemyTexture);
         AddChild(EnemyManager);
-        EnemyManager.SpawnEnemy();
+
+        // create weapon
+        Player.WeaponsContainer.AddChild(new BasicWeapon());
 
         // setup node signals
         Player.SetUpSignals();
         MainUI.SetUpSignals();
-        EnemySpawner.SetUpSignals();
+        // EnemySpawner.SetUpSignals();
 
-        // create weapon
-        Player.WeaponsContainer.AddChild(new BasicWeapon());
+        EnemyManager.Timer.Start();
     }
 
     public override void _Process(double delta)

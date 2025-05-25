@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://t6bekk5m7dx0"]
+[gd_scene load_steps=5 format=3 uid="uid://t6bekk5m7dx0"]
 
 [ext_resource type="Script" uid="uid://ss1nruo6en2i" path="res://main_game/MainGame.cs" id="1_oie4c"]
 [ext_resource type="PackedScene" uid="uid://bniavmmdkqyl5" path="res://main_game/player/player_scene.tscn" id="2_oec27"]
 [ext_resource type="PackedScene" uid="uid://ds2ftrfmhdcqp" path="res://main_game/UI/main_ui.tscn" id="3_0j7gl"]
 [ext_resource type="PackedScene" uid="uid://dply881m227n7" path="res://main_game/spawner/enemy_spawner.tscn" id="4_0xtkn"]
-[ext_resource type="PackedScene" uid="uid://bk2xxfodm4fw6" path="res://main_game/enemy/enemy_scene.tscn" id="5_0j7gl"]
 
 [node name="MainGame" type="Node2D" node_paths=PackedStringArray("Player", "MainUI", "EnemySpawner")]
 script = ExtResource("1_oie4c")
@@ -25,9 +24,6 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.325441, 0.325441, 0.325441, 1)
-
-[node name="EnemyScene" parent="." instance=ExtResource("5_0j7gl")]
-position = Vector2(-100, 0)
 
 [node name="EnemySpawner" parent="." instance=ExtResource("4_0xtkn")]
 
