@@ -18,10 +18,10 @@ public partial class SceneManager : Node
     // packed scene paths
     public enum EnumPathsDictionary { LOADING_SCREEN, MAIN_MENU, MAIN_UI, PLAYER_SCENE }
     public Dictionary<EnumPathsDictionary, string> PathsDictionary = new() {
-        {EnumPathsDictionary.MAIN_MENU, "res://main_menu/main_menu.tscn"},
-        {EnumPathsDictionary.MAIN_UI, "res://main_game/UI/main_ui.tscn"},
-        {EnumPathsDictionary.LOADING_SCREEN, "res://loading_screen/loading_screen.tscn"},
-        {EnumPathsDictionary.PLAYER_SCENE, "res://main_game/player/player_scene.tscn"},
+        {EnumPathsDictionary.MAIN_MENU, "res://scenes/main_menu/main_menu.tscn"},
+        {EnumPathsDictionary.MAIN_UI, "res://scenes/main_game/UI/main_ui.tscn"},
+        {EnumPathsDictionary.LOADING_SCREEN, "res://scenes/loading_screen/loading_screen.tscn"},
+        {EnumPathsDictionary.PLAYER_SCENE, "res://entities/player/player_scene.tscn"},
     };
 
     public override void _Ready()

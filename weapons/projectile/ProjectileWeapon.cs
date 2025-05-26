@@ -78,7 +78,7 @@ public partial class ProjectileWeapon : Node2D
 
     public void OnEnemyCollision(BasicBullet bullet, BasicEnemy enemy)
     {
-        GameManager.Instance.EnemyManager.EnemyReceiveDamage(enemy, bullet.Damage);
+        GameManager.Instance.EnemiesManager.EnemyReceiveDamage(enemy, bullet.Damage);
 
         if (bullet.PierceCount <= 0) DestroyBullet(bullet);
         bullet.PierceCount -= 1;

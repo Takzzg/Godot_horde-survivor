@@ -18,9 +18,9 @@ public partial class MainGame : Node2D
         // create basic weapon
         GameManager.Instance.Player.WeaponsContainer.AddChild(new ProjectileWeapon(WeaponShooting.EnumShootingStyle.TIMER, WeaponAiming.EnumAimingStyle.FACING));
 
-        // create EnemyManager
-        GameManager.Instance.EnemyManager = new EnemyManager(6);
-        AddChild(GameManager.Instance.EnemyManager);
+        // create EnemiesManager
+        GameManager.Instance.EnemiesManager = new EnemiesManager(6);
+        AddChild(GameManager.Instance.EnemiesManager);
 
         // create ui
         Layer = new CanvasLayer();
@@ -28,7 +28,7 @@ public partial class MainGame : Node2D
         GameManager.Instance.UI = SceneManager.Instance.GetInstanceFromEnum<MainUI>(SceneManager.EnumPathsDictionary.MAIN_UI);
         Layer.AddChild(GameManager.Instance.UI);
 
-        GameManager.Instance.EnemyManager.Timer.Start();
+        GameManager.Instance.EnemiesManager.Timer.Start();
     }
 
     public override void _UnhandledInput(InputEvent @event)

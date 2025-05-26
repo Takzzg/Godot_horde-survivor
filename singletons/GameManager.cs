@@ -8,7 +8,7 @@ public partial class GameManager : Node
     public const int RENDER_DISTANCE = 200;
 
     public PlayerScene Player;
-    public EnemyManager EnemyManager;
+    public EnemiesManager EnemiesManager;
     public MainUI UI;
 
     public override void _Ready()

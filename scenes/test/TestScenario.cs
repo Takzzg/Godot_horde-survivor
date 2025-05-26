@@ -19,9 +19,9 @@ public partial class TestScenario : Node2D
         ProjectileWeapon weapon = new(WeaponShooting.EnumShootingStyle.MANUAL, WeaponAiming.EnumAimingStyle.FIXED_R);
         GameManager.Instance.Player.WeaponsContainer.AddChild(weapon);
 
-        // create EnemyManager
-        GameManager.Instance.EnemyManager = new EnemyManager(6) { ProcessMovement = false };
-        AddChild(GameManager.Instance.EnemyManager);
+        // create EnemiesManager
+        GameManager.Instance.EnemiesManager = new EnemiesManager(6) { ProcessMovement = false };
+        AddChild(GameManager.Instance.EnemiesManager);
 
         // create ui
         Layer = new CanvasLayer();
@@ -49,7 +49,7 @@ public partial class TestScenario : Node2D
         foreach (Vector2 pos in positions)
         {
             BasicEnemy enemy = new(pos, 50, 0, 0);
-            GameManager.Instance.EnemyManager.SpawnEnemy(enemy);
+            GameManager.Instance.EnemiesManager.SpawnEnemy(enemy);
         }
     }
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-public partial class EnemyManager : Node2D
+public partial class EnemiesManager : Node2D
 {
     public List<BasicEnemy> EnemiesList = [];
 
@@ -14,7 +14,7 @@ public partial class EnemyManager : Node2D
 
     public bool ProcessMovement = true;
 
-    public EnemyManager(int size)
+    public EnemiesManager(int size)
     {
         SharedHitBoxSize = size;
         SharedHurtBoxSize = size + 4;

@@ -33,6 +33,6 @@ public partial class GameplayUI : Control
 
     public void UpdateEnemiesCountLabel()
     {
-        EnemiesLabel.Text = GameManager.Instance.EnemyManager.EnemiesList.Count.ToString();
+        EnemiesLabel.Text = GameManager.Instance.EnemiesManager.EnemiesList.Count.ToString();
     }
 }
