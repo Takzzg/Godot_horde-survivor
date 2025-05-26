@@ -18,12 +18,4 @@ public partial class GameManager : Node
 
         RNG = new RandomNumberGenerator();
     }
-
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        if (@event.IsAction("back"))
-        {
-            SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU);
-        }
-    }
 }

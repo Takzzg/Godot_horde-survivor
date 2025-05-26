@@ -10,23 +10,29 @@ public partial class GameplayUI : Control
     [Export]
     public Label PosLabel;
 
-    public void UpdateHealthLabel(int _)
+    public override void _Ready()
+    {
+        UpdateHealthLabel();
+        UpdatePosLabel();
+        UpdateEnemiesCountLabel();
+
+        GameManager.Instance.Player.PlayerMove += UpdatePosLabel;
+        GameManager.Instance.Player.PlayerReceiveDamage += (_) => UpdateHealthLabel();
+    }
+
+    public void UpdateHealthLabel()
     {
         HealthLabel.Text = GameManager.Instance.Player.Health.ToString();
     }
-    public void UpdateEnemiesCountLabel(int count)
-    {
-        EnemiesLabel.Text = count.ToString();
-    }
+
     public void UpdatePosLabel()
     {
         Vector2 pos = GameManager.Instance.Player.Position;
         PosLabel.Text = $"({float.Round(pos.X, 2)}, {float.Round(pos.Y, 2)})";
     }
 
-    public void SetUpSignals()
+    public void UpdateEnemiesCountLabel()
     {
-        GameManager.Instance.Player.PlayerMove += UpdatePosLabel;
-        GameManager.Instance.Player.PlayerReceiveDamage += UpdateHealthLabel;
+        EnemiesLabel.Text = GameManager.Instance.EnemyManager.EnemiesList.Count.ToString();
     }
 }

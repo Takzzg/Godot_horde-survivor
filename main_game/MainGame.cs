@@ -13,29 +13,28 @@ public partial class MainGame : Node2D
         AddChild(worldCenter);
 
         // create player
-        PlayerScene player = new();
-        AddChild(player);
+        GameManager.Instance.Player = SceneManager.Instance.GetInstanceFromEnum<PlayerScene>(SceneManager.EnumPathsDictionary.PLAYER_SCENE);
+        AddChild(GameManager.Instance.Player);
 
         // create EnemyManager
         Texture2D enemyTexture = GD.Load<Texture2D>("res://main_game/enemy/enemy_sphere.png");
-        EnemyManager enemyManager = new(6, enemyTexture);
-        AddChild(enemyManager);
+        GameManager.Instance.EnemyManager = new EnemyManager(6, enemyTexture);
+        AddChild(GameManager.Instance.EnemyManager);
 
         // create ui
         Layer = new CanvasLayer();
         AddChild(Layer);
-        MainUI ui = new();
-        Layer.AddChild(ui);
-
-        // setup Game Manager
-        GameManager.Instance.Player = player;
-        GameManager.Instance.UI = ui;
-        GameManager.Instance.EnemyManager = enemyManager;
-
-        // connetc signals
-        ui.SetUpSignals();
-        player.SetUpSignals();
+        GameManager.Instance.UI = SceneManager.Instance.GetInstanceFromEnum<MainUI>(SceneManager.EnumPathsDictionary.MAIN_UI);
+        Layer.AddChild(GameManager.Instance.UI);
 
         GameManager.Instance.EnemyManager.Timer.Start();
+    }
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (@event.IsAction("back"))
+        {
+            SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU);
+        }
     }
 }

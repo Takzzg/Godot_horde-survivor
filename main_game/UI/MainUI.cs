@@ -8,17 +8,15 @@ public partial class MainUI : Control
     [Export]
     public Control DeathUI;
 
+    public override void _Ready()
+    {
+        DeathUI.Visible = false;
+        GameManager.Instance.Player.PlayerDeath += OnPlayerDeath;
+    }
+
     public void OnPlayerDeath()
     {
         GameplayUI.Visible = false;
         DeathUI.Visible = true;
-    }
-
-    public void SetUpSignals()
-    {
-        DeathUI.Visible = false;
-        GameManager.Instance.Player.PlayerDeath += OnPlayerDeath;
-
-        GameplayUI.SetUpSignals();
     }
 }

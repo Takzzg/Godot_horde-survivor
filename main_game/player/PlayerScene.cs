@@ -24,22 +24,18 @@ public partial class PlayerScene : CharacterBody2D
     [Signal]
     public delegate void PlayerDeathEventHandler();
 
-    public override void _PhysicsProcess(double delta)
-    {
-        MovePlayer();
-    }
-
-    public void SetUpSignals()
+    public override void _Ready()
     {
         // PlayerReceiveDamage += OnReceiveDamage;
         PlayerDeath += OnPlayerDeath;
 
-        // update health ui
-        GameManager.Instance.UI.GameplayUI.UpdateHealthLabel(Health);
-        GameManager.Instance.UI.GameplayUI.UpdatePosLabel();
-
         // create basic weapon
         WeaponsContainer.AddChild(new BasicWeapon());
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        MovePlayer();
     }
 
     private void OnReceiveDamage(int amount)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
@@ -9,18 +10,26 @@ public partial class SceneManager : Node
     public enum EnumScenes { MAIN_MENU, MAIN_GAME, TEST_SCENARIO };
 
     // loading
-    public PackedScene _loadingScreenScene = GD.Load<PackedScene>("res://loading_screen/loading_screen.tscn");
+    public PackedScene _loadingScreenScene;
     private LoadingScreen _loadingScreen;
     private string _loadDir;
     private bool _isloading;
 
     // packed scene paths
-    private const string _mainMenuScenePath = "res://main_menu/main_menu.tscn";
+    public enum EnumPathsDictionary { LOADING_SCREEN, MAIN_MENU, MAIN_UI, PLAYER_SCENE }
+    public Dictionary<EnumPathsDictionary, string> PathsDictionary = new() {
+        {EnumPathsDictionary.MAIN_MENU, "res://main_menu/main_menu.tscn"},
+        {EnumPathsDictionary.MAIN_UI, "res://main_game/UI/main_ui.tscn"},
+        {EnumPathsDictionary.LOADING_SCREEN, "res://loading_screen/loading_screen.tscn"},
+        {EnumPathsDictionary.PLAYER_SCENE, "res://main_game/player/player_scene.tscn"},
+    };
 
     public override void _Ready()
     {
         GD.Print($"SceneManager singleton ready!");
         Instance = this;
+
+        _loadingScreenScene = GetPackedSceneFromEnum(EnumPathsDictionary.LOADING_SCREEN);
         _currentNode = GetTree().Root.GetChildren().Last();
         GD.Print($"_currentNode.Name: {_currentNode.Name}");
     }
@@ -108,13 +117,28 @@ public partial class SceneManager : Node
 
     private void LoadPackedScene(EnumScenes scene)
     {
-        _loadDir = scene switch
+        EnumPathsDictionary pathKey = scene switch
         {
-            EnumScenes.MAIN_MENU => _mainMenuScenePath,
+            EnumScenes.MAIN_MENU => EnumPathsDictionary.MAIN_MENU,
             _ => throw new NotImplementedException($"Cant load packed scene {scene}"),
         };
 
+        _loadDir = PathsDictionary[pathKey];
+
         GD.Print($"request load {scene} packed scene");
         ResourceLoader.LoadThreadedRequest(_loadDir);
+    }
+
+    public PackedScene GetPackedSceneFromEnum(EnumPathsDictionary key)
+    {
+        PackedScene scene = GD.Load<PackedScene>(PathsDictionary[key]);
+        return scene;
+    }
+
+    public T GetInstanceFromEnum<T>(EnumPathsDictionary key) where T : Node
+    {
+        PackedScene scene = GetPackedSceneFromEnum(key);
+        T instance = scene.Instantiate<T>();
+        return instance;
     }
 }
