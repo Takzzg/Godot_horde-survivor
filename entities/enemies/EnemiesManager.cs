@@ -27,6 +27,11 @@ public partial class EnemiesManager : Node2D
         AddChild(Timer);
     }
 
+    public override void _ExitTree()
+    {
+        EnemiesList.ForEach(DestroyEnemy);
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         if (!ProcessMovement) return;
@@ -107,17 +112,16 @@ public partial class EnemiesManager : Node2D
     {
         enemy.Health -= damage;
         if (enemy.Health > 0) return;
+
         DestroyEnemy(enemy);
+        EnemiesList.Remove(enemy);
+        GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();
     }
 
     public void DestroyEnemy(BasicEnemy enemy)
     {
         PhysicsServer2D.FreeRid(enemy.BodyRid);
         PhysicsServer2D.FreeRid(enemy.HurtboxRid);
-
         RenderingServer.FreeRid(enemy.CanvasItemRid);
-
-        EnemiesList.Remove(enemy);
-        GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();
     }
 }

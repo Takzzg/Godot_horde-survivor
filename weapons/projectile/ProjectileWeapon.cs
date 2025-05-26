@@ -16,7 +16,7 @@ public partial class ProjectileWeapon : Node2D
     public int BulletPierceCount = 1;
 
     // bullet management
-    public List<BasicBullet> BulletsArr = [];
+    public List<BasicBullet> BulletsList = [];
     public BulletManager BulletsManager;
 
     public ProjectileWeapon(WeaponShooting.EnumShootingStyle shooting, WeaponAiming.EnumAimingStyle aiming)
@@ -32,8 +32,13 @@ public partial class ProjectileWeapon : Node2D
 
     public override void _PhysicsProcess(double delta)
     {
-        if (BulletsArr.Count == 0) return;
+        if (BulletsList.Count == 0) return;
         MoveBullets(delta);
+    }
+
+    public override void _ExitTree()
+    {
+        BulletsList.ForEach(BulletsManager.DestroyBullet);
     }
 
     // -------------------------------------------- Bullets --------------------------------------------
@@ -51,14 +56,14 @@ public partial class ProjectileWeapon : Node2D
         };
 
         BulletsManager.SetUpBullet(bullet);
-        BulletsArr.Add(bullet);
+        BulletsList.Add(bullet);
     }
 
     public void MoveBullets(double delta)
     {
         List<BasicBullet> bulletsQueuedForDestruction = [];
 
-        foreach (BasicBullet bullet in BulletsArr)
+        foreach (BasicBullet bullet in BulletsList)
         {
             // move bullet
             BulletsManager.MoveBullet(bullet, delta);
@@ -87,6 +92,6 @@ public partial class ProjectileWeapon : Node2D
     public void DestroyBullet(BasicBullet bullet)
     {
         BulletsManager.DestroyBullet(bullet);
-        BulletsArr.Remove(bullet);
+        BulletsList.Remove(bullet);
     }
 }
