@@ -24,18 +24,17 @@ public partial class PlayerScene : CharacterBody2D
     [Signal]
     public delegate void PlayerDeathEventHandler();
 
+    public PlayerMovement PlayerMovement;
+
     public override void _Ready()
     {
+        // bind signals
         // PlayerReceiveDamage += OnReceiveDamage;
         PlayerDeath += OnPlayerDeath;
 
-        // create basic weapon
-        WeaponsContainer.AddChild(new BasicWeapon());
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        MovePlayer();
+        // create movement component
+        PlayerMovement = new(this);
+        AddChild(PlayerMovement);
     }
 
     private void OnReceiveDamage(int amount)
@@ -57,19 +56,9 @@ public partial class PlayerScene : CharacterBody2D
         Velocity = new Vector2(0, 0);
         Sprite.Rotate((float)(Math.PI / 2));
 
+        PlayerMovement.SetPhysicsProcess(false);
+
         Godot.Collections.Array<Node> weapons = WeaponsContainer.GetChildren();
-        foreach (BasicWeapon weapon in weapons.Cast<BasicWeapon>()) { weapon.Timer.Stop(); }
-    }
-
-    private void MovePlayer()
-    {
-        if (!Alive) return;
-
-        Vector2 inputDirection = Input.GetVector("left", "right", "up", "down");
-        if (inputDirection.Equals(Vector2.Zero)) return;
-
-        Velocity = inputDirection * Speed;
-        EmitSignal(SignalName.PlayerMove);
-        MoveAndSlide();
+        foreach (ProjectileWeapon weapon in weapons.Cast<ProjectileWeapon>()) { weapon.WeaponShooting.TimedAttackSetRunning(false); }
     }
 }

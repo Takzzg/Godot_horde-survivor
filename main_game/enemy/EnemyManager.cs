@@ -13,10 +13,10 @@ public partial class EnemyManager : Node2D
     public Texture2D SharedTexture;
     public Timer Timer;
 
+    public bool ProcessMovement = true;
+
     public EnemyManager(int size, Texture2D texture)
     {
-        TextureFilter = TextureFilterEnum.Nearest;
-
         SharedTexture = texture;
         SharedHitBoxSize = size;
         SharedHurtBoxSize = size + 4;
@@ -31,6 +31,7 @@ public partial class EnemyManager : Node2D
 
     public override void _PhysicsProcess(double delta)
     {
+        if (!ProcessMovement) return;
         MoveEnemies();
     }
 

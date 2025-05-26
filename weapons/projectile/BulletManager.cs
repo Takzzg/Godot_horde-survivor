@@ -1,14 +1,14 @@
 using System;
 using Godot;
 
-public partial class BulletsManager : Node2D
+public partial class BulletManager : Node2D
 {
     public int BulletSize;
     public AtlasTexture SharedTexture;
     public Shape2D SharedShape;
     public Action<BasicBullet, BasicEnemy> OnEnemyCollision;
 
-    public BulletsManager(AtlasTexture texture, int size, Action<BasicBullet, BasicEnemy> onCollide)
+    public BulletManager(AtlasTexture texture, int size, Action<BasicBullet, BasicEnemy> onCollide)
     {
         SharedTexture = texture;
         BulletSize = size;

@@ -19,6 +19,7 @@ texture = ExtResource("1_6qdbv")
 shape = SubResource("CircleShape2D_0khpw")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+texture_filter = 1
 zoom = Vector2(3, 3)
 
 [node name="Weapons" type="Node2D" parent="."]
