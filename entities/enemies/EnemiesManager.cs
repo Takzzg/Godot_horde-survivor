@@ -34,7 +34,6 @@ public partial class EnemiesManager : Node2D
 
     public override void _PhysicsProcess(double delta)
     {
-        if (!ProcessMovement) return;
         MoveEnemies();
     }
 
@@ -90,9 +89,12 @@ public partial class EnemiesManager : Node2D
         for (int i = 0; i < EnemiesList.Count; i++)
         {
             BasicEnemy enemy = EnemiesList[i];
-            Vector2 dir = enemy.Position.DirectionTo(playerPos).Normalized() * enemy.Speed;
 
-            PhysicsServer2D.BodySetState(enemy.BodyRid, PhysicsServer2D.BodyState.LinearVelocity, dir);
+            if (ProcessMovement)
+            {
+                Vector2 dir = enemy.Position.DirectionTo(playerPos).Normalized() * enemy.Speed;
+                PhysicsServer2D.BodySetState(enemy.BodyRid, PhysicsServer2D.BodyState.LinearVelocity, dir);
+            }
 
             Transform2D posTransform = (Transform2D)PhysicsServer2D.BodyGetState(enemy.BodyRid, PhysicsServer2D.BodyState.Transform);
             PhysicsServer2D.AreaSetTransform(enemy.HurtboxRid, posTransform);
