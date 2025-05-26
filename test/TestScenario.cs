@@ -20,8 +20,7 @@ public partial class TestScenario : Node2D
         GameManager.Instance.Player.WeaponsContainer.AddChild(weapon);
 
         // create EnemyManager
-        Texture2D enemyTexture = GD.Load<Texture2D>("res://main_game/enemy/enemy_sphere.png");
-        GameManager.Instance.EnemyManager = new EnemyManager(6, enemyTexture) { ProcessMovement = false };
+        GameManager.Instance.EnemyManager = new EnemyManager(6) { ProcessMovement = false };
         AddChild(GameManager.Instance.EnemyManager);
 
         // create ui

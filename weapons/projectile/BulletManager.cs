@@ -4,13 +4,11 @@ using Godot;
 public partial class BulletManager : Node2D
 {
     public int BulletSize;
-    public AtlasTexture SharedTexture;
     public Shape2D SharedShape;
     public Action<BasicBullet, BasicEnemy> OnEnemyCollision;
 
-    public BulletManager(AtlasTexture texture, int size, Action<BasicBullet, BasicEnemy> onCollide)
+    public BulletManager(int size, Action<BasicBullet, BasicEnemy> onCollide)
     {
-        SharedTexture = texture;
         BulletSize = size;
         OnEnemyCollision = onCollide;
 
@@ -34,15 +32,11 @@ public partial class BulletManager : Node2D
         Callable callback = Callable.From((int status, Rid areaRid, int instance_id, int area_shape_idx, int self_shape_idx) => OnAreaEntered(status, areaRid, bullet));
         PhysicsServer2D.AreaSetAreaMonitorCallback(bullet.AreaRid, callback);
 
-        // create sprite
-        bullet.SpriteRid = RenderingServer.CanvasItemCreate();
-        Vector2 textureSize = SharedTexture.GetSize();
-        RenderingServer.CanvasItemSetParent(bullet.SpriteRid, GetCanvasItem());
-        RenderingServer.CanvasItemAddTextureRect(bullet.SpriteRid, new Rect2(-textureSize / 2, textureSize), SharedTexture.GetRid());
-        RenderingServer.CanvasItemSetTransform(bullet.SpriteRid, posTransform);
-
-        // // create debug shapes
-        // RenderingServer.CanvasItemAddCircle(bullet.SpriteRid, Vector2.Zero, BulletSize, new Color(Colors.Red, 0.25f));
+        // draw enemy
+        bullet.CanvasItemRid = RenderingServer.CanvasItemCreate();
+        RenderingServer.CanvasItemSetParent(bullet.CanvasItemRid, GetCanvasItem());
+        RenderingServer.CanvasItemSetTransform(bullet.CanvasItemRid, posTransform);
+        RenderingServer.CanvasItemAddCircle(bullet.CanvasItemRid, Vector2.Zero, BulletSize, Colors.DarkGray);
     }
 
     public void OnAreaEntered(int status, Rid areaRid, BasicBullet bullet)
@@ -66,12 +60,12 @@ public partial class BulletManager : Node2D
         Transform2D posTransform = new(0, bullet.Position);
 
         PhysicsServer2D.AreaSetTransform(bullet.AreaRid, posTransform);
-        RenderingServer.CanvasItemSetTransform(bullet.SpriteRid, posTransform);
+        RenderingServer.CanvasItemSetTransform(bullet.CanvasItemRid, posTransform);
     }
 
     public void DestroyBullet(BasicBullet bullet)
     {
         PhysicsServer2D.FreeRid(bullet.AreaRid);
-        RenderingServer.FreeRid(bullet.SpriteRid);
+        RenderingServer.FreeRid(bullet.CanvasItemRid);
     }
 }

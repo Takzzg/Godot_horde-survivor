@@ -10,14 +10,12 @@ public partial class EnemyManager : Node2D
     public int SharedHurtBoxSize;
     public CircleShape2D SharedHitBox;
     public CircleShape2D SharedHurtBox;
-    public Texture2D SharedTexture;
     public Timer Timer;
 
     public bool ProcessMovement = true;
 
-    public EnemyManager(int size, Texture2D texture)
+    public EnemyManager(int size)
     {
-        SharedTexture = texture;
         SharedHitBoxSize = size;
         SharedHurtBoxSize = size + 4;
 
@@ -69,16 +67,11 @@ public partial class EnemyManager : Node2D
         PhysicsServer2D.AreaSetMonitorable(enemy.HurtboxRid, true);
 
         // create sprite
-        enemy.SpriteRid = RenderingServer.CanvasItemCreate();
-        Vector2 textureSize = SharedTexture.GetSize();
-        RenderingServer.CanvasItemSetParent(enemy.SpriteRid, GetCanvasItem());
-        RenderingServer.CanvasItemAddTextureRect(enemy.SpriteRid, new Rect2(-textureSize / 2, textureSize), SharedTexture.GetRid());
-        RenderingServer.CanvasItemSetDefaultTextureFilter(enemy.SpriteRid, RenderingServer.CanvasItemTextureFilter.Nearest);
-        RenderingServer.CanvasItemSetTransform(enemy.SpriteRid, posTransform);
-
-        // // create debug shapes
-        // RenderingServer.CanvasItemAddCircle(enemy.SpriteRid, Vector2.Zero, SharedHitBoxSize, new Color(Colors.Blue, 0.125f));
-        // RenderingServer.CanvasItemAddCircle(enemy.SpriteRid, Vector2.Zero, SharedHurtBoxSize, new Color(Colors.Pink, 0.125f));
+        enemy.CanvasItemRid = RenderingServer.CanvasItemCreate();
+        RenderingServer.CanvasItemSetParent(enemy.CanvasItemRid, GetCanvasItem());
+        RenderingServer.CanvasItemSetTransform(enemy.CanvasItemRid, posTransform);
+        RenderingServer.CanvasItemAddCircle(enemy.CanvasItemRid, Vector2.Zero, SharedHitBoxSize, Colors.Black);
+        // RenderingServer.CanvasItemAddCircle(enemy.CanvasItemRid, Vector2.Zero, SharedHurtBoxSize, new Color(Colors.Pink, 0.125f));
 
         // GD.Print($"spawning enemy at {pos}");
         EnemiesList.Add(enemy);
@@ -98,7 +91,7 @@ public partial class EnemyManager : Node2D
 
             Transform2D posTransform = (Transform2D)PhysicsServer2D.BodyGetState(enemy.BodyRid, PhysicsServer2D.BodyState.Transform);
             PhysicsServer2D.AreaSetTransform(enemy.HurtboxRid, posTransform);
-            RenderingServer.CanvasItemSetTransform(enemy.SpriteRid, posTransform);
+            RenderingServer.CanvasItemSetTransform(enemy.CanvasItemRid, posTransform);
 
             enemy.Position = posTransform.Origin;
         }
@@ -122,7 +115,7 @@ public partial class EnemyManager : Node2D
         PhysicsServer2D.FreeRid(enemy.BodyRid);
         PhysicsServer2D.FreeRid(enemy.HurtboxRid);
 
-        RenderingServer.FreeRid(enemy.SpriteRid);
+        RenderingServer.FreeRid(enemy.CanvasItemRid);
 
         EnemiesList.Remove(enemy);
         GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();

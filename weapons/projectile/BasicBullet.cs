@@ -14,6 +14,6 @@ public class BasicBullet
     public Texture2D ImageOffset;
     public double AnimationLifeTime;
 
-    public Rid SpriteRid;
+    public Rid CanvasItemRid;
     public Rid AreaRid;
 }

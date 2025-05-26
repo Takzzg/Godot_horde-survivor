@@ -19,8 +19,7 @@ public partial class MainGame : Node2D
         GameManager.Instance.Player.WeaponsContainer.AddChild(new ProjectileWeapon(WeaponShooting.EnumShootingStyle.TIMER, WeaponAiming.EnumAimingStyle.FACING));
 
         // create EnemyManager
-        Texture2D enemyTexture = GD.Load<Texture2D>("res://main_game/enemy/enemy_sphere.png");
-        GameManager.Instance.EnemyManager = new EnemyManager(6, enemyTexture);
+        GameManager.Instance.EnemyManager = new EnemyManager(6);
         AddChild(GameManager.Instance.EnemyManager);
 
         // create ui

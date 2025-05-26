@@ -16,7 +16,7 @@ public class BasicEnemy
     public int Speed;
     public int Damage;
 
-    public Rid SpriteRid;
+    public Rid CanvasItemRid;
     public Rid BodyRid;
     public Rid HurtboxRid;
 }

@@ -21,19 +21,12 @@ public partial class ProjectileWeapon : Node2D
 
     public ProjectileWeapon(WeaponShooting.EnumShootingStyle shooting, WeaponAiming.EnumAimingStyle aiming)
     {
-        // create shared texture
-        Texture2D BulletTileSet = GD.Load<Texture2D>("res://weapons/projectile/basic_bullets_tileset.png");
-        Vector2 TileSize = new(8, 8);
-        Vector2 TileOffset = new(8, 8);
-        AtlasTexture texture = new() { Atlas = BulletTileSet, Region = new Rect2(TileOffset, TileSize) };
-
-        // create bullet manager
-        BulletsManager = new(texture, BulletRadius, OnEnemyCollision) { TopLevel = true };
+        BulletsManager = new(BulletRadius, OnEnemyCollision) { TopLevel = true };
         AddChild(BulletsManager);
 
-        // create components
         WeaponShooting = new(shooting, Shoot);
         AddChild(WeaponShooting);
+
         WeaponAiming = new(aiming);
     }
 

@@ -12,9 +12,6 @@ public partial class PlayerScene : CharacterBody2D
     public int Speed = 50;
 
     [Export]
-    public Sprite2D Sprite;
-
-    [Export]
     public Node2D WeaponsContainer;
 
     [Signal]
@@ -24,17 +21,22 @@ public partial class PlayerScene : CharacterBody2D
     [Signal]
     public delegate void PlayerDeathEventHandler();
 
+    // components
     public PlayerMovement PlayerMovement;
+    public PlayerDraw PlayerDraw;
 
-    public override void _Ready()
+    public PlayerScene()
     {
         // bind signals
         // PlayerReceiveDamage += OnReceiveDamage;
         PlayerDeath += OnPlayerDeath;
 
-        // create movement component
+        // create components
         PlayerMovement = new(this);
         AddChild(PlayerMovement);
+
+        PlayerDraw = new();
+        AddChild(PlayerDraw);
     }
 
     private void OnReceiveDamage(int amount)
@@ -54,7 +56,6 @@ public partial class PlayerScene : CharacterBody2D
         GD.Print($"PlayerScene OnPlayerDeath()");
         Alive = false;
         Velocity = new Vector2(0, 0);
-        Sprite.Rotate((float)(Math.PI / 2));
 
         PlayerMovement.SetPhysicsProcess(false);
 
