@@ -25,7 +25,7 @@ public partial class EnemyManager : Node2D
         SharedHurtBox = new CircleShape2D() { Radius = SharedHurtBoxSize };
 
         Timer = new Timer() { Autostart = false, OneShot = false, WaitTime = 0.0125 };
-        Timer.Timeout += SpawnEnemy;
+        Timer.Timeout += SpawnEnemyAroundPlayer;
         AddChild(Timer);
     }
 
@@ -34,35 +34,32 @@ public partial class EnemyManager : Node2D
         MoveEnemies();
     }
 
-    public void SpawnEnemy()
+    public void SpawnEnemyAroundPlayer()
     {
-        if (EnemiesList.Count >= 2000) return;
+        Vector2 pos = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
+        BasicEnemy enemy = new(pos, 50, 25, 5);
+        SpawnEnemy(enemy);
+    }
 
-        // get position
-        Vector2 pos = Utils.GetRandomPointOnCircle(GameManager.Instance.MainGame.Player.Position, GameManager.RENDER_DISTANCE * 2);
-        Transform2D posTransform = new(0, pos);
+    public void SpawnEnemy(BasicEnemy enemy)
+    {
+        if (EnemiesList.Count >= 1500) return;
 
-        BasicEnemy enemy = new()
-        {
-            Position = pos,
-            Health = 50,
-            Speed = 25,
-            Damage = 5,
-            SpriteRid = RenderingServer.CanvasItemCreate(),
-            BodyRid = PhysicsServer2D.BodyCreate(),
-            HurtboxRid = PhysicsServer2D.AreaCreate(),
-        };
+        Transform2D posTransform = new(0, enemy.Position);
 
         // create body
+        enemy.BodyRid = PhysicsServer2D.BodyCreate();
         PhysicsServer2D.BodyAddShape(enemy.BodyRid, SharedHitBox.GetRid(), Transform2D.Identity);
         PhysicsServer2D.BodySetSpace(enemy.BodyRid, GetWorld2D().Space);
         PhysicsServer2D.BodySetState(enemy.BodyRid, PhysicsServer2D.BodyState.Transform, posTransform);
         PhysicsServer2D.BodySetMode(enemy.BodyRid, PhysicsServer2D.BodyMode.RigidLinear);
         PhysicsServer2D.BodySetParam(enemy.BodyRid, PhysicsServer2D.BodyParameter.GravityScale, 0);
+        PhysicsServer2D.BodySetParam(enemy.BodyRid, PhysicsServer2D.BodyParameter.Friction, 0);
         PhysicsServer2D.BodySetCollisionLayer(enemy.BodyRid, 2);
         PhysicsServer2D.BodySetCollisionMask(enemy.BodyRid, 3);
 
         // create hurtbox
+        enemy.HurtboxRid = PhysicsServer2D.AreaCreate();
         PhysicsServer2D.AreaAddShape(enemy.HurtboxRid, SharedHurtBox.GetRid(), Transform2D.Identity);
         PhysicsServer2D.AreaSetTransform(enemy.HurtboxRid, posTransform);
         PhysicsServer2D.AreaSetSpace(enemy.HurtboxRid, GetWorld2D().Space);
@@ -71,6 +68,7 @@ public partial class EnemyManager : Node2D
         PhysicsServer2D.AreaSetMonitorable(enemy.HurtboxRid, true);
 
         // create sprite
+        enemy.SpriteRid = RenderingServer.CanvasItemCreate();
         Vector2 textureSize = SharedTexture.GetSize();
         RenderingServer.CanvasItemSetParent(enemy.SpriteRid, GetCanvasItem());
         RenderingServer.CanvasItemAddTextureRect(enemy.SpriteRid, new Rect2(-textureSize / 2, textureSize), SharedTexture.GetRid());
@@ -83,12 +81,12 @@ public partial class EnemyManager : Node2D
 
         // GD.Print($"spawning enemy at {pos}");
         EnemiesList.Add(enemy);
-        GameManager.Instance.MainGame.MainUI.GameplayUI.UpdateEnemiesCountLabel(EnemiesList.Count);
+        GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel(EnemiesList.Count);
     }
 
     public void MoveEnemies()
     {
-        Vector2 playerPos = GameManager.Instance.MainGame.Player.Position;
+        Vector2 playerPos = GameManager.Instance.Player.Position;
 
         for (int i = 0; i < EnemiesList.Count; i++)
         {
@@ -126,6 +124,6 @@ public partial class EnemyManager : Node2D
         RenderingServer.FreeRid(enemy.SpriteRid);
 
         EnemiesList.Remove(enemy);
-        GameManager.Instance.MainGame.MainUI.GameplayUI.UpdateEnemiesCountLabel(EnemiesList.Count);
+        GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel(EnemiesList.Count);
     }
 }

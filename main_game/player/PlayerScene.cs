@@ -35,8 +35,11 @@ public partial class PlayerScene : CharacterBody2D
         PlayerDeath += OnPlayerDeath;
 
         // update health ui
-        GameManager.Instance.MainGame.MainUI.GameplayUI.UpdateHealthLabel(Health);
-        GameManager.Instance.MainGame.MainUI.GameplayUI.UpdatePosLabel();
+        GameManager.Instance.UI.GameplayUI.UpdateHealthLabel(Health);
+        GameManager.Instance.UI.GameplayUI.UpdatePosLabel();
+
+        // create basic weapon
+        WeaponsContainer.AddChild(new BasicWeapon());
     }
 
     private void OnReceiveDamage(int amount)

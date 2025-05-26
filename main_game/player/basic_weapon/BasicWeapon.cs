@@ -42,7 +42,7 @@ public partial class BasicWeapon : Node2D
 
     public void OnEnemyCollision(BasicBullet bullet, BasicEnemy enemy)
     {
-        GameManager.Instance.MainGame.EnemyManager.EnemyReceiveDamage(enemy, bullet.Damage);
+        GameManager.Instance.EnemyManager.EnemyReceiveDamage(enemy, bullet.Damage);
 
         if (bullet.PierceCount <= 0) DestroyBullet(bullet);
         bullet.PierceCount -= 1;
@@ -51,8 +51,8 @@ public partial class BasicWeapon : Node2D
     public void Shoot()
     {
         // GD.Print($"BasicWeapon Shoot()");
-        Vector2 dir = Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360));
-        // Vector2 dir = Vector2.Right;
+        // Vector2 dir = Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360));
+        Vector2 dir = Vector2.Right;
 
         BasicBullet bullet = new()
         {
@@ -93,5 +93,14 @@ public partial class BasicWeapon : Node2D
         // destroy bullets
         if (bulletsQueuedForDestruction.Count == 0) return;
         foreach (BasicBullet bullet in bulletsQueuedForDestruction) { DestroyBullet(bullet); }
+    }
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (@event.IsActionPressed("enter"))
+        {
+            Shoot();
+            Shoot();
+        }
     }
 }

@@ -9,7 +9,7 @@ content_margin_right = 15.0
 content_margin_bottom = 15.0
 bg_color = Color(0, 0, 0, 0.501961)
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("_start", "_quit")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("_start", "_quit", "_testScenario", "_testLoading")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,8 +17,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_oa53l")
-_start = NodePath("PanelContainer/BoxContainer/Button")
-_quit = NodePath("PanelContainer/BoxContainer/Button2")
+_start = NodePath("PanelContainer/BoxContainer/ButtonStart")
+_quit = NodePath("PanelContainer/BoxContainer/ButtonQuit")
+_testScenario = NodePath("PanelContainer/BoxContainer/BoxContainer2/ButtonTestScenario")
+_testLoading = NodePath("PanelContainer/BoxContainer/BoxContainer2/ButtonTestLoading")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -44,10 +46,26 @@ vertical = true
 layout_mode = 2
 text = "Horde Survivor"
 
-[node name="Button" type="Button" parent="PanelContainer/BoxContainer"]
+[node name="ButtonStart" type="Button" parent="PanelContainer/BoxContainer"]
 layout_mode = 2
 text = "Start"
 
-[node name="Button2" type="Button" parent="PanelContainer/BoxContainer"]
+[node name="ButtonQuit" type="Button" parent="PanelContainer/BoxContainer"]
 layout_mode = 2
 text = "Quit"
+
+[node name="BoxContainer2" type="BoxContainer" parent="PanelContainer/BoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="Label" type="Label" parent="PanelContainer/BoxContainer/BoxContainer2"]
+layout_mode = 2
+text = "Test"
+
+[node name="ButtonTestScenario" type="Button" parent="PanelContainer/BoxContainer/BoxContainer2"]
+layout_mode = 2
+text = "test scenario"
+
+[node name="ButtonTestLoading" type="Button" parent="PanelContainer/BoxContainer/BoxContainer2"]
+layout_mode = 2
+text = "test loading"

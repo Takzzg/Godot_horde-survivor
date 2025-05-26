@@ -17,7 +17,7 @@ public partial class MainUI : Control
     public void SetUpSignals()
     {
         DeathUI.Visible = false;
-        GameManager.Instance.MainGame.Player.PlayerDeath += OnPlayerDeath;
+        GameManager.Instance.Player.PlayerDeath += OnPlayerDeath;
 
         GameplayUI.SetUpSignals();
     }

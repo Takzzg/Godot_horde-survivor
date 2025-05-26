@@ -12,7 +12,7 @@ public partial class GameplayUI : Control
 
     public void UpdateHealthLabel(int _)
     {
-        HealthLabel.Text = GameManager.Instance.MainGame.Player.Health.ToString();
+        HealthLabel.Text = GameManager.Instance.Player.Health.ToString();
     }
     public void UpdateEnemiesCountLabel(int count)
     {
@@ -20,13 +20,13 @@ public partial class GameplayUI : Control
     }
     public void UpdatePosLabel()
     {
-        Vector2 pos = GameManager.Instance.MainGame.Player.Position;
+        Vector2 pos = GameManager.Instance.Player.Position;
         PosLabel.Text = $"({float.Round(pos.X, 2)}, {float.Round(pos.Y, 2)})";
     }
 
     public void SetUpSignals()
     {
-        GameManager.Instance.MainGame.Player.PlayerMove += UpdatePosLabel;
-        GameManager.Instance.MainGame.Player.PlayerReceiveDamage += UpdateHealthLabel;
+        GameManager.Instance.Player.PlayerMove += UpdatePosLabel;
+        GameManager.Instance.Player.PlayerReceiveDamage += UpdateHealthLabel;
     }
 }

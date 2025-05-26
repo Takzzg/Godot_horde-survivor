@@ -1,29 +1,33 @@
 using Godot;
-using System;
 
 public partial class MainMenu : Control
 {
 
     [Export]
     private Button _start;
-
     [Export]
     private Button _quit;
+    [Export]
+    private Button _testScenario;
+    [Export]
+    private Button _testLoading;
 
     public override void _Ready()
     {
         GD.Print($"MainMenu ready!");
         _start.Pressed += StartGame;
         _quit.Pressed += QuitGame;
+
+        _testScenario.Pressed += () => SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.TEST_SCENARIO);
+        _testLoading.Pressed += () => SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU);
     }
 
-    private void StartGame()
-    {
-        SceneManager.Instance.ChangeScene(SceneManager.SceneEnum.MAIN_GAME);
-    }
+    private void StartGame() { SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_GAME); }
+    private void QuitGame() { GetTree().Quit(); }
 
-    private void QuitGame()
+    public override void _UnhandledInput(InputEvent @event)
     {
-        GetTree().Quit();
+        if (@event.IsAction("enter")) { StartGame(); }
+        if (@event.IsAction("back")) { QuitGame(); }
     }
 }

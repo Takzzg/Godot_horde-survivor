@@ -2,42 +2,40 @@ using Godot;
 
 public partial class MainGame : Node2D
 {
-    [Export]
-    public PlayerScene Player;
-    [Export]
-    public MainUI MainUI;
-
-    public EnemyManager EnemyManager;
+    public CanvasLayer Layer;
 
     public override void _Ready()
     {
         GD.Print($"MainGame ready!");
-
-        // setup main game
-        GameManager.Instance.MainGame = this;
         TextureFilter = TextureFilterEnum.Nearest;
 
-        // setup EnemyManager
+        ColorRect worldCenter = new() { Color = Colors.DimGray, Size = new Vector2(64, 64), Position = new Vector2(-32, -32) };
+        AddChild(worldCenter);
+
+        // create player
+        PlayerScene player = new();
+        AddChild(player);
+
+        // create EnemyManager
         Texture2D enemyTexture = GD.Load<Texture2D>("res://main_game/enemy/enemy_sphere.png");
-        EnemyManager = new(6, enemyTexture);
-        AddChild(EnemyManager);
+        EnemyManager enemyManager = new(6, enemyTexture);
+        AddChild(enemyManager);
 
-        // create weapon
-        Player.WeaponsContainer.AddChild(new BasicWeapon());
+        // create ui
+        Layer = new CanvasLayer();
+        AddChild(Layer);
+        MainUI ui = new();
+        Layer.AddChild(ui);
 
-        // setup node signals
-        Player.SetUpSignals();
-        MainUI.SetUpSignals();
+        // setup Game Manager
+        GameManager.Instance.Player = player;
+        GameManager.Instance.UI = ui;
+        GameManager.Instance.EnemyManager = enemyManager;
 
-        EnemyManager.Timer.Start();
-    }
+        // connetc signals
+        ui.SetUpSignals();
+        player.SetUpSignals();
 
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        if (@event.IsAction("open_menu"))
-        {
-            GD.Print($"open_menu key pressed");
-            SceneManager.Instance.ChangeScene(SceneManager.SceneEnum.MAIN_MENU);
-        }
+        GameManager.Instance.EnemyManager.Timer.Start();
     }
 }

@@ -50,7 +50,7 @@ public partial class BulletsManager : Node2D
         // GD.Print($"BulletManager OnAreaEntered");
         // area entering = 0, area exiting = 1
         if (status == 1) return;
-        BasicEnemy enemy = GameManager.Instance.MainGame.EnemyManager.FindEnemyByAreaRid(areaRid);
+        BasicEnemy enemy = GameManager.Instance.EnemyManager.FindEnemyByAreaRid(areaRid);
         OnEnemyCollision(bullet, enemy);
         // GD.Print($"status: {status}, areaRid: {areaRid}, bullet: {bullet}, enemy {enemy}");
     }
