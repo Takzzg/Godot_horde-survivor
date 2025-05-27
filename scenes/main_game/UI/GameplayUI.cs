@@ -16,13 +16,13 @@ public partial class GameplayUI : Control
         UpdatePosLabel();
         UpdateEnemiesCountLabel();
 
-        GameManager.Instance.Player.PlayerMove += UpdatePosLabel;
-        GameManager.Instance.Player.PlayerReceiveDamage += (_) => UpdateHealthLabel();
+        GameManager.Instance.Player.PlayerMovement.PlayerMove += UpdatePosLabel;
+        GameManager.Instance.Player.PlayerHealth.PlayerReceiveDamage += (_) => UpdateHealthLabel();
     }
 
     public void UpdateHealthLabel()
     {
-        HealthLabel.Text = GameManager.Instance.Player.Health.ToString();
+        HealthLabel.Text = GameManager.Instance.Player.PlayerHealth.Health.ToString();
     }
 
     public void UpdatePosLabel()

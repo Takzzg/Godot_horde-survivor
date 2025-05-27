@@ -11,7 +11,7 @@ public partial class MainUI : Control
     public override void _Ready()
     {
         DeathUI.Visible = false;
-        GameManager.Instance.Player.PlayerDeath += OnPlayerDeath;
+        GameManager.Instance.Player.PlayerHealth.PlayerDeath += OnPlayerDeath;
     }
 
     public void OnPlayerDeath()
