@@ -23,6 +23,10 @@ public partial class TestScenario : Node2D
         GameManager.Instance.EnemiesManager = new EnemiesManager(6) { ProcessMovement = false };
         AddChild(GameManager.Instance.EnemiesManager);
 
+        // create ExperienceManager
+        GameManager.Instance.ExperienceManager = new ExperienceManager();
+        AddChild(GameManager.Instance.ExperienceManager);
+
         // create ui
         Layer = new CanvasLayer();
         AddChild(Layer);
@@ -48,7 +52,7 @@ public partial class TestScenario : Node2D
 
         foreach (Vector2 pos in positions)
         {
-            BasicEnemy enemy = new(pos, 50, 0, 0);
+            BasicEnemy enemy = new(pos, 50, 0, 0, 1);
             GameManager.Instance.EnemiesManager.SpawnEnemy(enemy);
         }
     }

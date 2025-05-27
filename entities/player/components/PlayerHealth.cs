@@ -2,10 +2,8 @@ using System.Linq;
 using Godot;
 using Godot.Collections;
 
-public partial class PlayerHealth : Node
+public partial class PlayerHealth : BasePlayerComponent
 {
-    PlayerScene _player;
-
     public bool Alive = true;
     public int Health = 50;
     public double InvulnerableLength = 0.25;
@@ -16,10 +14,8 @@ public partial class PlayerHealth : Node
     [Signal]
     public delegate void PlayerDeathEventHandler();
 
-    public PlayerHealth(PlayerScene player)
+    public PlayerHealth(PlayerScene player) : base(player)
     {
-        _player = player;
-
         // create invulnerability timer
         InvulnerableTimer = new Timer() { Autostart = false, OneShot = true, WaitTime = InvulnerableLength };
         AddChild(InvulnerableTimer);
@@ -54,7 +50,6 @@ public partial class PlayerHealth : Node
 
     public void OnCollision(Dictionary collision)
     {
-        GD.Print($"InvulnerableTimer.IsStopped(): {InvulnerableTimer.IsStopped()}");
         if (!InvulnerableTimer.IsStopped()) return;
 
         BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByBodyRid((Rid)collision["rid"]);

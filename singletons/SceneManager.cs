@@ -45,8 +45,8 @@ public partial class SceneManager : Node
         ResourceLoader.ThreadLoadStatus status = ResourceLoader.LoadThreadedGetStatus(_loadDir, loadpercent);
         double percentage = (double)loadpercent[0] * 100;
 
-        GD.Print($"load status: {status}");
-        GD.Print($"load percent: {percentage}");
+        // GD.Print($"load status: {status}");
+        // GD.Print($"load percent: {percentage}");
 
         if (status == ResourceLoader.ThreadLoadStatus.Loaded || status == ResourceLoader.ThreadLoadStatus.InvalidResource)
         {

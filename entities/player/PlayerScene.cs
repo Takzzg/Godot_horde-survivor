@@ -6,6 +6,7 @@ public partial class PlayerScene : CharacterBody2D
     public PlayerHealth PlayerHealth;
     public PlayerMovement PlayerMovement;
     public PlayerDraw PlayerDraw;
+    public PlayerExperience PlayerExperience;
     public Node2D WeaponsContainer;
 
     public PlayerScene()
@@ -15,17 +16,20 @@ public partial class PlayerScene : CharacterBody2D
         AddChild(WeaponsContainer);
 
         // create camera
-        Camera2D camera = new() { Zoom = new Vector2(3, 3), TextureFilter = TextureFilterEnum.Nearest };
+        Camera2D camera = new() { Zoom = new Vector2(2, 2), TextureFilter = TextureFilterEnum.Nearest };
         AddChild(camera);
 
         // create components
-        PlayerHealth = new(this);
+        PlayerHealth = new PlayerHealth(this);
         AddChild(PlayerHealth);
 
-        PlayerMovement = new(this);
+        PlayerMovement = new PlayerMovement(this);
         AddChild(PlayerMovement);
 
-        PlayerDraw = new();
+        PlayerDraw = new PlayerDraw(this);
         AddChild(PlayerDraw);
+
+        PlayerExperience = new PlayerExperience(this);
+        AddChild(PlayerExperience);
     }
 }

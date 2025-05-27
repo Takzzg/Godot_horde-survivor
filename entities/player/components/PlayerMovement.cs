@@ -1,18 +1,17 @@
 using Godot;
 using Godot.Collections;
 
-public partial class PlayerMovement : Node2D
+public partial class PlayerMovement : BasePlayerComponent
 {
-    private PlayerScene _player;
-
     public int Speed = 50;
     public int PlayerSize = 5;
     public CollisionShape2D HurtboxShape;
 
-    public PlayerMovement(PlayerScene player)
-    {
-        _player = player;
+    [Signal]
+    public delegate void PlayerMoveEventHandler();
 
+    public PlayerMovement(PlayerScene player) : base(player)
+    {
         _player.CollisionLayer = 1; // 1 = player layer
         _player.CollisionMask = 3; // 1 = player layer, 2 = enemy layer
 
@@ -20,9 +19,6 @@ public partial class PlayerMovement : Node2D
         HurtboxShape = new CollisionShape2D() { Shape = new CircleShape2D() { Radius = PlayerSize } };
         _player.AddChild(HurtboxShape);
     }
-
-    [Signal]
-    public delegate void PlayerMoveEventHandler();
 
     public override void _PhysicsProcess(double delta)
     {
@@ -40,6 +36,8 @@ public partial class PlayerMovement : Node2D
         foreach (Dictionary col in collisions) { _player.PlayerHealth.OnCollision(col); }
 
         // move player
+        if (!_player.PlayerHealth.Alive) return;
+
         Vector2 inputDirection = GetInputVector();
         if (inputDirection.Equals(Vector2.Zero)) return;
 

@@ -43,7 +43,7 @@ public partial class EnemiesManager : Node2D
     public void SpawnEnemyAroundPlayer()
     {
         Vector2 pos = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
-        BasicEnemy enemy = new(pos, 50, 25, 5);
+        BasicEnemy enemy = new(pos, 50, 25, 5, 1);
         SpawnEnemy(enemy);
     }
 
@@ -93,11 +93,8 @@ public partial class EnemiesManager : Node2D
         {
             BasicEnemy enemy = EnemiesList[i];
 
-            if (ProcessMovement)
-            {
-                Vector2 dir = enemy.Position.DirectionTo(playerPos).Normalized() * enemy.Speed;
-                PhysicsServer2D.BodySetState(enemy.BodyRid, PhysicsServer2D.BodyState.LinearVelocity, dir);
-            }
+            Vector2 dir = (!ProcessMovement || enemy.Speed == 0) ? Vector2.Zero : enemy.Position.DirectionTo(playerPos).Normalized() * enemy.Speed;
+            PhysicsServer2D.BodySetState(enemy.BodyRid, PhysicsServer2D.BodyState.LinearVelocity, dir);
 
             Transform2D posTransform = (Transform2D)PhysicsServer2D.BodyGetState(enemy.BodyRid, PhysicsServer2D.BodyState.Transform);
             PhysicsServer2D.AreaSetTransform(enemy.HurtboxRid, posTransform);
@@ -128,7 +125,7 @@ public partial class EnemiesManager : Node2D
         EnemiesList.Remove(enemy);
 
         GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();
-        GameManager.Instance.ExperienceManager.SpawnExperienceItem(enemy.Position);
+        GameManager.Instance.ExperienceManager.QueueExperienceEntitySpawn(enemy.Position, enemy.ExperienceDropped);
     }
 
     public void DestroyEnemy(BasicEnemy enemy)
@@ -144,6 +141,7 @@ public partial class EnemiesManager : Node2D
 
         EnemiesList.ForEach((enemy) =>
         {
+            PhysicsServer2D.BodySetMode(enemy.BodyRid, PhysicsServer2D.BodyMode.Static);
             Timer timer = new() { Autostart = true, OneShot = true, WaitTime = GameManager.Instance.RNG.RandfRange(0.5f, 1.5f) };
             timer.Timeout += () =>
             {

@@ -1,10 +1,10 @@
 using Godot;
 
-public partial class PlayerDraw : Node2D
+public partial class PlayerDraw : BasePlayerComponent
 {
     private Rid _canvasItemRid;
 
-    public PlayerDraw()
+    public PlayerDraw(PlayerScene player) : base(player)
     {
         Transform2D posTransform = new(0, Position);
 
