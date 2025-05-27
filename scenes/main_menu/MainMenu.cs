@@ -11,6 +11,8 @@ public partial class MainMenu : Control
     private Button _testScenario;
     [Export]
     private Button _testLoading;
+    [Export]
+    private Label _versionLabel;
 
     public override void _Ready()
     {
@@ -18,6 +20,7 @@ public partial class MainMenu : Control
         _start.Pressed += StartGame;
         _quit.Pressed += QuitGame;
 
+        _versionLabel.Text = GameManager.GAME_VERSION;
         _testScenario.Pressed += () => SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.TEST_SCENARIO);
         _testLoading.Pressed += () => SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU);
     }
