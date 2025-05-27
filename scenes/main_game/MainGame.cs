@@ -24,6 +24,10 @@ public partial class MainGame : Node2D
         GameManager.Instance.EnemiesManager = new EnemiesManager(6);
         AddChild(GameManager.Instance.EnemiesManager);
 
+        // create ExperienceManager
+        GameManager.Instance.ExperienceManager = new ExperienceManager();
+        AddChild(GameManager.Instance.ExperienceManager);
+
         // create ui
         Layer = new CanvasLayer();
         AddChild(Layer);

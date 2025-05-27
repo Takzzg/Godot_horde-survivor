@@ -124,7 +124,9 @@ public partial class EnemiesManager : Node2D
 
         DestroyEnemy(enemy);
         EnemiesList.Remove(enemy);
+
         GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();
+        GameManager.Instance.ExperienceManager.SpawnExperienceItem(enemy.Position);
     }
 
     public void DestroyEnemy(BasicEnemy enemy)
