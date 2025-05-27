@@ -11,6 +11,7 @@ public partial class EnemiesManager : Node2D
     public CircleShape2D SharedHitBox;
     public CircleShape2D SharedHurtBox;
     public Timer Timer;
+    public double TimerDelay = 0.125;
 
     public bool ProcessMovement = true;
 
@@ -22,7 +23,7 @@ public partial class EnemiesManager : Node2D
         SharedHitBox = new CircleShape2D() { Radius = SharedHitBoxSize };
         SharedHurtBox = new CircleShape2D() { Radius = SharedHurtBoxSize };
 
-        Timer = new Timer() { Autostart = false, OneShot = false, WaitTime = 0.25 };
+        Timer = new Timer() { Autostart = false, OneShot = false, WaitTime = TimerDelay };
         Timer.Timeout += SpawnEnemyAroundPlayer;
         AddChild(Timer);
 
@@ -111,6 +112,7 @@ public partial class EnemiesManager : Node2D
         foreach (BasicEnemy enemy in EnemiesList) { if (enemy.HurtboxRid.Equals(areaRid)) return enemy; }
         throw new Exception($"no enemy found with HurtBoxRid = {areaRid}");
     }
+
     public BasicEnemy FindEnemyByBodyRid(Rid bodyRid)
     {
         foreach (BasicEnemy enemy in EnemiesList) { if (enemy.BodyRid.Equals(bodyRid)) return enemy; }

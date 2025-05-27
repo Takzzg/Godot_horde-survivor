@@ -28,6 +28,7 @@ public partial class ProjectileWeapon : Node2D
         AddChild(WeaponShooting);
 
         WeaponAiming = new(aiming);
+        GameManager.Instance.Player.PlayerHealth.PlayerDeath += OnPlayerDeath;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -93,5 +94,11 @@ public partial class ProjectileWeapon : Node2D
     {
         BulletsManager.DestroyBullet(bullet);
         BulletsList.Remove(bullet);
+    }
+
+    public void OnPlayerDeath()
+    {
+        BulletsList.ForEach(BulletsManager.DestroyBullet);
+        BulletsList.Clear();
     }
 }
