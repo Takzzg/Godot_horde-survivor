@@ -13,10 +13,12 @@ public partial class MainGame : Node2D
         AddChild(worldCenter);
 
         // create player
-        GameManager.Instance.Player = SceneManager.Instance.GetInstanceFromEnum<PlayerScene>(SceneManager.EnumPathsDictionary.PLAYER_SCENE);
+        GameManager.Instance.Player = new PlayerScene();
         AddChild(GameManager.Instance.Player);
+
         // create basic weapon
-        GameManager.Instance.Player.WeaponsContainer.AddChild(new ProjectileWeapon(WeaponShooting.EnumShootingStyle.TIMER, WeaponAiming.EnumAimingStyle.FACING));
+        ProjectileWeapon weapon = new(WeaponShooting.EnumShootingStyle.TIMER, WeaponAiming.EnumAimingStyle.FACING);
+        GameManager.Instance.Player.WeaponsContainer.AddChild(weapon);
 
         // create EnemiesManager
         GameManager.Instance.EnemiesManager = new EnemiesManager(6);

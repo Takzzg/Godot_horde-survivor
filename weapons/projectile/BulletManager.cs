@@ -24,8 +24,8 @@ public partial class BulletManager : Node2D
         bullet.AreaRid = PhysicsServer2D.AreaCreate();
         PhysicsServer2D.AreaAddShape(bullet.AreaRid, SharedShape.GetRid(), Transform2D.Identity);
         PhysicsServer2D.AreaSetSpace(bullet.AreaRid, GetWorld2D().Space);
-        PhysicsServer2D.AreaSetCollisionLayer(bullet.AreaRid, 8);
-        PhysicsServer2D.AreaSetCollisionMask(bullet.AreaRid, 4);
+        PhysicsServer2D.AreaSetCollisionLayer(bullet.AreaRid, 8); // 8 = bullet layer
+        PhysicsServer2D.AreaSetCollisionMask(bullet.AreaRid, 4); // 4 = enemy hurtbox layer
         PhysicsServer2D.AreaSetMonitorable(bullet.AreaRid, true);
 
         // create callback

@@ -58,16 +58,16 @@ public partial class EnemiesManager : Node2D
         PhysicsServer2D.BodySetMode(enemy.BodyRid, PhysicsServer2D.BodyMode.RigidLinear);
         PhysicsServer2D.BodySetParam(enemy.BodyRid, PhysicsServer2D.BodyParameter.GravityScale, 0);
         PhysicsServer2D.BodySetParam(enemy.BodyRid, PhysicsServer2D.BodyParameter.Friction, 0);
-        PhysicsServer2D.BodySetCollisionLayer(enemy.BodyRid, 2);
-        PhysicsServer2D.BodySetCollisionMask(enemy.BodyRid, 3);
+        PhysicsServer2D.BodySetCollisionLayer(enemy.BodyRid, 2); // 2 = enemy layer
+        PhysicsServer2D.BodySetCollisionMask(enemy.BodyRid, 3); // 1 = player layer, 2 = enemy layer
 
         // create hurtbox
         enemy.HurtboxRid = PhysicsServer2D.AreaCreate();
         PhysicsServer2D.AreaAddShape(enemy.HurtboxRid, SharedHurtBox.GetRid(), Transform2D.Identity);
         PhysicsServer2D.AreaSetTransform(enemy.HurtboxRid, posTransform);
         PhysicsServer2D.AreaSetSpace(enemy.HurtboxRid, GetWorld2D().Space);
-        PhysicsServer2D.AreaSetCollisionLayer(enemy.HurtboxRid, 4);
-        PhysicsServer2D.AreaSetCollisionMask(enemy.HurtboxRid, 8);
+        PhysicsServer2D.AreaSetCollisionLayer(enemy.HurtboxRid, 4); // 4 = enemy hurtbox layer
+        PhysicsServer2D.AreaSetCollisionMask(enemy.HurtboxRid, 8); // 8 = bullet layer
         PhysicsServer2D.AreaSetMonitorable(enemy.HurtboxRid, true);
 
         // create sprite

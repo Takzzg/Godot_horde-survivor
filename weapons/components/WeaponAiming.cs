@@ -31,7 +31,7 @@ public class WeaponAiming
 
     private Vector2 GetFacingTrajectory()
     {
-        Vector2 dir = GameManager.Instance.Player.PlayerMovement.GetInputVector();
+        Vector2 dir = PlayerMovement.GetInputVector();
         if (dir != Vector2.Zero) _lastFacingDirection = dir;
 
         return _lastFacingDirection.Normalized();

@@ -1,18 +1,14 @@
 using Godot;
+using Godot.Collections;
 using System;
 using System.Linq;
 
 public partial class PlayerScene : CharacterBody2D
 {
-    [Export]
     public bool Alive = true;
-    [Export]
     public int Health = 50;
-    [Export]
     public int Speed = 50;
-
-    [Export]
-    public Node2D WeaponsContainer;
+    public int PlayerSize = 5;
 
     [Signal]
     public delegate void PlayerMoveEventHandler();
@@ -24,12 +20,25 @@ public partial class PlayerScene : CharacterBody2D
     // components
     public PlayerMovement PlayerMovement;
     public PlayerDraw PlayerDraw;
+    public Node2D WeaponsContainer;
+    public CollisionShape2D HurtboxShape;
 
     public PlayerScene()
     {
-        // bind signals
-        // PlayerReceiveDamage += OnReceiveDamage;
-        PlayerDeath += OnPlayerDeath;
+        CollisionLayer = 1; // 1 = player layer
+        CollisionMask = 3; // 1 = player layer, 2 = enemy layer
+
+        // create hurtbox
+        HurtboxShape = new CollisionShape2D() { Shape = new CircleShape2D() { Radius = PlayerSize } };
+        AddChild(HurtboxShape);
+
+        // create weapons cont
+        WeaponsContainer = new();
+        AddChild(WeaponsContainer);
+
+        // create camera
+        Camera2D camera = new() { Zoom = new Vector2(3, 3), TextureFilter = TextureFilterEnum.Nearest };
+        AddChild(camera);
 
         // create components
         PlayerMovement = new(this);
@@ -37,6 +46,10 @@ public partial class PlayerScene : CharacterBody2D
 
         PlayerDraw = new();
         AddChild(PlayerDraw);
+
+        // bind signals
+        PlayerReceiveDamage += OnReceiveDamage;
+        PlayerDeath += OnPlayerDeath;
     }
 
     private void OnReceiveDamage(int amount)
@@ -54,12 +67,17 @@ public partial class PlayerScene : CharacterBody2D
     private void OnPlayerDeath()
     {
         GD.Print($"PlayerScene OnPlayerDeath()");
-        Alive = false;
-        Velocity = new Vector2(0, 0);
 
+        Alive = false;
         PlayerMovement.SetPhysicsProcess(false);
 
         Godot.Collections.Array<Node> weapons = WeaponsContainer.GetChildren();
         foreach (ProjectileWeapon weapon in weapons.Cast<ProjectileWeapon>()) { weapon.WeaponShooting.TimedAttackSetRunning(false); }
+    }
+
+    public void OnCollision(Dictionary collision)
+    {
+        GD.Print($"player OnBodyEntered");
+        GD.Print($"collision: {collision}");
     }
 }

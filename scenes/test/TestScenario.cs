@@ -12,7 +12,7 @@ public partial class TestScenario : Node2D
         AddChild(worldCenter);
 
         // create player
-        GameManager.Instance.Player = SceneManager.Instance.GetInstanceFromEnum<PlayerScene>(SceneManager.EnumPathsDictionary.PLAYER_SCENE);
+        GameManager.Instance.Player = new PlayerScene();
         AddChild(GameManager.Instance.Player);
 
         // create basic weapon
