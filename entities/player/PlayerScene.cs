@@ -1,5 +1,4 @@
 using Godot;
-using Godot.Collections;
 
 public partial class PlayerScene : CharacterBody2D
 {
@@ -28,11 +27,5 @@ public partial class PlayerScene : CharacterBody2D
 
         PlayerDraw = new();
         AddChild(PlayerDraw);
-    }
-
-    public void OnCollision(Dictionary collision)
-    {
-        // GD.Print($"player OnBodyEntered");
-        // GD.Print($"collision: {collision}");
     }
 }

@@ -8,7 +8,7 @@ public partial class ProjectileWeapon : Node2D
     public WeaponAiming WeaponAiming;
 
     // bullet stats
-    public int BulletDamage = 50;
+    public int BulletDamage = 25;
     public int BulletRadius = 2;
     public int BulletSpeed = 75;
     public int BulletMaxDistance = 100;

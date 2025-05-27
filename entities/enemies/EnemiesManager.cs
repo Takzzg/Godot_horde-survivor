@@ -25,6 +25,8 @@ public partial class EnemiesManager : Node2D
         Timer = new Timer() { Autostart = false, OneShot = false, WaitTime = 0.25 };
         Timer.Timeout += SpawnEnemyAroundPlayer;
         AddChild(Timer);
+
+        GameManager.Instance.Player.PlayerHealth.PlayerDeath += OnPlayerDeath;
     }
 
     public override void _ExitTree()
@@ -109,6 +111,11 @@ public partial class EnemiesManager : Node2D
         foreach (BasicEnemy enemy in EnemiesList) { if (enemy.HurtboxRid.Equals(areaRid)) return enemy; }
         throw new Exception($"no enemy found with HurtBoxRid = {areaRid}");
     }
+    public BasicEnemy FindEnemyByBodyRid(Rid bodyRid)
+    {
+        foreach (BasicEnemy enemy in EnemiesList) { if (enemy.BodyRid.Equals(bodyRid)) return enemy; }
+        throw new Exception($"no enemy found with BodyRid = {bodyRid}");
+    }
 
     public void EnemyReceiveDamage(BasicEnemy enemy, int damage)
     {
@@ -125,5 +132,23 @@ public partial class EnemiesManager : Node2D
         PhysicsServer2D.FreeRid(enemy.BodyRid);
         PhysicsServer2D.FreeRid(enemy.HurtboxRid);
         RenderingServer.FreeRid(enemy.CanvasItemRid);
+    }
+
+    private void OnPlayerDeath()
+    {
+        Timer.Stop();
+
+        EnemiesList.ForEach((enemy) =>
+        {
+            Timer timer = new() { Autostart = true, OneShot = true, WaitTime = GameManager.Instance.RNG.RandfRange(0.5f, 1.5f) };
+            timer.Timeout += () =>
+            {
+                DestroyEnemy(enemy);
+                timer.QueueFree();
+            };
+            AddChild(timer);
+        });
+
+        EnemiesList.Clear();
     }
 }

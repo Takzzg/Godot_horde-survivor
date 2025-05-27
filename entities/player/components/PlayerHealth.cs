@@ -1,5 +1,6 @@
 using System.Linq;
 using Godot;
+using Godot.Collections;
 
 public partial class PlayerHealth : Node
 {
@@ -7,6 +8,8 @@ public partial class PlayerHealth : Node
 
     public bool Alive = true;
     public int Health = 50;
+    public double InvulnerableLength = 0.25;
+    public Timer InvulnerableTimer;
 
     [Signal]
     public delegate void PlayerReceiveDamageEventHandler(int amount);
@@ -16,6 +19,10 @@ public partial class PlayerHealth : Node
     public PlayerHealth(PlayerScene player)
     {
         _player = player;
+
+        // create invulnerability timer
+        InvulnerableTimer = new Timer() { Autostart = false, OneShot = true, WaitTime = InvulnerableLength };
+        AddChild(InvulnerableTimer);
 
         // bind signals
         PlayerReceiveDamage += OnReceiveDamage;
@@ -41,7 +48,17 @@ public partial class PlayerHealth : Node
         Alive = false;
         _player.PlayerMovement.SetPhysicsProcess(false);
 
-        Godot.Collections.Array<Node> weapons = _player.WeaponsContainer.GetChildren();
+        Array<Node> weapons = _player.WeaponsContainer.GetChildren();
         foreach (ProjectileWeapon weapon in weapons.Cast<ProjectileWeapon>()) { weapon.WeaponShooting.TimedAttackSetRunning(false); }
+    }
+
+    public void OnCollision(Dictionary collision)
+    {
+        GD.Print($"InvulnerableTimer.IsStopped(): {InvulnerableTimer.IsStopped()}");
+        if (!InvulnerableTimer.IsStopped()) return;
+
+        BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByBodyRid((Rid)collision["rid"]);
+        EmitSignal(SignalName.PlayerReceiveDamage, enemy.Damage);
+        InvulnerableTimer.Start();
     }
 }

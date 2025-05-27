@@ -17,7 +17,7 @@ public partial class WeaponShooting(WeaponShooting.EnumShootingStyle style, Acti
         _timer.Timeout += _onShoot;
         AddChild(_timer);
 
-        // _timer.Start();
+        _timer.Start();
     }
 
     public override void _UnhandledInput(InputEvent @event)

@@ -37,7 +37,7 @@ public partial class PlayerMovement : Node2D
         };
 
         Array<Dictionary> collisions = GetWorld2D().DirectSpaceState.IntersectShape(query, 16);
-        foreach (Dictionary col in collisions) { _player.OnCollision(col); }
+        foreach (Dictionary col in collisions) { _player.PlayerHealth.OnCollision(col); }
 
         // move player
         Vector2 inputDirection = GetInputVector();
