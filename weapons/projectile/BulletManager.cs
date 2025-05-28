@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Godot.Collections;
 
 public partial class BulletManager : Node2D
 {
@@ -20,52 +21,55 @@ public partial class BulletManager : Node2D
         // GD.Print($"Spawning bullet at {pos}");
         Transform2D posTransform = new(0, bullet.Position);
 
-        // create area
-        bullet.AreaRid = PhysicsServer2D.AreaCreate();
-        PhysicsServer2D.AreaAddShape(bullet.AreaRid, SharedShape.GetRid(), Transform2D.Identity);
-        PhysicsServer2D.AreaSetSpace(bullet.AreaRid, GetWorld2D().Space);
-        PhysicsServer2D.AreaSetCollisionLayer(bullet.AreaRid, 8); // 8 = bullet layer
-        PhysicsServer2D.AreaSetCollisionMask(bullet.AreaRid, 4); // 4 = enemy hurtbox layer
-        PhysicsServer2D.AreaSetMonitorable(bullet.AreaRid, true);
-
-        // create callback
-        Callable callback = Callable.From((int status, Rid areaRid, int instance_id, int area_shape_idx, int self_shape_idx) => OnAreaEntered(status, areaRid, bullet));
-        PhysicsServer2D.AreaSetAreaMonitorCallback(bullet.AreaRid, callback);
-
-        // draw enemy
+        // draw bullet
         bullet.CanvasItemRid = RenderingServer.CanvasItemCreate();
         RenderingServer.CanvasItemSetParent(bullet.CanvasItemRid, GetCanvasItem());
         RenderingServer.CanvasItemSetTransform(bullet.CanvasItemRid, posTransform);
         RenderingServer.CanvasItemAddCircle(bullet.CanvasItemRid, Vector2.Zero, BulletSize, Colors.DarkGray);
     }
 
-    public void OnAreaEntered(int status, Rid areaRid, BasicBullet bullet)
-    {
-        // GD.Print($"BulletManager OnAreaEntered");
-        // area entering = 0, area exiting = 1
-        if (status == 1) return;
-        BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByAreaRid(areaRid);
-        OnEnemyCollision(bullet, enemy);
-        // GD.Print($"status: {status}, areaRid: {areaRid}, bullet: {bullet}, enemy {enemy}");
-    }
-
     public void MoveBullet(BasicBullet bullet, double delta)
     {
+        // calculate motion
         Vector2 offset = new(
             (float)(bullet.Direction.X * bullet.Speed * delta),
             (float)(bullet.Direction.Y * bullet.Speed * delta)
         );
 
+        // move bullet
         bullet.Position += offset;
         Transform2D posTransform = new(0, bullet.Position);
 
-        PhysicsServer2D.AreaSetTransform(bullet.AreaRid, posTransform);
+        // move canvas item
         RenderingServer.CanvasItemSetTransform(bullet.CanvasItemRid, posTransform);
     }
 
-    public void DestroyBullet(BasicBullet bullet)
+    public void CheckCollision(BasicBullet bullet, int maxColisions)
     {
-        PhysicsServer2D.FreeRid(bullet.AreaRid);
+        Transform2D posTransform = new(0, bullet.Position);
+        PhysicsShapeQueryParameters2D query = new()
+        {
+            CollideWithAreas = true,
+            CollideWithBodies = false,
+            Shape = SharedShape,
+            CollisionMask = 4, // 4 = enemy hurtbox layer
+            Transform = posTransform,
+        };
+
+        // check collision
+        Array<Dictionary> collisions = GetWorld2D().DirectSpaceState.IntersectShape(query, maxColisions);
+        if (collisions.Count == 0) return;
+
+        // deal damage
+        foreach (Dictionary col in collisions)
+        {
+            BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByAreaRid((Rid)col["rid"]);
+            OnEnemyCollision(bullet, enemy);
+        }
+    }
+
+    public void FreeBulletRids(BasicBullet bullet)
+    {
         RenderingServer.FreeRid(bullet.CanvasItemRid);
     }
 }

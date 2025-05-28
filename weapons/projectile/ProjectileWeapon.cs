@@ -34,12 +34,12 @@ public partial class ProjectileWeapon : Node2D
     public override void _PhysicsProcess(double delta)
     {
         if (BulletsList.Count == 0) return;
-        MoveBullets(delta);
+        ProcessBullets(delta);
     }
 
     public override void _ExitTree()
     {
-        BulletsList.ForEach(BulletsManager.DestroyBullet);
+        BulletsList.ForEach(BulletsManager.FreeBulletRids);
     }
 
     // -------------------------------------------- Bullets --------------------------------------------
@@ -60,45 +60,48 @@ public partial class ProjectileWeapon : Node2D
         BulletsList.Add(bullet);
     }
 
-    public void MoveBullets(double delta)
+    public void ProcessBullets(double delta)
     {
-        List<BasicBullet> bulletsQueuedForDestruction = [];
+        List<BasicBullet> expiredBullets = [];
 
         foreach (BasicBullet bullet in BulletsList)
         {
             // move bullet
             BulletsManager.MoveBullet(bullet, delta);
 
-            // destroy if too far or lifetime elapsed
+            // mark expired if too far or lifetime elapsed
             if (bullet.Position.DistanceTo(GlobalPosition) > BulletMaxDistance || bullet.MaxLifeTime > BulletMaxLifetime)
             {
-                bulletsQueuedForDestruction.Add(bullet);
+                expiredBullets.Add(bullet);
                 continue;
             }
+
+            // check collision
+            BulletsManager.CheckCollision(bullet, 1);
+
+            // mark expired if no pierce
+            if (bullet.PierceCount <= 0) expiredBullets.Add(bullet);
         }
 
-        // destroy bullets
-        if (bulletsQueuedForDestruction.Count == 0) return;
-        foreach (BasicBullet bullet in bulletsQueuedForDestruction) { DestroyBullet(bullet); }
+        // destroy expired bullets
+        if (expiredBullets.Count > 0) { expiredBullets.ForEach(DestroyBullet); }
     }
 
     public void OnEnemyCollision(BasicBullet bullet, BasicEnemy enemy)
     {
         GameManager.Instance.EnemiesManager.EnemyReceiveDamage(enemy, bullet.Damage);
-
-        if (bullet.PierceCount <= 0) DestroyBullet(bullet);
         bullet.PierceCount -= 1;
     }
 
     public void DestroyBullet(BasicBullet bullet)
     {
-        BulletsManager.DestroyBullet(bullet);
+        BulletsManager.FreeBulletRids(bullet);
         BulletsList.Remove(bullet);
     }
 
     public void OnPlayerDeath()
     {
-        BulletsList.ForEach(BulletsManager.DestroyBullet);
+        BulletsList.ForEach(BulletsManager.FreeBulletRids);
         BulletsList.Clear();
     }
 }
