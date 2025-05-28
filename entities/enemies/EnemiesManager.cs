@@ -60,7 +60,7 @@ public partial class EnemiesManager : Node2D
         Vector2 pos = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
         BasicEnemy enemy = new(pos, 50, 25, 5, 1);
         SpawnEnemy(enemy);
-        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
+        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
     }
 
     public void SpawnEnemy(BasicEnemy enemy)
@@ -142,7 +142,7 @@ public partial class EnemiesManager : Node2D
         GameManager.Instance.ExperienceManager.QueueExperienceEntitySpawn(enemy.Position, enemy.ExperienceDropped);
 
         // update debug label
-        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
+        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
     }
 
     public static void FreeEnemyEntityRids(BasicEnemy enemy)
@@ -171,6 +171,6 @@ public partial class EnemiesManager : Node2D
         EnemiesList.Clear();
 
         // update debug label
-        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
+        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
     }
 }

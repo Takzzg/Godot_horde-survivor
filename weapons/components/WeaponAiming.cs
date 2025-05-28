@@ -3,22 +3,22 @@ using Godot;
 
 public class WeaponAiming
 {
-    public enum EnumAimingStyle { RANDOM, FACING, FIXED_R }
-    public EnumAimingStyle AimingStyle;
+    public enum EnumStyle { RANDOM, FACING, FIXED_R }
+    public EnumStyle Style;
     private Vector2 _lastFacingDirection = Vector2.Right;
 
-    public WeaponAiming(EnumAimingStyle style)
+    public WeaponAiming(EnumStyle style)
     {
-        AimingStyle = style;
+        Style = style;
     }
 
     public Vector2 GetTrajectory()
     {
-        return AimingStyle switch
+        return Style switch
         {
-            EnumAimingStyle.RANDOM => GetRandomTrajectory(),
-            EnumAimingStyle.FACING => GetFacingTrajectory(),
-            EnumAimingStyle.FIXED_R => Vector2.Right,
+            EnumStyle.RANDOM => GetRandomTrajectory(),
+            EnumStyle.FACING => GetFacingTrajectory(),
+            EnumStyle.FIXED_R => Vector2.Right,
             _ => throw new NotImplementedException(),
         };
     }

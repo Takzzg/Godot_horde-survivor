@@ -24,7 +24,7 @@ public partial class DebugManager : Node2D
         AddChild(_layer);
 
         // create panel container
-        _panel = new PanelContainer() { CustomMinimumSize = new Vector2(200, 0) };
+        _panel = new PanelContainer() { CustomMinimumSize = new Vector2(250, 0) };
         _panel.SetAnchorsPreset(Control.LayoutPreset.LeftWide);
         _layer.AddChild(_panel);
 

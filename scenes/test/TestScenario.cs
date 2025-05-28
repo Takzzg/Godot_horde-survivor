@@ -16,7 +16,7 @@ public partial class TestScenario : Node2D
         AddChild(GameManager.Instance.Player);
 
         // create basic weapon
-        ProjectileWeapon weapon = new(WeaponShooting.EnumShootingStyle.MANUAL, WeaponAiming.EnumAimingStyle.FIXED_R);
+        ProjectileWeapon weapon = new(WeaponShooting.EnumStyle.MANUAL, WeaponAiming.EnumStyle.FIXED_R);
         GameManager.Instance.Player.WeaponsContainer.AddChild(weapon);
 
         // create EnemiesManager

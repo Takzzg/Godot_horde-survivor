@@ -18,7 +18,7 @@ public partial class DebugCategoryComponent : Node2D
     public override void _ExitTree()
     {
         DebugManager.Instance.DebugStateToggled -= SetDebug;
-        _debug?.QueueFree();
+        if (DebugManager.Instance.DebugEnabled) _debug?.QueueFree();
     }
 
     private void SetDebug(bool state)
