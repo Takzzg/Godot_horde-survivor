@@ -20,7 +20,7 @@ public partial class TestScenario : Node2D
         GameManager.Instance.Player.WeaponsContainer.AddChild(weapon);
 
         // create EnemiesManager
-        GameManager.Instance.EnemiesManager = new EnemiesManager(6) { ProcessMovement = false };
+        GameManager.Instance.EnemiesManager = new EnemiesManager(6);
         AddChild(GameManager.Instance.EnemiesManager);
 
         // create ExperienceManager

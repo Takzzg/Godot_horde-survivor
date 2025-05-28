@@ -4,16 +4,22 @@ using Godot;
 
 public partial class EnemiesManager : Node2D
 {
+    // enemies
+    public const int MAX_ENEMIES = 1500;
     public List<BasicEnemy> EnemiesList = [];
 
+    // shared resources
     public int SharedHitBoxSize;
     public int SharedHurtBoxSize;
     public CircleShape2D SharedHitBox;
     public CircleShape2D SharedHurtBox;
+
+    // spawner
     public Timer Timer;
     public double TimerDelay = 0.125;
 
-    public bool ProcessMovement = true;
+    // debug
+    private DebugCategoryComponent _debug;
 
     public EnemiesManager(int size)
     {
@@ -28,11 +34,20 @@ public partial class EnemiesManager : Node2D
         AddChild(Timer);
 
         GameManager.Instance.Player.PlayerHealth.PlayerDeath += OnPlayerDeath;
+
+        // create debug component
+        _debug = new DebugCategoryComponent((instance) =>
+        {
+            instance.TryCreateCategory(new DebugManager.DebugCategory("enemies_manager", "Enemies Manager"));
+            instance.TryCreateField("enemies_count", "Count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
+        })
+        { Name = "EnemiesManagerDebugComp" };
+        AddChild(_debug);
     }
 
     public override void _ExitTree()
     {
-        EnemiesList.ForEach(DestroyEnemy);
+        EnemiesList.ForEach(FreeEnemyEntityRids);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -45,11 +60,12 @@ public partial class EnemiesManager : Node2D
         Vector2 pos = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
         BasicEnemy enemy = new(pos, 50, 25, 5, 1);
         SpawnEnemy(enemy);
+        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
     }
 
     public void SpawnEnemy(BasicEnemy enemy)
     {
-        if (EnemiesList.Count >= 1500) return;
+        if (EnemiesList.Count >= MAX_ENEMIES) return;
 
         Transform2D posTransform = new(0, enemy.Position);
 
@@ -82,7 +98,6 @@ public partial class EnemiesManager : Node2D
 
         // GD.Print($"spawning enemy at {pos}");
         EnemiesList.Add(enemy);
-        GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();
     }
 
     public void MoveEnemies()
@@ -93,7 +108,7 @@ public partial class EnemiesManager : Node2D
         {
             BasicEnemy enemy = EnemiesList[i];
 
-            Vector2 dir = (!ProcessMovement || enemy.Speed == 0) ? Vector2.Zero : enemy.Position.DirectionTo(playerPos).Normalized() * enemy.Speed;
+            Vector2 dir = (enemy.Speed == 0) ? Vector2.Zero : enemy.Position.DirectionTo(playerPos).Normalized() * enemy.Speed;
             PhysicsServer2D.BodySetState(enemy.BodyRid, PhysicsServer2D.BodyState.LinearVelocity, dir);
 
             Transform2D posTransform = (Transform2D)PhysicsServer2D.BodyGetState(enemy.BodyRid, PhysicsServer2D.BodyState.Transform);
@@ -121,14 +136,16 @@ public partial class EnemiesManager : Node2D
         enemy.Health -= damage;
         if (enemy.Health > 0) return;
 
-        DestroyEnemy(enemy);
         EnemiesList.Remove(enemy);
+        FreeEnemyEntityRids(enemy);
 
-        GameManager.Instance.UI.GameplayUI.UpdateEnemiesCountLabel();
         GameManager.Instance.ExperienceManager.QueueExperienceEntitySpawn(enemy.Position, enemy.ExperienceDropped);
+
+        // update debug label
+        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
     }
 
-    public void DestroyEnemy(BasicEnemy enemy)
+    public static void FreeEnemyEntityRids(BasicEnemy enemy)
     {
         PhysicsServer2D.FreeRid(enemy.BodyRid);
         PhysicsServer2D.FreeRid(enemy.HurtboxRid);
@@ -145,12 +162,15 @@ public partial class EnemiesManager : Node2D
             Timer timer = new() { Autostart = true, OneShot = true, WaitTime = GameManager.Instance.RNG.RandfRange(0.5f, 1.5f) };
             timer.Timeout += () =>
             {
-                DestroyEnemy(enemy);
+                FreeEnemyEntityRids(enemy);
                 timer.QueueFree();
             };
             AddChild(timer);
         });
 
         EnemiesList.Clear();
+
+        // update debug label
+        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
     }
 }

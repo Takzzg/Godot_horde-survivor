@@ -6,6 +6,7 @@ public partial class PlayerHealth : BasePlayerComponent
 {
     public bool Alive = true;
     public int Health = 50;
+    public int MaxHealth = 50;
     public double InvulnerableLength = 0.25;
     public Timer InvulnerableTimer;
 

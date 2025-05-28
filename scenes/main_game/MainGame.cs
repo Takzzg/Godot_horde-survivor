@@ -9,7 +9,9 @@ public partial class MainGame : Node2D
         GD.Print($"MainGame ready!");
         TextureFilter = TextureFilterEnum.Nearest;
 
-        ColorRect worldCenter = new() { Color = Colors.DimGray, Size = new Vector2(64, 64), Position = new Vector2(-32, -32) };
+        // world center reference
+        Vector2 squareSize = new(64, 64);
+        ColorRect worldCenter = new() { Color = Colors.DimGray, Size = squareSize, Position = -squareSize / 2 };
         AddChild(worldCenter);
 
         // create player
@@ -34,6 +36,7 @@ public partial class MainGame : Node2D
         GameManager.Instance.UI = SceneManager.Instance.GetInstanceFromEnum<MainUI>(SceneManager.EnumPathsDictionary.MAIN_UI);
         Layer.AddChild(GameManager.Instance.UI);
 
+        // spawn enemies
         GameManager.Instance.EnemiesManager.Timer.Start();
     }
 

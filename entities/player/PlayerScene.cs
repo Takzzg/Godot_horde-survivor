@@ -9,6 +9,8 @@ public partial class PlayerScene : CharacterBody2D
     public PlayerExperience PlayerExperience;
     public Node2D WeaponsContainer;
 
+    private PlayerDebug _debug;
+
     public PlayerScene()
     {
         // create weapons cont
@@ -20,16 +22,19 @@ public partial class PlayerScene : CharacterBody2D
         AddChild(camera);
 
         // create components
-        PlayerHealth = new PlayerHealth(this);
-        AddChild(PlayerHealth);
+        PlayerDraw = new PlayerDraw(this);
+        AddChild(PlayerDraw);
 
         PlayerMovement = new PlayerMovement(this);
         AddChild(PlayerMovement);
 
-        PlayerDraw = new PlayerDraw(this);
-        AddChild(PlayerDraw);
+        PlayerHealth = new PlayerHealth(this);
+        AddChild(PlayerHealth);
 
         PlayerExperience = new PlayerExperience(this);
         AddChild(PlayerExperience);
+
+        _debug = new PlayerDebug(this);
+        AddChild(_debug);
     }
 }

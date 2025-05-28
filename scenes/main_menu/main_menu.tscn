@@ -12,7 +12,7 @@ bg_color = Color(0, 0, 0, 0.501961)
 [sub_resource type="Theme" id="Theme_fsom3"]
 default_font_size = 14
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("_start", "_quit", "_testScenario", "_testLoading", "_versionLabel")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("_start", "_quit", "_versionLabel", "_debugContainer", "_testScenario", "_testLoading")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,9 +22,10 @@ grow_vertical = 2
 script = ExtResource("1_oa53l")
 _start = NodePath("PanelContainer/BoxContainer/ButtonStart")
 _quit = NodePath("PanelContainer/BoxContainer/ButtonQuit")
-_testScenario = NodePath("PanelContainer/BoxContainer/BoxContainer2/ButtonTestScenario")
-_testLoading = NodePath("PanelContainer/BoxContainer/BoxContainer2/ButtonTestLoading")
-_versionLabel = NodePath("MarginContainer/BoxContainer/VersionLabel")
+_versionLabel = NodePath("MarginContainer/VersionLabel")
+_debugContainer = NodePath("PanelContainer/BoxContainer/DebugBoxContainer")
+_testScenario = NodePath("PanelContainer/BoxContainer/DebugBoxContainer/ButtonTestScenario")
+_testLoading = NodePath("PanelContainer/BoxContainer/DebugBoxContainer/ButtonTestLoading")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -69,21 +70,21 @@ theme_override_font_sizes/font_size = 12
 text = "(esc)"
 horizontal_alignment = 1
 
-[node name="BoxContainer2" type="BoxContainer" parent="PanelContainer/BoxContainer"]
+[node name="DebugBoxContainer" type="BoxContainer" parent="PanelContainer/BoxContainer"]
 layout_mode = 2
 theme = SubResource("Theme_fsom3")
 vertical = true
 
-[node name="Label" type="Label" parent="PanelContainer/BoxContainer/BoxContainer2"]
+[node name="Label" type="Label" parent="PanelContainer/BoxContainer/DebugBoxContainer"]
 layout_mode = 2
 text = "Test"
 horizontal_alignment = 1
 
-[node name="ButtonTestScenario" type="Button" parent="PanelContainer/BoxContainer/BoxContainer2"]
+[node name="ButtonTestScenario" type="Button" parent="PanelContainer/BoxContainer/DebugBoxContainer"]
 layout_mode = 2
 text = "test scenario"
 
-[node name="ButtonTestLoading" type="Button" parent="PanelContainer/BoxContainer/BoxContainer2"]
+[node name="ButtonTestLoading" type="Button" parent="PanelContainer/BoxContainer/DebugBoxContainer"]
 layout_mode = 2
 text = "test loading"
 
@@ -100,13 +101,6 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="BoxContainer" type="BoxContainer" parent="MarginContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/BoxContainer"]
-layout_mode = 2
-text = "version"
-
-[node name="VersionLabel" type="Label" parent="MarginContainer/BoxContainer"]
+[node name="VersionLabel" type="Label" parent="MarginContainer"]
 layout_mode = 2
 text = "vX.X.X"
