@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 public class BasicBullet
@@ -16,4 +17,6 @@ public class BasicBullet
 
     public Rid CanvasItemRid;
     public Rid AreaRid;
+
+    public List<Rid> CollidingWith = [];
 }

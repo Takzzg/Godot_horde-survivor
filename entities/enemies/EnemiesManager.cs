@@ -131,10 +131,13 @@ public partial class EnemiesManager : Node2D
         throw new Exception($"no enemy found with BodyRid = {bodyRid}");
     }
 
-    public void EnemyReceiveDamage(BasicEnemy enemy, int damage)
+    public (bool enemyDied, int damageDealt) EnemyReceiveDamage(BasicEnemy enemy, int damage)
     {
-        enemy.Health -= damage;
-        if (enemy.Health > 0) return;
+        if (enemy.Health - damage > 0)
+        {
+            enemy.Health -= damage;
+            return (false, damage); // enemy did not die
+        }
 
         EnemiesList.Remove(enemy);
         FreeEnemyEntityRids(enemy);
@@ -143,6 +146,8 @@ public partial class EnemiesManager : Node2D
 
         // update debug label
         _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
+
+        return (true, enemy.Health); // enemy died
     }
 
     public static void FreeEnemyEntityRids(BasicEnemy enemy)

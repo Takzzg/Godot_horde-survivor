@@ -117,7 +117,7 @@ public partial class ProjectileWeapon : Node2D
             BulletsManager.CheckCollision(bullet, 1);
 
             // mark expired if no pierce
-            if (bullet.PierceCount <= 0) expiredBullets.Add(bullet);
+            if (bullet.PierceCount < 0) expiredBullets.Add(bullet);
         }
 
         // destroy expired bullets
@@ -126,8 +126,12 @@ public partial class ProjectileWeapon : Node2D
 
     public void OnEnemyCollision(BasicBullet bullet, BasicEnemy enemy)
     {
-        GameManager.Instance.EnemiesManager.EnemyReceiveDamage(enemy, bullet.Damage);
         bullet.PierceCount -= 1;
+        var (enemyDied, damage_dealt) = GameManager.Instance.EnemiesManager.EnemyReceiveDamage(enemy, bullet.Damage);
+
+        // increase stats
+        GameManager.Instance.Player.PlayerStats.IncreaseDamageDealt(damage_dealt);
+        if (enemyDied) GameManager.Instance.Player.PlayerStats.IncreaseKOsCount(1);
     }
 
     public void DestroyBullet(BasicBullet bullet)

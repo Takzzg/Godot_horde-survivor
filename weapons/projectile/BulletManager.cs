@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 
@@ -61,11 +62,20 @@ public partial class BulletManager : Node2D
         if (collisions.Count == 0) return;
 
         // deal damage
+        List<Rid> collisionRids = [];
+
         foreach (Dictionary col in collisions)
         {
-            BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByAreaRid((Rid)col["rid"]);
+            Rid rid = (Rid)col["rid"];
+
+            collisionRids.Add(rid);
+            if (bullet.CollidingWith.Contains(rid)) return;
+
+            BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByAreaRid(rid);
             OnEnemyCollision(bullet, enemy);
         }
+
+        bullet.CollidingWith = collisionRids;
     }
 
     public void FreeBulletRids(BasicBullet bullet)

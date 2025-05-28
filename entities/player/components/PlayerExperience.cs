@@ -48,15 +48,19 @@ public partial class PlayerExperience : BasePlayerComponent
 
     public void GainExperience(int amount)
     {
-        CurrentExperience += amount;
+        int xpRequired = ExperienceToNextLevel - CurrentExperience;
+        int experienceGained = (amount > xpRequired) ? xpRequired : amount;
 
-        if (CurrentExperience < ExperienceToNextLevel)
-        {
-            // GD.Print($"player gain experience {amount} ({CurrentExperience}/{ExperienceToNextLevel})");
-            EmitSignal(SignalName.PlayerExperienceGain);
-            return;
-        }
+        CurrentExperience += experienceGained;
+        _player.PlayerStats.IncreaseExperienceGathered(experienceGained);
 
+        // GD.Print($"player gain experience {amount} ({CurrentExperience}/{ExperienceToNextLevel})");
+        if (CurrentExperience >= ExperienceToNextLevel) LevelUp();
+        else EmitSignal(SignalName.PlayerExperienceGain);
+    }
+
+    public void LevelUp()
+    {
         PlayerLevel += 1;
         ExperienceToNextLevel = GetExperienceToNextLevel();
         CurrentExperience = 0;

@@ -22,6 +22,8 @@ public partial class PlayerMovement : BasePlayerComponent
 
     public override void _PhysicsProcess(double delta)
     {
+        if (!_player.PlayerHealth.Alive) return;
+
         // check collisions
         PhysicsShapeQueryParameters2D query = new()
         {
@@ -36,8 +38,6 @@ public partial class PlayerMovement : BasePlayerComponent
         foreach (Dictionary col in collisions) { _player.PlayerHealth.OnCollision(col); }
 
         // move player
-        if (!_player.PlayerHealth.Alive) return;
-
         Vector2 inputDirection = GetInputVector();
         if (inputDirection.Equals(Vector2.Zero)) return;
 
@@ -47,6 +47,7 @@ public partial class PlayerMovement : BasePlayerComponent
         );
 
         _player.Position += offset;
+        _player.PlayerStats.IncreaseDistanceTraveled(offset.Length());
         EmitSignal(SignalName.PlayerMove);
     }
 

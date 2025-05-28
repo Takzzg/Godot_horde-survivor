@@ -20,25 +20,27 @@ public partial class PlayerHealth : BasePlayerComponent
         // create invulnerability timer
         InvulnerableTimer = new Timer() { Autostart = false, OneShot = true, WaitTime = InvulnerableLength };
         AddChild(InvulnerableTimer);
-
-        // bind signals
-        PlayerReceiveDamage += OnReceiveDamage;
-        PlayerDeath += OnPlayerDeath;
     }
 
-    private void OnReceiveDamage(int amount)
+    private void ReceiveDamage(int amount)
     {
         if (!Alive) return;
 
         // GD.Print($"player received {amount} damage");
         Health -= amount;
-        if (Health < 0) Health = 0;
+        _player.PlayerStats.IncreaseDamageReceived(amount);
 
-        if (Health > 0) return;
-        EmitSignal(SignalName.PlayerDeath);
+        if (Health <= 0)
+        {
+            PlayerDie();
+            return;
+        }
+
+        InvulnerableTimer.Start();
+        EmitSignal(SignalName.PlayerReceiveDamage, amount);
     }
 
-    private void OnPlayerDeath()
+    private void PlayerDie()
     {
         GD.Print($"PlayerScene OnPlayerDeath()");
 
@@ -47,6 +49,8 @@ public partial class PlayerHealth : BasePlayerComponent
 
         Array<Node> weapons = _player.WeaponsContainer.GetChildren();
         foreach (ProjectileWeapon weapon in weapons.Cast<ProjectileWeapon>()) { weapon.WeaponShooting.TimedAttackSetRunning(false); }
+
+        EmitSignal(SignalName.PlayerDeath);
     }
 
     public void OnCollision(Dictionary collision)
@@ -54,7 +58,6 @@ public partial class PlayerHealth : BasePlayerComponent
         if (!InvulnerableTimer.IsStopped()) return;
 
         BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByBodyRid((Rid)collision["rid"]);
-        EmitSignal(SignalName.PlayerReceiveDamage, enemy.Damage);
-        InvulnerableTimer.Start();
+        ReceiveDamage(enemy.Damage);
     }
 }

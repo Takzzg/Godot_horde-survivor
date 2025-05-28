@@ -3,6 +3,7 @@ using Godot;
 public partial class PlayerScene : CharacterBody2D
 {
     // components
+    public PlayerStats PlayerStats;
     public PlayerHealth PlayerHealth;
     public PlayerMovement PlayerMovement;
     public PlayerDraw PlayerDraw;
@@ -22,6 +23,9 @@ public partial class PlayerScene : CharacterBody2D
         AddChild(camera);
 
         // create components
+        PlayerStats = new PlayerStats(this);
+        AddChild(PlayerStats);
+
         PlayerDraw = new PlayerDraw(this);
         AddChild(PlayerDraw);
 
