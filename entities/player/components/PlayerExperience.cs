@@ -46,7 +46,7 @@ public partial class PlayerExperience : BasePlayerComponent
         return PlayerLevel * 2;
     }
 
-    public void GainExperience(int amount)
+    private void GainExperience(int amount)
     {
         int xpRequired = ExperienceToNextLevel - CurrentExperience;
         int experienceGained = (amount > xpRequired) ? xpRequired : amount;
@@ -59,7 +59,7 @@ public partial class PlayerExperience : BasePlayerComponent
         else EmitSignal(SignalName.PlayerExperienceGain);
     }
 
-    public void LevelUp()
+    private void LevelUp()
     {
         PlayerLevel += 1;
         ExperienceToNextLevel = GetExperienceToNextLevel();

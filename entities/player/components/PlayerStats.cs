@@ -25,6 +25,11 @@ public partial class PlayerStats : BasePlayerComponent
         AddChild(_debug);
     }
 
+    public override void _ExitTree()
+    {
+        _debug.QueueFree();
+    }
+
     public void IncreaseDamageReceived(int count)
     {
         DamageReceived += count;
