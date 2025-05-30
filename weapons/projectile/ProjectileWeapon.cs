@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-public partial class ProjectileWeapon : Node2D
+public partial class ProjectileWeapon : DebugNode2D
 {
     // components
     public WeaponShooting WeaponShooting;
@@ -19,11 +19,6 @@ public partial class ProjectileWeapon : Node2D
     public List<BasicBullet> BulletsList = [];
     public BulletManager BulletsManager;
 
-    // debug
-    private DebugManager.DebugTitle _title;
-    private DebugCategoryComponent _weaponDebug;
-    private DebugCategoryComponent _bulletsDebug;
-
     public ProjectileWeapon(WeaponShooting.EnumStyle shooting, WeaponAiming.EnumStyle aiming)
     {
         // create bullet manager
@@ -36,44 +31,14 @@ public partial class ProjectileWeapon : Node2D
 
         // create aiming style
         WeaponAiming = new WeaponAiming(aiming);
-        GameManager.Instance.Player.PlayerHealth.PlayerDeath += OnPlayerDeath;
 
-        // create debug components
-        _title = new DebugManager.DebugTitle("W. Projectile");
-        DebugManager.Instance.RenderNode(_title);
-        TreeExiting += _title.QueueFree;
-
-        _weaponDebug = new DebugCategoryComponent((instance) =>
-        {
-            instance.TryCreateCategory(new DebugManager.DebugCategory("weapon_stats", "Weapon Stats"));
-            instance.TryCreateField("shooting_style", "Shooting s.", WeaponShooting.Style.ToString());
-            instance.TryCreateField("aiming_style", "Aiming s.", WeaponAiming.Style.ToString());
-            instance.TryCreateField("bullets_count", "Bullets count", BulletsList.Count.ToString());
-        });
-        AddChild(_weaponDebug);
-
-        _bulletsDebug = new DebugCategoryComponent((instance) =>
-        {
-            instance.TryCreateCategory(new DebugManager.DebugCategory("bullet_stats", "Bullet Stats"));
-            instance.TryCreateField("damage", "Damage", BulletDamage.ToString());
-            instance.TryCreateField("radius", "Radius", BulletRadius.ToString());
-            instance.TryCreateField("speed", "Speed", BulletSpeed.ToString());
-            instance.TryCreateField("max_dist", "Max dist.", BulletMaxDistance.ToString());
-            instance.TryCreateField("max_lifetime", "Lifespan", BulletMaxLifetime.ToString());
-            instance.TryCreateField("pierce_count", "Pierce", BulletPierceCount.ToString());
-        });
-        AddChild(_bulletsDebug);
+        TreeExiting += () => { BulletsList.ForEach(BulletsManager.FreeBulletRids); };
     }
 
     public override void _PhysicsProcess(double delta)
     {
         if (BulletsList.Count == 0) return;
         ProcessBullets(delta);
-    }
-
-    public override void _ExitTree()
-    {
-        BulletsList.ForEach(BulletsManager.FreeBulletRids);
     }
 
     // -------------------------------------------- Bullets --------------------------------------------
@@ -94,7 +59,7 @@ public partial class ProjectileWeapon : Node2D
         BulletsList.Add(bullet);
 
         // update debug label
-        _weaponDebug.TryUpdateField("bullets_count", BulletsList.Count.ToString());
+        DebugTryUpdateField("bullets_count", BulletsList.Count.ToString());
     }
 
     public void ProcessBullets(double delta)
@@ -131,7 +96,7 @@ public partial class ProjectileWeapon : Node2D
 
         // increase stats
         GameManager.Instance.Player.PlayerStats.IncreaseDamageDealt(damage_dealt);
-        if (enemyDied) GameManager.Instance.Player.PlayerStats.IncreaseKillsCount(1);
+        if (enemyDied) GameManager.Instance.Player.PlayerStats.IncreaseKillCount(1);
     }
 
     public void DestroyBullet(BasicBullet bullet)
@@ -140,12 +105,34 @@ public partial class ProjectileWeapon : Node2D
         BulletsList.Remove(bullet);
 
         // update debug label
-        _weaponDebug.TryUpdateField("bullets_count", BulletsList.Count.ToString());
+        DebugTryUpdateField("bullets_count", BulletsList.Count.ToString());
     }
 
     public void OnPlayerDeath()
     {
+        WeaponShooting.TimedAttackSetRunning(false);
+
         BulletsList.ForEach(BulletsManager.FreeBulletRids);
         BulletsList.Clear();
+    }
+
+    public override DebugCategory DebugCreateCategory()
+    {
+        DebugCategory category = new("Projectile Weapon");
+
+        category.CreateDivider("Weapon Stats");
+        category.CreateLabelField("shooting_style", "Shooting s.", WeaponShooting.Style.ToString());
+        category.CreateLabelField("aiming_style", "Aiming s.", WeaponAiming.Style.ToString());
+        category.CreateLabelField("bullets_count", "Bullets count", BulletsList.Count.ToString());
+
+        category.CreateDivider("Bullet Stats");
+        category.CreateLabelField("bullet_damage", "Damage", BulletDamage.ToString());
+        category.CreateLabelField("bullet_radius", "Radius", BulletRadius.ToString());
+        category.CreateLabelField("bullet_speed", "Speed", BulletSpeed.ToString());
+        category.CreateLabelField("bullet_max_dist", "Max dist.", BulletMaxDistance.ToString());
+        category.CreateLabelField("bullet_max_lifetime", "Lifespan", BulletMaxLifetime.ToString());
+        category.CreateLabelField("bullet_pierce_count", "Pierce", BulletPierceCount.ToString());
+
+        return category;
     }
 }

@@ -1,11 +1,10 @@
-using Godot;
-
-public abstract partial class BasePlayerComponent : Node2D
+public abstract partial class BasePlayerComponent : DebugNode2D
 {
     protected PlayerScene _player;
 
-    public BasePlayerComponent(PlayerScene player)
+    public BasePlayerComponent(PlayerScene player, bool useDebug = true) : base(useDebug)
     {
         _player = player;
+        _player.AddChild(this);
     }
 }

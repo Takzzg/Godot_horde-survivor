@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-public partial class ExperienceManager : Node2D
+public partial class ExperienceManager : DebugNode2D
 {
     // entities
     public int EntitiesCount => _entitiesList.Count;
@@ -13,27 +13,17 @@ public partial class ExperienceManager : Node2D
     public int ExperienceEntitySize = 2;
     public Shape2D SharedShape;
 
-    // debug
-    private DebugCategoryComponent _debug;
-
     public ExperienceManager()
     {
         SharedShape = new CircleShape2D() { Radius = ExperienceEntitySize };
-        GameManager.Instance.Player.PlayerMovement.PlayerMove += RenderExperienceEntities;
-
-        // create debug component
-        _debug = new DebugCategoryComponent((instance) =>
-        {
-            instance.TryCreateCategory(new DebugManager.DebugCategory("experience_manager", "XP Manager"));
-            instance.TryCreateField("current_count", "Count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
-        })
-        { Name = "ExperienceManagerDebugComp" };
-        AddChild(_debug, true);
+        TreeExiting += () => { _entitiesList.ForEach(FreeExperienceEntityRids); };
     }
 
-    public override void _ExitTree()
+    public override DebugCategory DebugCreateCategory()
     {
-        _entitiesList.ForEach(FreeExperienceEntityRids);
+        DebugCategory category = new("XP Manager");
+        category.CreateLabelField("current_count", "Count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
+        return category;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -62,7 +52,7 @@ public partial class ExperienceManager : Node2D
         _renderedEntitiesCount = rendered;
 
         // update debug labels
-        _debug.TryUpdateField("current_count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
+        DebugTryUpdateField("current_count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
     }
 
     public void QueueExperienceEntitySpawn(Vector2 pos, int amount)
@@ -107,7 +97,7 @@ public partial class ExperienceManager : Node2D
         _entitiesList.Remove(entity);
 
         // update debug label
-        _debug.TryUpdateField("current_count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
+        DebugTryUpdateField("current_count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
     }
 
     public ExperienceEntity FindExperienceEntityFromAreaRid(Rid areaRid)

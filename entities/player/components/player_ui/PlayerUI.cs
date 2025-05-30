@@ -1,13 +1,13 @@
 using Godot;
 
-public partial class PlayerUI(PlayerScene player) : BasePlayerComponent(player)
+public partial class PlayerUI : BasePlayerComponent
 {
     [Export]
     public Control DeathUI;
     [Export]
     public GameplayUI GameplayUI;
 
-    public override void _Ready()
+    public PlayerUI(PlayerScene player) : base(player, false)
     {
         CanvasLayer layer = new();
         AddChild(layer);
@@ -19,13 +19,13 @@ public partial class PlayerUI(PlayerScene player) : BasePlayerComponent(player)
         layer.AddChild(GameplayUI);
 
         DeathUI.Visible = false;
-        GameplayUI.UpdateHealthBar(_player.PlayerHealth.Health, _player.PlayerHealth.MaxHealth);
 
-        _player.PlayerHealth.PlayerDeath += OnPlayerDeath;
-        _player.PlayerHealth.PlayerReceiveDamage += (_) => GameplayUI.UpdateHealthBar(_player.PlayerHealth.Health, _player.PlayerHealth.MaxHealth);
+        GameplayUI.UpdateHealthBar(_player.PlayerHealth.Health, _player.PlayerHealth.MaxHealth);
+        GameplayUI.UpdateExperienceBar(_player.PlayerExperience.CurrentExperience, _player.PlayerExperience.RequiredExperience);
+        GameplayUI.UpdateKillCount(_player.PlayerStats.KillCount);
     }
 
-    public void OnPlayerDeath()
+    public void ShowDeathUI()
     {
         DeathUI.Visible = true;
         GameplayUI.Visible = false;

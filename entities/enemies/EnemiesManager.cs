@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-public partial class EnemiesManager : Node2D
+public partial class EnemiesManager : DebugNode2D
 {
     // enemies
     public const int MAX_ENEMIES = 1500;
@@ -18,9 +18,6 @@ public partial class EnemiesManager : Node2D
     public Timer Timer;
     public double TimerDelay = 0.125;
 
-    // debug
-    private DebugCategoryComponent _debug;
-
     public EnemiesManager(int size)
     {
         SharedHitBoxSize = size;
@@ -33,21 +30,7 @@ public partial class EnemiesManager : Node2D
         Timer.Timeout += SpawnEnemyAroundPlayer;
         AddChild(Timer);
 
-        GameManager.Instance.Player.PlayerHealth.PlayerDeath += OnPlayerDeath;
-
-        // create debug component
-        _debug = new DebugCategoryComponent((instance) =>
-        {
-            instance.TryCreateCategory(new DebugManager.DebugCategory("enemies_manager", "Enemies Manager"));
-            instance.TryCreateField("enemies_count", "Count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
-        })
-        { Name = "EnemiesManagerDebugComp" };
-        AddChild(_debug);
-    }
-
-    public override void _ExitTree()
-    {
-        EnemiesList.ForEach(FreeEnemyEntityRids);
+        TreeExiting += () => { EnemiesList.ForEach(FreeEnemyEntityRids); };
     }
 
     public override void _PhysicsProcess(double delta)
@@ -55,12 +38,19 @@ public partial class EnemiesManager : Node2D
         MoveEnemies();
     }
 
+    public override DebugCategory DebugCreateCategory()
+    {
+        DebugCategory category = new("Enemies Manager");
+        category.CreateLabelField("enemies_count", "Count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
+        return category;
+    }
+
     public void SpawnEnemyAroundPlayer()
     {
         Vector2 pos = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
         BasicEnemy enemy = new(pos, 50, 25, 5, 1);
         SpawnEnemy(enemy);
-        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
+        DebugTryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
     }
 
     public void SpawnEnemy(BasicEnemy enemy)
@@ -145,7 +135,7 @@ public partial class EnemiesManager : Node2D
         GameManager.Instance.ExperienceManager.QueueExperienceEntitySpawn(enemy.Position, enemy.ExperienceDropped);
 
         // update debug label
-        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
+        DebugTryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
 
         return (true, enemy.Health); // enemy died
     }
@@ -157,7 +147,7 @@ public partial class EnemiesManager : Node2D
         RenderingServer.FreeRid(enemy.CanvasItemRid);
     }
 
-    private void OnPlayerDeath()
+    public void OnPlayerDeath()
     {
         Timer.Stop();
 
@@ -176,6 +166,6 @@ public partial class EnemiesManager : Node2D
         EnemiesList.Clear();
 
         // update debug label
-        _debug.TryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
+        DebugTryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
     }
 }

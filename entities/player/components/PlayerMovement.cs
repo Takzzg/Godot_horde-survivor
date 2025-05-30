@@ -7,9 +7,6 @@ public partial class PlayerMovement : BasePlayerComponent
     public int PlayerSize = 5;
     public CollisionShape2D HurtboxShape;
 
-    [Signal]
-    public delegate void PlayerMoveEventHandler();
-
     public PlayerMovement(PlayerScene player) : base(player)
     {
         _player.CollisionLayer = 1; // 1 = player layer
@@ -48,7 +45,18 @@ public partial class PlayerMovement : BasePlayerComponent
 
         _player.Position += offset;
         _player.PlayerStats.IncreaseDistanceTraveled(offset.Length());
-        EmitSignal(SignalName.PlayerMove);
+
+        DebugTryUpdateField("player_pos", _player.Position.ToString("0.0"));
+    }
+
+    public override DebugCategory DebugCreateCategory()
+    {
+        GD.Print($"_player: {_player}");
+        DebugCategory category = new("Player Movement");
+        category.CreateLabelField("player_speed", "Speed", Speed.ToString());
+        category.CreateLabelField("player_pos", "Pos", _player.Position.ToString("0.0"));
+
+        return category;
     }
 
     public static Vector2 GetInputVector()

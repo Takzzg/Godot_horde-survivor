@@ -10,11 +10,6 @@ public partial class PlayerHealth : BasePlayerComponent
     public double InvulnerableLength = 0.25;
     public Timer InvulnerableTimer;
 
-    [Signal]
-    public delegate void PlayerReceiveDamageEventHandler(int amount);
-    [Signal]
-    public delegate void PlayerDeathEventHandler();
-
     public PlayerHealth(PlayerScene player) : base(player)
     {
         // create invulnerability timer
@@ -22,10 +17,9 @@ public partial class PlayerHealth : BasePlayerComponent
         AddChild(InvulnerableTimer);
     }
 
-
     public override void _PhysicsProcess(double delta)
     {
-        if (!_player.PlayerHealth.Alive) return;
+        if (!Alive) return;
         _player.PlayerStats.IncreaseTimeAlive(delta);
     }
 
@@ -35,7 +29,9 @@ public partial class PlayerHealth : BasePlayerComponent
 
         // GD.Print($"player received {amount} damage");
         Health -= amount;
+
         _player.PlayerStats.IncreaseDamageReceived(amount);
+        _player.PlayerUI.GameplayUI.UpdateHealthBar(Health, MaxHealth);
 
         if (Health <= 0)
         {
@@ -44,7 +40,8 @@ public partial class PlayerHealth : BasePlayerComponent
         }
 
         InvulnerableTimer.Start();
-        EmitSignal(SignalName.PlayerReceiveDamage, amount);
+
+        DebugTryUpdateField("current_health", $"{Health} / {MaxHealth}");
     }
 
     private void PlayerDie()
@@ -53,11 +50,14 @@ public partial class PlayerHealth : BasePlayerComponent
 
         Alive = false;
         _player.PlayerMovement.SetPhysicsProcess(false);
+        _player.PlayerUI.ShowDeathUI();
+
+        GameManager.Instance.EnemiesManager.OnPlayerDeath();
 
         Array<Node> weapons = _player.WeaponsContainer.GetChildren();
-        foreach (ProjectileWeapon weapon in weapons.Cast<ProjectileWeapon>()) { weapon.WeaponShooting.TimedAttackSetRunning(false); }
+        foreach (ProjectileWeapon weapon in weapons.Cast<ProjectileWeapon>()) { weapon.OnPlayerDeath(); }
 
-        EmitSignal(SignalName.PlayerDeath);
+        DebugTryUpdateField("player_alive", Alive ? "Alive" : "Dead");
     }
 
     public void OnCollision(Dictionary collision)
@@ -66,5 +66,13 @@ public partial class PlayerHealth : BasePlayerComponent
 
         BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByBodyRid((Rid)collision["rid"]);
         ReceiveDamage(enemy.Damage);
+    }
+
+    public override DebugCategory DebugCreateCategory()
+    {
+        DebugCategory category = new("Player Health");
+        category.CreateLabelField("current_health", "HP", $"{Health} / {MaxHealth}");
+        category.CreateLabelField("player_alive", "State", Alive ? "Alive" : "Dead");
+        return category;
     }
 }

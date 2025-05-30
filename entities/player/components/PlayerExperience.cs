@@ -5,19 +5,13 @@ public partial class PlayerExperience : BasePlayerComponent
 {
     public int PlayerLevel = 1;
     public int CurrentExperience = 0;
-    public int ExperienceToNextLevel;
+    public int RequiredExperience => PlayerLevel * 2;
 
     public int ExperiencePickUpRadius = 20;
     public Shape2D ExperiencePickUpShape;
 
-    [Signal]
-    public delegate void PlayerExperienceGainEventHandler();
-    [Signal]
-    public delegate void PlayerLevelUpEventHandler();
-
     public PlayerExperience(PlayerScene player) : base(player)
     {
-        ExperienceToNextLevel = GetExperienceToNextLevel();
         ExperiencePickUpShape = new CircleShape2D() { Radius = ExperiencePickUpRadius };
     }
 
@@ -41,31 +35,37 @@ public partial class PlayerExperience : BasePlayerComponent
         }
     }
 
-    public int GetExperienceToNextLevel()
-    {
-        return PlayerLevel * 2;
-    }
-
     private void GainExperience(int amount)
     {
-        int xpRequired = ExperienceToNextLevel - CurrentExperience;
+        int xpRequired = RequiredExperience - CurrentExperience;
         int experienceGained = (amount > xpRequired) ? xpRequired : amount;
 
         CurrentExperience += experienceGained;
         _player.PlayerStats.IncreaseExperienceGathered(experienceGained);
 
         // GD.Print($"player gain experience {amount} ({CurrentExperience}/{ExperienceToNextLevel})");
-        if (CurrentExperience >= ExperienceToNextLevel) LevelUp();
-        else EmitSignal(SignalName.PlayerExperienceGain);
+        if (CurrentExperience >= RequiredExperience) LevelUp();
+
+        DebugTryUpdateField("current_xp", $"{CurrentExperience} / {RequiredExperience}");
+        _player.PlayerUI.GameplayUI.UpdateExperienceBar(CurrentExperience, RequiredExperience);
     }
 
     private void LevelUp()
     {
         PlayerLevel += 1;
-        ExperienceToNextLevel = GetExperienceToNextLevel();
         CurrentExperience = 0;
 
         // GD.Print($"player level up {PlayerLevel}");
-        EmitSignal(SignalName.PlayerLevelUp);
+        DebugTryUpdateField("player_level", PlayerLevel.ToString());
+    }
+
+    public override DebugCategory DebugCreateCategory()
+    {
+        DebugCategory category = new("Player Experience");
+
+        category.CreateLabelField("player_level", "Level", PlayerLevel.ToString());
+        category.CreateLabelField("current_xp", "XP", $"{CurrentExperience} / {RequiredExperience}");
+
+        return category;
     }
 }

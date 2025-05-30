@@ -28,14 +28,10 @@ public partial class MainMenu : Control
         // debug
         _debugContainer.Visible = DebugManager.Instance.DebugEnabled;
         DebugManager.Instance.DebugStateToggled += SetDebugContainerVisible;
+        TreeExiting += () => { DebugManager.Instance.DebugStateToggled -= SetDebugContainerVisible; };
 
         _testScenario.Pressed += () => SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.TEST_SCENARIO);
         _testLoading.Pressed += () => SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU);
-    }
-
-    public override void _ExitTree()
-    {
-        DebugManager.Instance.DebugStateToggled -= SetDebugContainerVisible;
     }
 
     private void SetDebugContainerVisible(bool state)
@@ -49,7 +45,10 @@ public partial class MainMenu : Control
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (@event.IsActionPressed("enter")) { StartGame(); }
+        if (@event.IsActionPressed("enter"))
+        {
+            SceneManager.Instance.ChangeScene(DebugManager.Instance.DebugEnabled ? SceneManager.EnumScenes.TEST_SCENARIO : SceneManager.EnumScenes.MAIN_GAME);
+        }
         if (@event.IsActionPressed("back")) { QuitGame(); }
     }
 }

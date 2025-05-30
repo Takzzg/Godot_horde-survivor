@@ -1,16 +1,11 @@
 using System;
 using Godot;
 
-public class WeaponAiming
+public class WeaponAiming(WeaponAiming.EnumStyle style)
 {
     public enum EnumStyle { RANDOM, FACING, FIXED_R }
-    public EnumStyle Style;
+    public EnumStyle Style = style;
     private Vector2 _lastFacingDirection = Vector2.Right;
-
-    public WeaponAiming(EnumStyle style)
-    {
-        Style = style;
-    }
 
     public Vector2 GetTrajectory()
     {

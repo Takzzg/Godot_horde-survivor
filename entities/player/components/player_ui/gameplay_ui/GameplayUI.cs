@@ -1,5 +1,5 @@
-using System;
 using Godot;
+
 public partial class GameplayUI : Control
 {
     [Export]
@@ -11,34 +11,14 @@ public partial class GameplayUI : Control
     [Export]
     private ProgressBar _experienceBar;
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        UpdateExperienceBar();
-        UpdateKillCount(GameManager.Instance.Player.PlayerStats.KillsCount);
-
-        GameManager.Instance.Player.PlayerExperience.PlayerExperienceGain += UpdateExperienceBar;
-        GameManager.Instance.Player.PlayerExperience.PlayerLevelUp += UpdateExperienceBar;
-    }
-
-    public override void _ExitTree()
-    {
-        GameManager.Instance.Player.PlayerExperience.PlayerExperienceGain -= UpdateExperienceBar;
-        GameManager.Instance.Player.PlayerExperience.PlayerLevelUp -= UpdateExperienceBar;
-    }
-
     public void UpdateHealthBar(int current, int max)
     {
         _healthBar.UpdateValue(current, max);
     }
 
-    public void UpdateExperienceBar()
+    public void UpdateExperienceBar(int current, int required)
     {
-        int CurrentXP = GameManager.Instance.Player.PlayerExperience.CurrentExperience;
-        int requiredXP = GameManager.Instance.Player.PlayerExperience.ExperienceToNextLevel;
-        double percentage = CurrentXP * 100 / requiredXP;
-
-        GD.Print($"updating experience bar {percentage}");
+        double percentage = current * 100 / required;
         _experienceBar.Value = percentage;
     }
 
