@@ -2,8 +2,6 @@ using Godot;
 
 public partial class MainGame : Node2D
 {
-    public CanvasLayer Layer;
-
     public override void _Ready()
     {
         GD.Print($"MainGame ready!");
@@ -29,12 +27,6 @@ public partial class MainGame : Node2D
         // create ExperienceManager
         GameManager.Instance.ExperienceManager = new ExperienceManager();
         AddChild(GameManager.Instance.ExperienceManager);
-
-        // create ui
-        Layer = new CanvasLayer();
-        AddChild(Layer);
-        GameManager.Instance.UI = SceneManager.Instance.GetInstanceFromEnum<MainUI>(SceneManager.EnumPathsDictionary.MAIN_UI);
-        Layer.AddChild(GameManager.Instance.UI);
 
         // spawn enemies
         GameManager.Instance.EnemiesManager.Timer.Start();

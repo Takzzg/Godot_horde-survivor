@@ -4,30 +4,44 @@ public partial class PlayerStats : BasePlayerComponent
 {
     private DebugCategoryComponent _debug;
 
+    public double TimeAlive { get; private set; } = 0;
     public int DamageReceived { get; private set; } = 0;
     public int DamageDealt { get; private set; } = 0;
-    public int KOsCount { get; private set; } = 0;
+    public int KillsCount { get; private set; } = 0;
     public float DistanceTraveled { get; private set; } = 0;
     public float ExperienceGathered { get; private set; } = 0;
 
     public PlayerStats(PlayerScene player) : base(player)
     {
-        // create debug cat
-        _debug = new DebugCategoryComponent((instance) => { instance.TryCreateCategory(new DebugManager.DebugCategory("player_stats", "Stats")); });
+        _debug = new DebugCategoryComponent((instance) =>
+        {
+            // create debug cat
+            instance.TryCreateCategory(new DebugManager.DebugCategory("player_stats", "Stats"));
 
-        // create debug fields
-        _debug.TryCreateField("damage_received", "Dmg received", DamageReceived.ToString());
-        _debug.TryCreateField("damage_dealt", "Dmg dealt", DamageDealt.ToString());
-        _debug.TryCreateField("kos_count", "KOs count", KOsCount.ToString());
-        _debug.TryCreateField("dist_traveled", "Dist. traveled", DistanceTraveled.ToString("0.0"));
-        _debug.TryCreateField("exp_gained", "XP gained", ExperienceGathered.ToString());
-
+            // create debug fields
+            instance.TryCreateField("time_alive", "Time alive", TimeAlive.ToString("00:00"));
+            instance.TryCreateField("damage_received", "Dmg received", DamageReceived.ToString());
+            instance.TryCreateField("damage_dealt", "Dmg dealt", DamageDealt.ToString());
+            instance.TryCreateField("kills_count", "Kills", KillsCount.ToString());
+            instance.TryCreateField("dist_traveled", "Dist. traveled", DistanceTraveled.ToString("0.0"));
+            instance.TryCreateField("exp_gained", "XP gained", ExperienceGathered.ToString());
+        });
         AddChild(_debug);
     }
 
     public override void _ExitTree()
     {
         _debug.QueueFree();
+    }
+
+    public void IncreaseTimeAlive(double delta)
+    {
+        TimeAlive += delta;
+        GameManager.Instance.Player.PlayerUI.GameplayUI.UpdateTimeLabel(TimeAlive);
+
+        int minutes = (int)(TimeAlive / 60);
+        int seconds = (int)(TimeAlive % 60);
+        _debug.TryUpdateField("time_alive", $"{minutes:00}:{seconds:00}");
     }
 
     public void IncreaseDamageReceived(int count)
@@ -42,10 +56,11 @@ public partial class PlayerStats : BasePlayerComponent
         _debug.TryUpdateField("damage_dealt", DamageDealt.ToString());
     }
 
-    public void IncreaseKOsCount(int count)
+    public void IncreaseKillsCount(int count)
     {
-        KOsCount += count;
-        _debug.TryUpdateField("kos_count", KOsCount.ToString());
+        KillsCount += count;
+        _debug.TryUpdateField("kills_count", KillsCount.ToString());
+        GameManager.Instance.Player.PlayerUI.GameplayUI.UpdateKillCount(KillsCount);
     }
 
     public void IncreaseDistanceTraveled(float distance)

@@ -9,7 +9,6 @@ public partial class DebugManager : Node2D
     public int MarginSize = 8;
 
     private CanvasLayer _layer;
-    private PanelContainer _panel;
     private BoxContainer _container;
 
     [Signal]
@@ -23,22 +22,30 @@ public partial class DebugManager : Node2D
         _layer = new CanvasLayer() { Layer = 100 };
         AddChild(_layer);
 
-        // create panel container
-        _panel = new PanelContainer() { CustomMinimumSize = new Vector2(250, 0) };
-        _panel.SetAnchorsPreset(Control.LayoutPreset.LeftWide);
-        _layer.AddChild(_panel);
-
         // create scroll container
-        ScrollContainer scroll = new();
-        _panel.AddChild(scroll);
+        ScrollContainer scroll = new()
+        {
+            CustomMinimumSize = new Vector2(250, 0),
+            GrowHorizontal = Control.GrowDirection.Begin
+        };
+        scroll.SetAnchorsPreset(Control.LayoutPreset.RightWide);
+        _layer.AddChild(scroll);
+
+        // create panel container
+        PanelContainer panel = new()
+        {
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+            SizeFlagsVertical = Control.SizeFlags.ExpandFill
+        };
+        scroll.AddChild(panel);
 
         // create margin
-        MarginContainer margin = new() { SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
+        MarginContainer margin = new();
         margin.AddThemeConstantOverride("margin_top", MarginSize);
         margin.AddThemeConstantOverride("margin_left", MarginSize);
         margin.AddThemeConstantOverride("margin_bottom", MarginSize);
         margin.AddThemeConstantOverride("margin_right", MarginSize);
-        scroll.AddChild(margin);
+        panel.AddChild(margin);
 
         // create box container
         _container = new BoxContainer() { Vertical = true };
@@ -61,7 +68,6 @@ public partial class DebugManager : Node2D
     public void RenderNode(Control node)
     {
         _container.AddChild(node);
-        if (node.Size.X > _panel.Size.X) _panel.Size = _panel.Size with { X = node.Size.X };
     }
 
     public partial class DebugTitle : MarginContainer

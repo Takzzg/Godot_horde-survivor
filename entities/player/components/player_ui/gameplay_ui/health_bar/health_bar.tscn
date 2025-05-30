@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=3 uid="uid://dsdm3y5v5i6ae"]
+
+[ext_resource type="Script" uid="uid://btd7rmvfn75ku" path="res://entities/player/components/player_ui/gameplay_ui/health_bar/HealthBar.cs" id="1_ji36l"]
+
+[node name="HealthBar" type="Control" node_paths=PackedStringArray("ProgressBar", "CurrentLabel", "MaxLabel")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 55.0
+offset_bottom = 23.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_ji36l")
+ProgressBar = NodePath("ProgressBar")
+CurrentLabel = NodePath("BoxContainer/CurrentLabel")
+MaxLabel = NodePath("BoxContainer/MaxLabel")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+show_percentage = false
+
+[node name="BoxContainer" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -27.5
+offset_top = -11.5
+offset_right = 27.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CurrentLabel" type="Label" parent="BoxContainer"]
+layout_mode = 2
+text = "XX"
+
+[node name="Label2" type="Label" parent="BoxContainer"]
+layout_mode = 2
+text = "/"
+
+[node name="MaxLabel" type="Label" parent="BoxContainer"]
+layout_mode = 2
+text = "XX"

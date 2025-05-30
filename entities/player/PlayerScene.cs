@@ -8,6 +8,7 @@ public partial class PlayerScene : CharacterBody2D
     public PlayerMovement PlayerMovement;
     public PlayerDraw PlayerDraw;
     public PlayerExperience PlayerExperience;
+    public PlayerUI PlayerUI;
     public Node2D WeaponsContainer;
 
     private PlayerDebug _debug;
@@ -37,6 +38,9 @@ public partial class PlayerScene : CharacterBody2D
 
         PlayerExperience = new PlayerExperience(this);
         AddChild(PlayerExperience);
+
+        PlayerUI = new PlayerUI(this);
+        AddChild(PlayerUI);
 
         _debug = new PlayerDebug(this);
         AddChild(_debug);

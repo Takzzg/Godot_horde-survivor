@@ -2,8 +2,6 @@ using Godot;
 
 public partial class TestScenario : Node2D
 {
-    public CanvasLayer Layer;
-
     public override void _Ready()
     {
         GD.Print($"TestScenario ready!");
@@ -27,12 +25,6 @@ public partial class TestScenario : Node2D
         GameManager.Instance.ExperienceManager = new ExperienceManager();
         AddChild(GameManager.Instance.ExperienceManager);
 
-        // create ui
-        Layer = new CanvasLayer();
-        AddChild(Layer);
-        GameManager.Instance.UI = SceneManager.Instance.GetInstanceFromEnum<MainUI>(SceneManager.EnumPathsDictionary.MAIN_UI);
-        Layer.AddChild(GameManager.Instance.UI);
-
         TEST_SpawnEnemies();
     }
 
@@ -52,7 +44,7 @@ public partial class TestScenario : Node2D
 
         foreach (Vector2 pos in positions)
         {
-            BasicEnemy enemy = new(pos, 50, 0, 0, 1);
+            BasicEnemy enemy = new(pos, 50, 0, 1, 1);
             GameManager.Instance.EnemiesManager.SpawnEnemy(enemy);
         }
     }

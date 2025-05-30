@@ -131,7 +131,7 @@ public partial class ProjectileWeapon : Node2D
 
         // increase stats
         GameManager.Instance.Player.PlayerStats.IncreaseDamageDealt(damage_dealt);
-        if (enemyDied) GameManager.Instance.Player.PlayerStats.IncreaseKOsCount(1);
+        if (enemyDied) GameManager.Instance.Player.PlayerStats.IncreaseKillsCount(1);
     }
 
     public void DestroyBullet(BasicBullet bullet)

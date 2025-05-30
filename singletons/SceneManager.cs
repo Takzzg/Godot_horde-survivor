@@ -15,20 +15,12 @@ public partial class SceneManager : Node
     private string _loadDir;
     private bool _isloading;
 
-    // packed scene paths
-    public enum EnumPathsDictionary { LOADING_SCREEN, MAIN_MENU, MAIN_UI }
-    public Dictionary<EnumPathsDictionary, string> PathsDictionary = new() {
-        {EnumPathsDictionary.MAIN_MENU, "res://scenes/main_menu/main_menu.tscn"},
-        {EnumPathsDictionary.MAIN_UI, "res://scenes/main_game/UI/main_ui.tscn"},
-        {EnumPathsDictionary.LOADING_SCREEN, "res://scenes/loading_screen/loading_screen.tscn"},
-    };
-
     public override void _Ready()
     {
         GD.Print($"SceneManager singleton ready!");
         Instance = this;
 
-        _loadingScreenScene = GetPackedSceneFromEnum(EnumPathsDictionary.LOADING_SCREEN);
+        _loadingScreenScene = ResourcePaths.GetPackedSceneFromEnum(ResourcePaths.EnumPathsDictionary.LOADING_SCREEN);
         _currentNode = GetTree().Root.GetChildren().Last();
         GD.Print($"_currentNode.Name: {_currentNode.Name}");
     }
@@ -116,28 +108,15 @@ public partial class SceneManager : Node
 
     private void LoadPackedScene(EnumScenes scene)
     {
-        EnumPathsDictionary pathKey = scene switch
+        ResourcePaths.EnumPathsDictionary pathKey = scene switch
         {
-            EnumScenes.MAIN_MENU => EnumPathsDictionary.MAIN_MENU,
+            EnumScenes.MAIN_MENU => ResourcePaths.EnumPathsDictionary.MAIN_MENU,
             _ => throw new NotImplementedException($"Cant load packed scene {scene}"),
         };
 
-        _loadDir = PathsDictionary[pathKey];
+        _loadDir = ResourcePaths.PathsDictionary[pathKey];
 
         GD.Print($"request load {scene} packed scene");
         ResourceLoader.LoadThreadedRequest(_loadDir);
-    }
-
-    public PackedScene GetPackedSceneFromEnum(EnumPathsDictionary key)
-    {
-        PackedScene scene = GD.Load<PackedScene>(PathsDictionary[key]);
-        return scene;
-    }
-
-    public T GetInstanceFromEnum<T>(EnumPathsDictionary key) where T : Node
-    {
-        PackedScene scene = GetPackedSceneFromEnum(key);
-        T instance = scene.Instantiate<T>();
-        return instance;
     }
 }

@@ -22,6 +22,13 @@ public partial class PlayerHealth : BasePlayerComponent
         AddChild(InvulnerableTimer);
     }
 
+
+    public override void _PhysicsProcess(double delta)
+    {
+        if (!_player.PlayerHealth.Alive) return;
+        _player.PlayerStats.IncreaseTimeAlive(delta);
+    }
+
     private void ReceiveDamage(int amount)
     {
         if (!Alive) return;
