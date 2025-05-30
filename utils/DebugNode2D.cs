@@ -5,10 +5,7 @@ public abstract partial class DebugNode2D : Node2D
 {
     private DebugCategory _debug;
 
-    public virtual DebugCategory DebugCreateCategory()
-    {
-        throw new NotImplementedException();
-    }
+    public virtual DebugCategory DebugCreateCategory() => throw new NotImplementedException();
 
     public DebugNode2D(bool useDebug = true)
     {

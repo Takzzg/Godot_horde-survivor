@@ -2,7 +2,7 @@ using Godot;
 
 public partial class MainGame : Node2D
 {
-    public override void _Ready()
+    public MainGame()
     {
         GD.Print($"MainGame ready!");
         TextureFilter = TextureFilterEnum.Nearest;
@@ -28,8 +28,7 @@ public partial class MainGame : Node2D
         GameManager.Instance.ExperienceManager = new ExperienceManager();
         AddChild(GameManager.Instance.ExperienceManager);
 
-        // spawn enemies
-        GameManager.Instance.EnemiesManager.Timer.Start();
+        GameManager.Instance.EnemiesManager.StartSpawnerTimer();
     }
 
     public override void _UnhandledInput(InputEvent @event)

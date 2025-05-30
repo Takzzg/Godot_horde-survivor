@@ -2,7 +2,7 @@ using Godot;
 
 public partial class TestScenario : Node2D
 {
-    public override void _Ready()
+    public TestScenario()
     {
         GD.Print($"TestScenario ready!");
 
@@ -25,7 +25,7 @@ public partial class TestScenario : Node2D
         GameManager.Instance.ExperienceManager = new ExperienceManager();
         AddChild(GameManager.Instance.ExperienceManager);
 
-        TEST_SpawnEnemies();
+        Ready += TEST_SpawnEnemies;
     }
 
     public static void TEST_SpawnEnemies()

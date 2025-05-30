@@ -15,7 +15,7 @@ public partial class EnemiesManager : DebugNode2D
     public CircleShape2D SharedHurtBox;
 
     // spawner
-    public Timer Timer;
+    private Timer Timer;
     public double TimerDelay = 0.125;
 
     public EnemiesManager(int size)
@@ -26,16 +26,19 @@ public partial class EnemiesManager : DebugNode2D
         SharedHitBox = new CircleShape2D() { Radius = SharedHitBoxSize };
         SharedHurtBox = new CircleShape2D() { Radius = SharedHurtBoxSize };
 
-        Timer = new Timer() { Autostart = false, OneShot = false, WaitTime = TimerDelay };
-        Timer.Timeout += SpawnEnemyAroundPlayer;
-        AddChild(Timer);
-
         TreeExiting += () => { EnemiesList.ForEach(FreeEnemyEntityRids); };
     }
 
     public override void _PhysicsProcess(double delta)
     {
         MoveEnemies();
+    }
+
+    public void StartSpawnerTimer()
+    {
+        Timer = new Timer() { Autostart = true, OneShot = false, WaitTime = TimerDelay };
+        Timer.Timeout += SpawnEnemyAroundPlayer;
+        AddChild(Timer);
     }
 
     public override DebugCategory DebugCreateCategory()
