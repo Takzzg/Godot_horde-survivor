@@ -13,9 +13,17 @@ public partial class TestScenario : Node2D
         GameManager.Instance.Player = new PlayerScene();
         AddChild(GameManager.Instance.Player);
 
-        // create basic weapon
-        ProjectileWeapon weapon = new(WeaponShooting.EnumStyle.MANUAL, WeaponAiming.EnumStyle.FIXED_R);
-        GameManager.Instance.Player.WeaponsContainer.AddChild(weapon);
+        // create projectile weapon
+        ProjectileWeapon projectile = new(BaseWeapon.TrajectoryStyleEnum.FACING, true);
+        GameManager.Instance.Player.PlayerWeapons.CreateWeapon(projectile);
+
+        // // create stationary weapon
+        // StationaryWeapon stationary = new(BaseWeapon.TrajectoryStyleEnum.NONE, true);
+        // GameManager.Instance.Player.PlayerWeapons.CreateWeapon(stationary);
+
+        // // create relative weapon
+        // RelativeWeapon relative = new(BaseWeapon.TrajectoryStyleEnum.NONE, true);
+        // GameManager.Instance.Player.PlayerWeapons.CreateWeapon(relative);
 
         // create EnemiesManager
         GameManager.Instance.EnemiesManager = new EnemiesManager(6);

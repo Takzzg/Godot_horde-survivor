@@ -1,4 +1,4 @@
-using System;
+using Godot;
 
 public partial class PlayerStats(PlayerScene player) : BasePlayerComponent(player)
 {

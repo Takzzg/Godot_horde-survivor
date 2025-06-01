@@ -3,13 +3,17 @@ using System;
 
 public partial class Utils : Node
 {
+    public static Vector2 GetPointArounOrigin(Vector2 center, float distance, float rotation)
+    {
+        return new Vector2(
+            center.X + distance * (float)Math.Cos(rotation),
+            center.Y + distance * (float)Math.Sin(rotation)
+        );
+    }
+
     public static Vector2 GetRandomPointOnCircle(Vector2 center, float radius)
     {
         float angle = GameManager.Instance.RNG.RandiRange(0, 359);
-        Vector2 point = new(
-            center.X + radius * (float)Math.Cos(angle),
-            center.Y + radius * (float)Math.Sin(angle)
-        );
-        return point;
+        return GetPointArounOrigin(center, radius, angle);
     }
 }

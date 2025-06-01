@@ -4,7 +4,7 @@ using Godot.Collections;
 
 public partial class PlayerHealth : BasePlayerComponent
 {
-    public bool Alive = true;
+    public bool Alive = false;
     public int Health = 50;
     public int MaxHealth = 50;
     public double InvulnerableLength = 0.25;
@@ -15,6 +15,8 @@ public partial class PlayerHealth : BasePlayerComponent
         // create invulnerability timer
         InvulnerableTimer = new Timer() { Autostart = false, OneShot = true, WaitTime = InvulnerableLength };
         AddChild(InvulnerableTimer);
+
+        Ready += () => Alive = true;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -51,11 +53,9 @@ public partial class PlayerHealth : BasePlayerComponent
         Alive = false;
         _player.PlayerMovement.SetPhysicsProcess(false);
         _player.PlayerUI.ShowDeathUI();
+        _player.PlayerWeapons.OnPlayerDeath();
 
         GameManager.Instance.EnemiesManager.OnPlayerDeath();
-
-        Array<Node> weapons = _player.WeaponsContainer.GetChildren();
-        foreach (ProjectileWeapon weapon in weapons.Cast<ProjectileWeapon>()) { weapon.OnPlayerDeath(); }
 
         DebugTryUpdateField("player_alive", Alive ? "Alive" : "Dead");
     }

@@ -36,20 +36,21 @@ public partial class DebugCategory : PanelContainer
 
     public void CreateLabelField(string id, string title, string value)
     {
-        LabelField field = new(id, title, value);
+        LabelField field = new(title, value);
         _debugLabelsList.Add(id, field);
         _container.AddChild(field);
     }
 
     public void UpdateLabelField(string id, string value)
     {
-        _debugLabelsList[id].Value.Text = value;
+        // GD.Print($"DebugTryUpdateField id: {id}, value: {value}");
+        _debugLabelsList[id].UpdateValue(value);
     }
 
     // -------------------------------------------- Title  --------------------------------------------
     private partial class Title : PanelContainer
     {
-        public int MarginSize = 8;
+        public int MarginSize = 4;
 
         public Title(string text)
         {
@@ -63,8 +64,8 @@ public partial class DebugCategory : PanelContainer
             Label title = new()
             {
                 Text = text,
-                Theme = new Theme() { DefaultFontSize = 20 },
                 HorizontalAlignment = HorizontalAlignment.Center,
+                Theme = new Theme() { DefaultFontSize = 16 }
             };
             margin.AddChild(title);
         }
@@ -73,7 +74,7 @@ public partial class DebugCategory : PanelContainer
     // -------------------------------------------- Divier --------------------------------------------
     private partial class Divider : PanelContainer
     {
-        public int MarginSize = 8;
+        public int MarginSize = 2;
 
         public Divider(string text)
         {
@@ -88,7 +89,7 @@ public partial class DebugCategory : PanelContainer
             {
                 Text = text,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Theme = new Theme() { DefaultFontSize = 12 }
+                Theme = new Theme() { DefaultFontSize = 14 }
             };
             margin.AddChild(title);
         }
@@ -97,22 +98,24 @@ public partial class DebugCategory : PanelContainer
     // -------------------------------------------- Label Field --------------------------------------------
     private partial class LabelField : BoxContainer
     {
-        public string ID;
-        public Label Title;
-        public Label Value;
+        private Label _title;
+        private Label _value;
 
-        public LabelField(string id, string title, string value)
+        public LabelField(string title, string value)
         {
-            ID = id;
-            Title = new() { Text = title };
-            Value = new() { Text = value };
+            Theme theme = new() { DefaultFontSize = 14 };
+            _title = new() { Theme = theme, Text = title };
+            _value = new() { Theme = theme, Text = value };
 
-            Label titleLabel = new() { Text = title };
-            Label valueLabel = new() { Text = value };
-
-            AddChild(titleLabel);
+            AddChild(_title);
             AddChild(new Label() { Text = ":" });
-            AddChild(valueLabel);
+            AddChild(_value);
+        }
+
+        public void UpdateValue(string value)
+        {
+            if (_value.Text == value) return;
+            _value.Text = value;
         }
     }
 }

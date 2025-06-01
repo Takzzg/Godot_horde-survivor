@@ -17,8 +17,8 @@ public partial class MainGame : Node2D
         AddChild(GameManager.Instance.Player);
 
         // create basic weapon
-        ProjectileWeapon weapon = new(WeaponShooting.EnumStyle.TIMER, WeaponAiming.EnumStyle.RANDOM);
-        GameManager.Instance.Player.WeaponsContainer.AddChild(weapon);
+        ProjectileWeapon weapon = new(BaseWeapon.TrajectoryStyleEnum.RANDOM);
+        GameManager.Instance.Player.PlayerWeapons.CreateWeapon(weapon);
 
         // create EnemiesManager
         GameManager.Instance.EnemiesManager = new EnemiesManager(6);

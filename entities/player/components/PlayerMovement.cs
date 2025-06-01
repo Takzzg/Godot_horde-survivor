@@ -6,6 +6,7 @@ public partial class PlayerMovement : BasePlayerComponent
     public int Speed = 50;
     public int PlayerSize = 5;
     public CollisionShape2D HurtboxShape;
+    public Vector2 FacingDirection = Vector2.Right;
 
     public PlayerMovement(PlayerScene player) : base(player)
     {
@@ -34,15 +35,15 @@ public partial class PlayerMovement : BasePlayerComponent
         Array<Dictionary> collisions = GetWorld2D().DirectSpaceState.IntersectShape(query, 16);
         foreach (Dictionary col in collisions) { _player.PlayerHealth.OnCollision(col); }
 
-        // move player
         Vector2 inputDirection = GetInputVector();
-        if (inputDirection.Equals(Vector2.Zero)) return;
+        if (inputDirection == Vector2.Zero) return;
 
         Vector2 offset = new(
             (float)(inputDirection.X * Speed * delta),
             (float)(inputDirection.Y * Speed * delta)
         );
 
+        FacingDirection = inputDirection;
         _player.Position += offset;
         _player.PlayerStats.IncreaseDistanceTraveled(offset.Length());
 
@@ -51,7 +52,6 @@ public partial class PlayerMovement : BasePlayerComponent
 
     public override DebugCategory DebugCreateCategory()
     {
-        GD.Print($"_player: {_player}");
         DebugCategory category = new("Player Movement");
         category.CreateLabelField("player_speed", "Speed", Speed.ToString());
         category.CreateLabelField("player_pos", "Pos", _player.Position.ToString("0.0"));
