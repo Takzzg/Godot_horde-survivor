@@ -16,7 +16,7 @@ public partial class PlayerStats(PlayerScene player) : BasePlayerComponent(playe
         category.CreateLabelField("time_alive", "Time alive", TimeAlive.ToString("00:00"));
         category.CreateLabelField("damage_received", "Dmg received", DamageReceived.ToString());
         category.CreateLabelField("damage_dealt", "Dmg dealt", DamageDealt.ToString());
-        category.CreateLabelField("kill_count", "Kills", KillCount.ToString());
+        category.CreateLabelField("kill_count", "Kill count", KillCount.ToString());
         category.CreateLabelField("dist_traveled", "Dist. traveled", DistanceTraveled.ToString("0.0"));
         category.CreateLabelField("exp_gained", "XP gained", ExperienceGathered.ToString());
 
