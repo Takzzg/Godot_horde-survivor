@@ -22,7 +22,7 @@ public partial class ExperienceManager : DebugNode2D
     public override DebugCategory DebugCreateCategory()
     {
         DebugCategory category = new("XP Manager");
-        category.CreateLabelField("current_count", "Count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
+        category.CreateLabelField("xp_entities_count", "Count (Rendered)", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
         return category;
     }
 
@@ -52,7 +52,7 @@ public partial class ExperienceManager : DebugNode2D
         _renderedEntitiesCount = rendered;
 
         // update debug labels
-        DebugTryUpdateField("current_count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
+        DebugTryUpdateField("xp_entities_count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
     }
 
     public void QueueExperienceEntitySpawn(Vector2 pos, int amount)
@@ -97,7 +97,7 @@ public partial class ExperienceManager : DebugNode2D
         _entitiesList.Remove(entity);
 
         // update debug label
-        DebugTryUpdateField("current_count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
+        DebugTryUpdateField("xp_entities_count", $"{_entitiesList.Count} ({_renderedEntitiesCount})");
     }
 
     public ExperienceEntity FindExperienceEntityFromAreaRid(Rid areaRid)
