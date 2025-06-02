@@ -20,7 +20,7 @@ public abstract partial class DebugNode2D : Node2D
 
         TreeExiting += () =>
         {
-            DebugSetState(false);
+            if (DebugManager.Instance.DebugEnabled) { DebugSetState(false); }
             DebugManager.Instance.DebugStateToggled -= DebugSetState;
         };
     }
@@ -29,7 +29,7 @@ public abstract partial class DebugNode2D : Node2D
     {
         if (state == false)
         {
-            _debug?.QueueFree();
+            _debug.QueueFree();
             return;
         }
 
