@@ -133,6 +133,12 @@ public partial class EnemiesManager : DebugNode2D
             return (false, damage); // enemy did not die
         }
 
+        DestroyEnemy(enemy);
+        return (true, enemy.Health); // enemy died
+    }
+
+    private void DestroyEnemy(BasicEnemy enemy)
+    {
         EnemiesList.Remove(enemy);
         FreeEnemyEntityRids(enemy);
 
@@ -140,8 +146,6 @@ public partial class EnemiesManager : DebugNode2D
 
         // update debug label
         DebugTryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
-
-        return (true, enemy.Health); // enemy died
     }
 
     public static void FreeEnemyEntityRids(BasicEnemy enemy)

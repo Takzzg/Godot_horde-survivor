@@ -35,7 +35,7 @@ public partial class ProjectileWeapon : BaseWeapon
 
     public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)
     {
-        entity.MaxPierceCount = Math.Max(entity.MaxPierceCount - 1, 0);
+        entity.MaxPierceCount -= 1;
         var (enemyDied, damage_dealt) = GameManager.Instance.EnemiesManager.EnemyReceiveDamage(enemy, entity.Damage);
 
         // increase stats

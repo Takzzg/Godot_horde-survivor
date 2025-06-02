@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Godot;
+using Godot.Collections;
 
 public class WeaponEntity
 {
@@ -20,5 +20,5 @@ public class WeaponEntity
 
     public Rid CanvasItemRid;
 
-    public List<Rid> CollidingWith = [];
+    public Dictionary<Rid, double> CollidingWith = [];
 }

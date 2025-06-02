@@ -15,6 +15,7 @@ public abstract partial class BaseWeapon : DebugNode2D
     public readonly List<WeaponEntity> EntitiesList = [];
     public WeaponEntityManager WeaponEntityManager;
     public int MaxCollisionsPerFrame;
+    public double EntityTickDelay = 0.5f;
 
     // trajectory
     public enum TrajectoryStyleEnum { NONE, RANDOM, FACING, FIXED }
@@ -68,7 +69,7 @@ public abstract partial class BaseWeapon : DebugNode2D
             entity.LifeTime += delta;
 
             // check collision
-            WeaponEntityManager.CheckCollision(entity, MaxCollisionsPerFrame, OnCollision);
+            WeaponEntityManager.CheckCollision(entity, MaxCollisionsPerFrame, EntityTickDelay, OnCollision);
 
             // check expired 
             if (

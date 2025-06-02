@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 
@@ -39,8 +38,17 @@ public partial class WeaponEntityManager() : Node2D
         RenderingServer.CanvasItemSetTransform(entity.CanvasItemRid, posTransform);
     }
 
-    public void CheckCollision(WeaponEntity entity, int maxColisions, Action<WeaponEntity, BasicEnemy> onCollide)
+    public void CheckCollision(WeaponEntity entity, int maxColisions, double tickDelay, Action<WeaponEntity, BasicEnemy> onCollide)
     {
+        double currentTime = Time.GetUnixTimeFromSystem();
+
+        // clear expired collisions
+        foreach (Rid key in entity.CollidingWith.Keys)
+        {
+            if (entity.CollidingWith[key] < currentTime) { entity.CollidingWith.Remove(key); }
+        }
+
+        // check collisions
         Transform2D posTransform = new(0, entity.Position);
         PhysicsShapeQueryParameters2D query = new()
         {
@@ -51,26 +59,20 @@ public partial class WeaponEntityManager() : Node2D
             Transform = posTransform,
         };
 
-        // check collision
         Array<Dictionary> collisions = GetWorld2D().DirectSpaceState.IntersectShape(query, maxColisions);
         if (collisions.Count == 0) return;
-        GD.Print($"collisions.Count: {collisions.Count}");
 
-        // deal damage
-        List<Rid> collisionRids = [];
-
+        // trigger collision callback
         foreach (Dictionary col in collisions)
         {
             Rid rid = (Rid)col["rid"];
+            if (entity.CollidingWith.ContainsKey(rid)) { continue; } // already colliding
 
-            collisionRids.Add(rid);
-            if (entity.CollidingWith.Contains(rid)) { continue; }
+            entity.CollidingWith.Add(rid, currentTime + tickDelay);
 
             BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByAreaRid(rid);
-            onCollide(entity, enemy);
+            onCollide(entity, enemy); // deal damage
         }
-
-        entity.CollidingWith = collisionRids;
     }
 
     public static void FreeEntityRids(WeaponEntity entity)
