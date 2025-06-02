@@ -17,6 +17,7 @@ public partial class StationaryWeapon : BaseWeapon
             Speed = 0,
             Radius = 20,
             MaxLifeTime = 10,
+            Foreground = false,
         };
     }
 
@@ -41,7 +42,6 @@ public partial class StationaryWeapon : BaseWeapon
 
     public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)
     {
-        entity.MaxPierceCount -= 1;
         var (enemyDied, damage_dealt) = GameManager.Instance.EnemiesManager.EnemyReceiveDamage(enemy, entity.Damage);
 
         // increase stats

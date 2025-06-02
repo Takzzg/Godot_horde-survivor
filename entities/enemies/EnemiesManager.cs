@@ -85,6 +85,7 @@ public partial class EnemiesManager : DebugNode2D
         // create sprite
         enemy.CanvasItemRid = RenderingServer.CanvasItemCreate();
         RenderingServer.CanvasItemSetParent(enemy.CanvasItemRid, GetCanvasItem());
+        RenderingServer.CanvasItemSetZIndex(enemy.CanvasItemRid, 10);
         RenderingServer.CanvasItemSetTransform(enemy.CanvasItemRid, posTransform);
         RenderingServer.CanvasItemAddCircle(enemy.CanvasItemRid, Vector2.Zero, SharedHitBoxSize, Colors.Black);
         // RenderingServer.CanvasItemAddCircle(enemy.CanvasItemRid, Vector2.Zero, SharedHurtBoxSize, new Color(Colors.Pink, 0.125f));

@@ -16,6 +16,8 @@ public class WeaponEntity
     public int MaxPierceCount = 0;
     public double MaxLifeTime = 10;
 
+    public bool Foreground = true;
+
     public Rid CanvasItemRid;
 
     public List<Rid> CollidingWith = [];

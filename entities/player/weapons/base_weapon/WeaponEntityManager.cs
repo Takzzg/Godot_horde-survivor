@@ -13,6 +13,7 @@ public partial class WeaponEntityManager() : Node2D
         // draw entity
         entity.CanvasItemRid = RenderingServer.CanvasItemCreate();
         RenderingServer.CanvasItemSetParent(entity.CanvasItemRid, GetCanvasItem());
+        RenderingServer.CanvasItemSetZIndex(entity.CanvasItemRid, entity.Foreground ? 30 : 0);
         RenderingServer.CanvasItemSetTransform(entity.CanvasItemRid, posTransform);
         RenderingServer.CanvasItemAddCircle(entity.CanvasItemRid, Vector2.Zero, entity.Radius, Colors.DarkGray);
     }
