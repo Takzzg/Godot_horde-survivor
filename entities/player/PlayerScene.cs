@@ -14,7 +14,7 @@ public partial class PlayerScene : CharacterBody2D
     public PlayerScene()
     {
         // create camera
-        Camera2D camera = new() { Zoom = new Vector2(2, 2), TextureFilter = TextureFilterEnum.Nearest };
+        Camera2D camera = new() { Zoom = new Vector2(2, 2) };
         AddChild(camera);
 
         // create components        

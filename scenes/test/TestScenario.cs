@@ -1,29 +1,21 @@
+using System;
 using Godot;
 
 public partial class TestScenario : Node2D
 {
+    private Vector2 _worldCenterSize = new(64, 64);
+
     public TestScenario()
     {
         GD.Print($"TestScenario ready!");
 
-        ColorRect worldCenter = new() { Color = Colors.DimGray, Size = new Vector2(64, 64), Position = new Vector2(-32, -32) };
+        // world center ref
+        ColorRect worldCenter = new() { Color = Colors.DimGray, Size = _worldCenterSize, Position = -_worldCenterSize / 2 };
         AddChild(worldCenter);
 
         // create player
         GameManager.Instance.Player = new PlayerScene();
         AddChild(GameManager.Instance.Player);
-
-        // create projectile weapon
-        ProjectileWeapon projectile = new(BaseWeapon.TrajectoryStyleEnum.FACING, true);
-        GameManager.Instance.Player.PlayerWeapons.CreateWeapon(projectile);
-
-        // // create stationary weapon
-        // StationaryWeapon stationary = new(BaseWeapon.TrajectoryStyleEnum.NONE, true);
-        // GameManager.Instance.Player.PlayerWeapons.CreateWeapon(stationary);
-
-        // // create relative weapon
-        // RelativeWeapon relative = new(BaseWeapon.TrajectoryStyleEnum.NONE, true);
-        // GameManager.Instance.Player.PlayerWeapons.CreateWeapon(relative);
 
         // create EnemiesManager
         GameManager.Instance.EnemiesManager = new EnemiesManager(6);
@@ -33,6 +25,10 @@ public partial class TestScenario : Node2D
         GameManager.Instance.ExperienceManager = new ExperienceManager();
         AddChild(GameManager.Instance.ExperienceManager);
 
+        // weapon switching
+        CreateWeaponTypeOptions();
+
+        // spawn enemies
         Ready += TEST_SpawnEnemies;
     }
 
@@ -62,6 +58,43 @@ public partial class TestScenario : Node2D
         if (@event.IsAction("back"))
         {
             SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU);
+        }
+    }
+
+    public void CreateWeaponTypeOptions()
+    {
+        Theme theme = new() { DefaultFontSize = 6 };
+        Vector2 titleSize = new(24, 16);
+        int separation = 25;
+
+        (string title, Func<BaseWeapon> createWeapon)[] types = [
+            new("Projectile", () => new ProjectileWeapon(BaseWeapon.TrajectoryStyleEnum.FACING, true)),
+            new("Stationary", () => new StationaryWeapon(BaseWeapon.TrajectoryStyleEnum.NONE, true)),
+            new("Relative", () => new RelativeWeapon(BaseWeapon.TrajectoryStyleEnum.NONE, true)),
+        ];
+
+        static void OnCreateWeapon(PlayerScene player, Func<BaseWeapon> createWeapon)
+        {
+            if (player.PlayerWeapons.WeaponsList.Count > 0) player.PlayerWeapons.DestroyWeapon(player.PlayerWeapons.WeaponsList[0]);
+            player.PlayerWeapons.CreateWeapon(createWeapon());
+        }
+
+        // parent node
+        Vector2 parentPosition = new(-(titleSize.X + (separation * (types.Length + 1)) + (_worldCenterSize.X / 2)), -separation);
+        Node2D parent = new() { Position = parentPosition };
+        AddChild(parent);
+
+        // title
+        WorldTextCentered label = new("Weapon", theme) { Position = new Vector2(titleSize.X / 2, 0) };
+        parent.AddChild(label);
+
+        // options
+        Vector2 nextPos = new(titleSize.X + separation / 2, 0);
+        foreach ((string title, Func<BaseWeapon> createWeapon) in types)
+        {
+            PlayerTrigger weapon = new(title, (player) => OnCreateWeapon(player, createWeapon)) { Position = nextPos };
+            parent.AddChild(weapon);
+            nextPos.X += separation;
         }
     }
 }

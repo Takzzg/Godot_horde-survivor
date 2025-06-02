@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
@@ -97,11 +96,11 @@ public partial class SceneManager : Node
                 break;
 
             case EnumScenes.MAIN_GAME:
-                _currentNode = new MainGame();
+                _currentNode = new MainGame() { TextureFilter = CanvasItem.TextureFilterEnum.Nearest };
                 break;
 
             case EnumScenes.TEST_SCENARIO:
-                _currentNode = new TestScenario();
+                _currentNode = new TestScenario() { TextureFilter = CanvasItem.TextureFilterEnum.Nearest };
                 break;
         }
     }

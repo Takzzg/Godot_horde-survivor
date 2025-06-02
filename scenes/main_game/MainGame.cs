@@ -5,7 +5,6 @@ public partial class MainGame : Node2D
     public MainGame()
     {
         GD.Print($"MainGame ready!");
-        TextureFilter = TextureFilterEnum.Nearest;
 
         // world center reference
         Vector2 squareSize = new(64, 64);
