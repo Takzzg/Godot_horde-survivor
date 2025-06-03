@@ -22,8 +22,9 @@ public partial class LoadingScreen : Control
             if (Tween.IsRunning()) return;
         }
 
-        GD.Print($"creating tween");
-        GD.Print($"Bar: {Bar.Value}, percent: {percentage}");
+        // GD.Print($"creating tween");
+        // GD.Print($"Bar: {Bar.Value}, percent: {percentage}");
+        GD.Print($"loading: {percentage}%");
 
         Tween = GetTree().CreateTween();
         Tween.TweenProperty(Bar, "value", percentage, TweenSpeed);
