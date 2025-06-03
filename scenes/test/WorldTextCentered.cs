@@ -7,7 +7,7 @@ public partial class WorldTextCentered : CenterContainer
         GrowHorizontal = GrowDirection.Both;
         GrowVertical = GrowDirection.Both;
 
-        Label weaponTypesLabel = new() { Text = title, Theme = theme };
-        AddChild(weaponTypesLabel);
+        Label label = new() { Text = title, Theme = theme };
+        AddChild(label);
     }
 }
