@@ -26,10 +26,6 @@ offset_bottom = 93.0
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
 
 [node name="BoxContainer" type="BoxContainer" parent="PanelContainer/MarginContainer"]
 layout_mode = 2

@@ -36,6 +36,10 @@ project/assembly_name="horde survivor"
 
 player=""
 
+[gui]
+
+theme/custom="uid://d0iicskici3eu"
+
 [input]
 
 left={
@@ -96,3 +100,7 @@ toggle_debug={
 2d_physics/layer_3="enemy_hurt_box"
 2d_physics/layer_4="player_projectile_hit_box"
 2d_physics/layer_5="experience_entities"
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.0705882, 0.0705882, 0.0705882, 1)
