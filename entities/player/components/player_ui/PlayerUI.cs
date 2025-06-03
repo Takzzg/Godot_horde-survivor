@@ -12,10 +12,10 @@ public partial class PlayerUI : BasePlayerComponent
         CanvasLayer layer = new();
         AddChild(layer);
 
-        DeathUI = ResourcePaths.GetInstanceFromEnum<Control>(ResourcePaths.EnumPathsDictionary.PLAYER_DEATH_UI);
+        DeathUI = ResourcePaths.GetSceneInstanceFromEnum<Control>(ResourcePaths.ScenePathsEnum.PLAYER_DEATH_UI);
         layer.AddChild(DeathUI);
 
-        GameplayUI = ResourcePaths.GetInstanceFromEnum<GameplayUI>(ResourcePaths.EnumPathsDictionary.PLAYER_GAMEPLAY_UI);
+        GameplayUI = ResourcePaths.GetSceneInstanceFromEnum<GameplayUI>(ResourcePaths.ScenePathsEnum.PLAYER_GAMEPLAY_UI);
         layer.AddChild(GameplayUI);
 
         DeathUI.Visible = false;

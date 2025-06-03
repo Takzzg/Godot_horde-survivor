@@ -2,9 +2,10 @@ using Godot;
 
 public partial class MainMenu : Control
 {
-
     [Export]
     private Button _start;
+    [Export]
+    private Button _options;
     [Export]
     private Button _quit;
     [Export]
@@ -22,6 +23,7 @@ public partial class MainMenu : Control
     {
         GD.Print($"MainMenu ready!");
         _start.Pressed += StartGame;
+        _options.Pressed += SceneManager.Instance.OpenOptionsMenu;
         _quit.Pressed += QuitGame;
         _versionLabel.Text = GameManager.GAME_VERSION;
 
@@ -51,4 +53,5 @@ public partial class MainMenu : Control
         }
         if (@event.IsActionPressed("back")) { QuitGame(); }
     }
+
 }

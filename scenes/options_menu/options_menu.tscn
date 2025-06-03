@@ -1,0 +1,76 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4dtu4w87d6sm"]
+
+[ext_resource type="Script" uid="uid://cny01blwlcvpx" path="res://scenes/options_menu/OptionsMenu.cs" id="1_sglii"]
+
+[node name="OptionsMenu" type="Panel" node_paths=PackedStringArray("_cancelBtn", "_defatulBtn", "_saveBtn", "_fontOptionBtn")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sglii")
+_cancelBtn = NodePath("BoxContainer/BoxContainer/CancelBtn")
+_defatulBtn = NodePath("BoxContainer/BoxContainer/DefaultBtn")
+_saveBtn = NodePath("BoxContainer/BoxContainer/SaveBtn")
+_fontOptionBtn = NodePath("BoxContainer/BoxContainer2/BoxContainer/GridContainer/OptionButton")
+
+[node name="BoxContainer" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.5
+offset_top = -56.0
+offset_right = 88.5
+offset_bottom = 56.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+vertical = true
+
+[node name="Label" type="Label" parent="BoxContainer"]
+layout_mode = 2
+text = "Options Menu"
+horizontal_alignment = 1
+
+[node name="BoxContainer2" type="BoxContainer" parent="BoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="BoxContainer" type="BoxContainer" parent="BoxContainer/BoxContainer2"]
+layout_mode = 2
+vertical = true
+
+[node name="Label" type="Label" parent="BoxContainer/BoxContainer2/BoxContainer"]
+layout_mode = 2
+text = "Display"
+
+[node name="GridContainer" type="GridContainer" parent="BoxContainer/BoxContainer2/BoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="BoxContainer/BoxContainer2/BoxContainer/GridContainer"]
+layout_mode = 2
+text = "Font"
+
+[node name="OptionButton" type="OptionButton" parent="BoxContainer/BoxContainer2/BoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BoxContainer" type="BoxContainer" parent="BoxContainer"]
+layout_mode = 2
+
+[node name="CancelBtn" type="Button" parent="BoxContainer/BoxContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="DefaultBtn" type="Button" parent="BoxContainer/BoxContainer"]
+layout_mode = 2
+text = "Default
+"
+
+[node name="SaveBtn" type="Button" parent="BoxContainer/BoxContainer"]
+layout_mode = 2
+text = "Save"

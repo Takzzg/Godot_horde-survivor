@@ -9,7 +9,6 @@ public partial class SceneManager : Node
     public enum EnumScenes { MAIN_MENU, MAIN_GAME, TEST_SCENARIO };
 
     // loading
-    public PackedScene _loadingScreenScene;
     private LoadingScreen _loadingScreen;
     private string _loadDir;
     private bool _isloading;
@@ -19,7 +18,6 @@ public partial class SceneManager : Node
         GD.Print($"SceneManager singleton ready!");
         Instance = this;
 
-        _loadingScreenScene = ResourcePaths.GetPackedSceneFromEnum(ResourcePaths.EnumPathsDictionary.LOADING_SCREEN);
         _currentNode = GetTree().Root.GetChildren().Last();
         GD.Print($"_currentNode.Name: {_currentNode.Name}");
     }
@@ -82,7 +80,7 @@ public partial class SceneManager : Node
         _isloading = true;
 
         GD.Print($"creating loading screen");
-        _loadingScreen = _loadingScreenScene.Instantiate<LoadingScreen>();
+        _loadingScreen = ResourcePaths.GetSceneInstanceFromEnum<LoadingScreen>(ResourcePaths.ScenePathsEnum.LOADING_SCREEN);
         AddChild(_loadingScreen);
         // GetTree().Root.CallDeferred("add_child", _loadingScreen);
 
@@ -107,15 +105,21 @@ public partial class SceneManager : Node
 
     private void LoadPackedScene(EnumScenes scene)
     {
-        ResourcePaths.EnumPathsDictionary pathKey = scene switch
+        ResourcePaths.ScenePathsEnum pathKey = scene switch
         {
-            EnumScenes.MAIN_MENU => ResourcePaths.EnumPathsDictionary.MAIN_MENU,
+            EnumScenes.MAIN_MENU => ResourcePaths.ScenePathsEnum.MAIN_MENU,
             _ => throw new NotImplementedException($"Cant load packed scene {scene}"),
         };
 
-        _loadDir = ResourcePaths.PathsDictionary[pathKey];
+        _loadDir = ResourcePaths.ScenePaths[pathKey];
 
         GD.Print($"request load {scene} packed scene");
         ResourceLoader.LoadThreadedRequest(_loadDir);
+    }
+
+    public void OpenOptionsMenu()
+    {
+        OptionsMenu menu = ResourcePaths.GetSceneInstanceFromEnum<OptionsMenu>(ResourcePaths.ScenePathsEnum.OPTIONS_MENU);
+        _currentNode.AddChild(menu);
     }
 }

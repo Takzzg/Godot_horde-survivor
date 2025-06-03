@@ -5,7 +5,7 @@
 [sub_resource type="Theme" id="Theme_fsom3"]
 default_font_size = 14
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("_start", "_quit", "_versionLabel", "_debugContainer", "_testScenario", "_testLoading")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("_start", "_options", "_quit", "_versionLabel", "_debugContainer", "_testScenario", "_testLoading")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,6 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_oa53l")
 _start = NodePath("MarginContainer2/BoxContainer/ButtonStart")
+_options = NodePath("MarginContainer2/BoxContainer/ButtonOptions")
 _quit = NodePath("MarginContainer2/BoxContainer/ButtonQuit")
 _versionLabel = NodePath("MarginContainer/VersionLabel")
 _debugContainer = NodePath("MarginContainer2/BoxContainer/DebugBoxContainer")
@@ -45,6 +46,10 @@ text = "Horde Survivor"
 [node name="ButtonStart" type="Button" parent="MarginContainer2/BoxContainer"]
 layout_mode = 2
 text = "Start"
+
+[node name="ButtonOptions" type="Button" parent="MarginContainer2/BoxContainer"]
+layout_mode = 2
+text = "Options"
 
 [node name="ButtonQuit" type="Button" parent="MarginContainer2/BoxContainer"]
 layout_mode = 2
