@@ -12,38 +12,79 @@ public partial class OptionsMenu : Control
     [Export]
     private Button _saveBtn;
 
-    [Export]
-    private OptionButton _fontOptionBtn;
-    private Dictionary<string, Font> _fonts;
-
     public override void _Ready()
     {
         _cancelBtn.Pressed += QueueFree;
 
-        LoadFonts();
+        SetupOptionBtn_Font();
+        SetupOptionBtn_Window();
     }
 
-    private void LoadFonts()
+    public override void _UnhandledInput(InputEvent @event)
     {
-        string fontsPath = ResourcePaths.AssetPaths[ResourcePaths.AssetPathsEnum.FONTS];
-        _fonts = ResourcePaths.LoadResourcesFromDirectory<Font>(fontsPath);
+        if (@event.IsActionPressed("back"))
+        {
+            GetViewport().SetInputAsHandled();
+            QueueFree();
+        }
+    }
 
-        // GD.Print($"fonts: {_fonts}");
-        // GD.Print($"fonts.Keys.Count: {_fonts.Keys.Count}");
+    // -------------------------------------------- Font --------------------------------------------
 
+    [Export]
+    private OptionButton _fontOptionBtn;
+    private Dictionary<string, string> _fontPaths;
+
+    private void SetupOptionBtn_Font()
+    {
+        // read files from fonst dir
+        string fontsDir = ResourcePaths.AssetPaths[ResourcePaths.AssetPathsEnum.FONTS];
+        _fontPaths = ResourcePaths.GetAllResourcePathsInDirectory(fontsDir);
+
+        // create items
         _fontOptionBtn.AddItem("Default");
+        foreach (string file_name in _fontPaths.Keys) { _fontOptionBtn.AddItem(file_name); }
+
+        // initialize options button
         _fontOptionBtn.Selected = 0;
         _fontOptionBtn.ItemSelected += ChangeFont;
-
-        foreach (string key in _fonts.Keys) { _fontOptionBtn.AddItem(key); }
     }
 
     private void ChangeFont(long index)
     {
-        // GD.Print($"selected option: index {index}, text {_fontOptionBtn.GetItemText((int)index)}");
         Theme theme = ThemeDB.GetProjectTheme();
+        Font font = ThemeDB.FallbackFont;
 
-        Font font = index == 0 ? ThemeDB.FallbackFont : _fonts[_fonts.Keys.ElementAt((Index)(index - 1))];
+        if (index != 0)
+        {
+            string file_name = _fontPaths.Keys.ElementAt((Index)(index - 1));
+            font = ResourcePaths.LoadResourceFromPath<Font>(_fontPaths[file_name]);
+        }
+
         theme.DefaultFont = font;
+    }
+
+    // -------------------------------------------- Window --------------------------------------------
+    [Export]
+    private OptionButton _windowOptionBtn;
+    private static List<DisplayServer.WindowMode> _windowModes = [
+        DisplayServer.WindowMode.Windowed,
+        DisplayServer.WindowMode.ExclusiveFullscreen,
+    ];
+
+    private void SetupOptionBtn_Window()
+    {
+        // create items
+        foreach (DisplayServer.WindowMode mode in _windowModes) { _windowOptionBtn.AddItem(mode.ToString()); }
+
+        // initialize options button
+        _windowOptionBtn.Selected = 0;
+        _windowOptionBtn.ItemSelected += ChangeWindowMode;
+    }
+
+    private void ChangeWindowMode(long index)
+    {
+        DisplayServer.WindowMode mode = _windowModes.ElementAt((Index)index);
+        DisplayServer.WindowSetMode(mode);
     }
 }

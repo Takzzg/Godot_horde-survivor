@@ -3,9 +3,46 @@ using Godot;
 
 public static class ResourcePaths
 {
-    public static Dictionary<string, T> LoadResourcesFromDirectory<T>(string path) where T : Resource
+    // public static Dictionary<string, T> LoadAllResourcesFromDirectory<T>(string path) where T : Resource
+    // {
+    //     Dictionary<string, T> resources = [];
+
+    //     DirAccess dir_access = DirAccess.Open(path);
+    //     if (dir_access == null) { return null; }
+
+    //     string[] files = dir_access.GetFiles();
+    //     if (files == null) { return null; }
+
+    //     foreach (string file_name in files)
+    //     {
+    //         if (file_name.EndsWith(".import")) { continue; }
+
+    //         T loaded_resource = GD.Load<T>(path + "/" + file_name);
+    //         if (loaded_resource == null) { continue; }
+
+    //         GD.Print($"resouce loaded: {path + "/" + file_name}, {loaded_resource}");
+    //         resources[file_name] = loaded_resource;
+    //     }
+
+    //     return resources;
+    // }
+
+    // -------------------------------------------- Assets --------------------------------------------
+    public enum AssetPathsEnum { FONTS }
+    public static Dictionary<AssetPathsEnum, string> AssetPaths = new()
     {
-        Dictionary<string, T> resources = [];
+        {AssetPathsEnum.FONTS, "res://assets/fonts"},
+    };
+
+    public static T LoadResourceFromPath<T>(string path) where T : Resource
+    {
+        T res = GD.Load<T>(path);
+        return res;
+    }
+
+    public static Dictionary<string, string> GetAllResourcePathsInDirectory(string path)
+    {
+        Dictionary<string, string> paths = [];
 
         DirAccess dir_access = DirAccess.Open(path);
         if (dir_access == null) { return null; }
@@ -16,23 +53,11 @@ public static class ResourcePaths
         foreach (string file_name in files)
         {
             if (file_name.EndsWith(".import")) { continue; }
-
-            T loaded_resource = GD.Load<T>(path + "/" + file_name);
-            if (loaded_resource == null) { continue; }
-
-            GD.Print($"resouce loaded: {path + "/" + file_name}, {loaded_resource}");
-            resources[file_name] = loaded_resource;
+            paths[file_name] = path + "/" + file_name;
         }
 
-        return resources;
+        return paths;
     }
-
-    // -------------------------------------------- Assets --------------------------------------------
-    public enum AssetPathsEnum { FONTS }
-    public static Dictionary<AssetPathsEnum, string> AssetPaths = new()
-    {
-        {AssetPathsEnum.FONTS, "res://assets/fonts"},
-    };
 
     // -------------------------------------------- Scenes --------------------------------------------
     public enum ScenePathsEnum { LOADING_SCREEN, MAIN_MENU, OPTIONS_MENU, PLAYER_GAMEPLAY_UI, PLAYER_DEATH_UI }

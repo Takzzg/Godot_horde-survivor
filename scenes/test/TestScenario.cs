@@ -63,7 +63,7 @@ public partial class TestScenario : Node2D
 
     public void CreateWeaponTypeOptions()
     {
-        Theme theme = new() { DefaultFontSize = 6 };
+        Theme theme = new() { DefaultFontSize = 8 };
         Vector2 titleSize = new(24, 16);
         int separation = 25;
 

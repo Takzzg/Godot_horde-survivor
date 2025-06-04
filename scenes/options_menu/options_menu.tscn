@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cny01blwlcvpx" path="res://scenes/options_menu/OptionsMenu.cs" id="1_sglii"]
 
-[node name="OptionsMenu" type="Panel" node_paths=PackedStringArray("_cancelBtn", "_defatulBtn", "_saveBtn", "_fontOptionBtn")]
+[node name="OptionsMenu" type="Panel" node_paths=PackedStringArray("_cancelBtn", "_defatulBtn", "_saveBtn", "_fontOptionBtn", "_windowOptionBtn")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -12,7 +12,8 @@ script = ExtResource("1_sglii")
 _cancelBtn = NodePath("BoxContainer/BoxContainer/CancelBtn")
 _defatulBtn = NodePath("BoxContainer/BoxContainer/DefaultBtn")
 _saveBtn = NodePath("BoxContainer/BoxContainer/SaveBtn")
-_fontOptionBtn = NodePath("BoxContainer/BoxContainer2/BoxContainer/GridContainer/OptionButton")
+_fontOptionBtn = NodePath("BoxContainer/BoxContainer2/MarginContainer/BoxContainer/GridContainer/FontOptionButton")
+_windowOptionBtn = NodePath("BoxContainer/BoxContainer2/MarginContainer/BoxContainer/GridContainer/WindowOptionButton")
 
 [node name="BoxContainer" type="BoxContainer" parent="."]
 layout_mode = 1
@@ -39,28 +40,40 @@ horizontal_alignment = 1
 layout_mode = 2
 vertical = true
 
-[node name="BoxContainer" type="BoxContainer" parent="BoxContainer/BoxContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="BoxContainer/BoxContainer2"]
+layout_mode = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="BoxContainer/BoxContainer2/MarginContainer"]
 layout_mode = 2
 vertical = true
 
-[node name="Label" type="Label" parent="BoxContainer/BoxContainer2/BoxContainer"]
+[node name="DisplayTitle" type="Label" parent="BoxContainer/BoxContainer2/MarginContainer/BoxContainer"]
 layout_mode = 2
 text = "Display"
 
-[node name="GridContainer" type="GridContainer" parent="BoxContainer/BoxContainer2/BoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="BoxContainer/BoxContainer2/MarginContainer/BoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="BoxContainer/BoxContainer2/BoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="BoxContainer/BoxContainer2/MarginContainer/BoxContainer/GridContainer"]
 layout_mode = 2
 text = "Font"
 
-[node name="OptionButton" type="OptionButton" parent="BoxContainer/BoxContainer2/BoxContainer/GridContainer"]
+[node name="FontOptionButton" type="OptionButton" parent="BoxContainer/BoxContainer2/MarginContainer/BoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label4" type="Label" parent="BoxContainer/BoxContainer2/MarginContainer/BoxContainer/GridContainer"]
+layout_mode = 2
+text = "Window"
+
+[node name="WindowOptionButton" type="OptionButton" parent="BoxContainer/BoxContainer2/MarginContainer/BoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="BoxContainer" type="BoxContainer" parent="BoxContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="CancelBtn" type="Button" parent="BoxContainer/BoxContainer"]
 layout_mode = 2
