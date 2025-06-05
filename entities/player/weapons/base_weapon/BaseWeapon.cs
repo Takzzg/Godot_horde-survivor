@@ -4,54 +4,121 @@ using Godot;
 
 public abstract partial class BaseWeapon : DebuggerNode
 {
-    // player
-    protected PlayerScene _player;
-
-    // timer
-    protected bool TEST_MANUAL = false;
-    private Timer _timer;
-
-    // entities 
-    public readonly List<WeaponEntity> EntitiesList = [];
-    public WeaponEntityManager WeaponEntityManager;
-    public int MaxCollisionsPerFrame;
-    public double EntityTickDelay = 0.5f;
-
-    // trajectory
-    public enum TrajectoryStyleEnum { NONE, RANDOM, FACING, FIXED }
-    public TrajectoryStyleEnum Trajectory;
-
     public BaseWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false)
     {
+        TEST_MANUAL = test_manual;
         Trajectory = entityTrajectory;
 
-        // create entity manager
-        WeaponEntityManager = new WeaponEntityManager() { TopLevel = true };
-        AddChild(WeaponEntityManager);
+        CreateEntityManager();
 
-        // clear entities on exit
-        TreeExiting += () => { EntitiesList.ForEach(WeaponEntityManager.FreeEntityRids); };
-
-        // trigger on input
-        TEST_MANUAL = test_manual;
         if (TEST_MANUAL) return;
-
-        // bind trigger timer
-        _timer = new() { Autostart = true, OneShot = false, WaitTime = 0.25 };
-        _timer.Timeout += OnTrigger;
-        AddChild(_timer);
+        CreateTimer();
     }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        ProcessEntities(delta);
+    }
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (!TEST_MANUAL) return;
+        if (@event.IsActionPressed("enter"))
+        {
+            OnTrigger();
+            GetViewport().SetInputAsHandled();
+        }
+    }
+
+    // -------------------------------------------- Player --------------------------------------------
+    protected PlayerScene _player;
 
     public void SetPlayerReference(PlayerScene player)
     {
         _player = player;
     }
 
+    public void OnPlayerDeath()
+    {
+        TimedSetRunning(false);
+
+        EntitiesList.ForEach(WeaponEntityManager.FreeEntityRids);
+        EntitiesList.Clear();
+
+        // update debug label
+        DebugTryUpdateField("entities_count", EntitiesList.Count.ToString());
+    }
+
+    // -------------------------------------------- Timer --------------------------------------------
+    protected bool TEST_MANUAL = false;
+    private Timer _timer;
     public abstract void OnTrigger();
+
+    public void TimedSetRunning(bool state)
+    {
+        if (TEST_MANUAL) return;
+
+        if (state) _timer.Start();
+        else _timer.Stop();
+    }
+
+    public void CreateTimer()
+    {
+        _timer = new() { Autostart = true, OneShot = false, WaitTime = 0.25 };
+        _timer.Timeout += OnTrigger;
+        AddChild(_timer);
+    }
+
+    // -------------------------------------------- Trajectory --------------------------------------------
+    public enum TrajectoryStyleEnum { NONE, RANDOM, FACING, FIXED }
+    public TrajectoryStyleEnum Trajectory;
+
+    public Vector2 GetTrajectory()
+    {
+        return Trajectory switch
+        {
+            TrajectoryStyleEnum.RANDOM => GetRandomTrajectory(),
+            TrajectoryStyleEnum.FACING => GetFacingTrajectory(),
+            TrajectoryStyleEnum.FIXED => GetFixedTrajectory(),
+            TrajectoryStyleEnum.NONE => Vector2.Zero,
+            _ => throw new NotImplementedException(),
+        };
+    }
+
+    public Func<Vector2> GetFixedTrajectory = () => throw new NotImplementedException();
+    public Vector2 GetFacingTrajectory() { return _player.PlayerMovement.FacingDirection; }
+    protected static Vector2 GetRandomTrajectory() { return Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360)); }
+
+    // -------------------------------------------- Entities --------------------------------------------
+    public readonly List<WeaponEntity> EntitiesList = [];
+    public WeaponEntityManager WeaponEntityManager;
+    public int MaxCollisionsPerFrame;
+    public double EntityTickDelay = 0.5f;
+
     public abstract void OnCollision(WeaponEntity entity, BasicEnemy enemy);
     public abstract WeaponEntity GetBaseEntity();
+    public abstract void UpdateEntityPosition(WeaponEntity entity, double delta);
 
-    public override void _PhysicsProcess(double delta)
+    public void CreateEntityManager()
+    {
+        // create entity manager
+        WeaponEntityManager = new WeaponEntityManager() { TopLevel = true };
+        AddChild(WeaponEntityManager);
+
+        // clear entities on exit
+        TreeExiting += () => { EntitiesList.ForEach(WeaponEntityManager.FreeEntityRids); };
+    }
+
+    private void DestroyEntity(WeaponEntity entity)
+    {
+        WeaponEntityManager.FreeEntityRids(entity);
+        EntitiesList.Remove(entity);
+
+        // update debug label
+        DebugTryUpdateField("entities_count", EntitiesList.Count.ToString());
+    }
+
+    private void ProcessEntities(double delta)
     {
         if (EntitiesList.Count == 0) return;
 
@@ -84,58 +151,7 @@ public abstract partial class BaseWeapon : DebuggerNode
         if (expiredEntities.Count > 0) { expiredEntities.ForEach(DestroyEntity); }
     }
 
-    public abstract void UpdateEntityPosition(WeaponEntity entity, double delta);
-
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        if (!TEST_MANUAL) return;
-        if (@event.IsActionPressed("enter")) { OnTrigger(); }
-    }
-
-    public void TimedSetRunning(bool state)
-    {
-        if (TEST_MANUAL) return;
-
-        if (state) _timer.Start();
-        else _timer.Stop();
-    }
-
-    public Vector2 GetTrajectory()
-    {
-        return Trajectory switch
-        {
-            TrajectoryStyleEnum.RANDOM => GetRandomTrajectory(),
-            TrajectoryStyleEnum.FACING => GetFacingTrajectory(),
-            TrajectoryStyleEnum.FIXED => GetFixedTrajectory(),
-            TrajectoryStyleEnum.NONE => Vector2.Zero,
-            _ => throw new NotImplementedException(),
-        };
-    }
-
-    public Func<Vector2> GetFixedTrajectory = () => throw new NotImplementedException();
-    public Vector2 GetFacingTrajectory() { return _player.PlayerMovement.FacingDirection; }
-    protected static Vector2 GetRandomTrajectory() { return Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360)); }
-
-    private void DestroyEntity(WeaponEntity entity)
-    {
-        WeaponEntityManager.FreeEntityRids(entity);
-        EntitiesList.Remove(entity);
-
-        // update debug label
-        DebugTryUpdateField("entities_count", EntitiesList.Count.ToString());
-    }
-
-    public void OnPlayerDeath()
-    {
-        TimedSetRunning(false);
-
-        EntitiesList.ForEach(WeaponEntityManager.FreeEntityRids);
-        EntitiesList.Clear();
-
-        // update debug label
-        DebugTryUpdateField("entities_count", EntitiesList.Count.ToString());
-    }
-
+    // -------------------------------------------- Debug --------------------------------------------
     public abstract string DebugGetCategoryTitle();
 
     public override DebugCategory DebugCreateCategory()
