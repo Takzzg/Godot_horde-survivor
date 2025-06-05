@@ -53,14 +53,6 @@ public partial class TestScenario : Node2D
         }
     }
 
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        if (@event.IsAction("back"))
-        {
-            SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU);
-        }
-    }
-
     public void CreateWeaponTypeOptions()
     {
         int separation = 25;

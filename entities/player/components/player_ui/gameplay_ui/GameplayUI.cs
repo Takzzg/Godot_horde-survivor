@@ -33,4 +33,11 @@ public partial class GameplayUI : Control
     {
         _killCountLabel.Text = count.ToString();
     }
+
+    public void UpdateValues(PlayerScene player)
+    {
+        UpdateHealthBar(player.PlayerHealth.Health, player.PlayerHealth.MaxHealth);
+        UpdateExperienceBar(player.PlayerExperience.CurrentExperience, player.PlayerExperience.RequiredExperience);
+        UpdateKillCount(player.PlayerStats.KillCount);
+    }
 }

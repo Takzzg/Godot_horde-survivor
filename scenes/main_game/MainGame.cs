@@ -29,12 +29,4 @@ public partial class MainGame : Node2D
 
         GameManager.Instance.EnemiesManager.StartSpawnerTimer();
     }
-
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        if (@event.IsAction("back"))
-        {
-            SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU);
-        }
-    }
 }

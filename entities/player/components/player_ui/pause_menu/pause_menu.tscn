@@ -1,0 +1,84 @@
+[gd_scene load_steps=2 format=3 uid="uid://dae6ck6o3v1kw"]
+
+[ext_resource type="Script" uid="uid://lub10cllmhgp" path="res://entities/player/components/player_ui/pause_menu/PauseMenu.cs" id="1_tl8p8"]
+
+[node name="PauseMenu" type="Panel" node_paths=PackedStringArray("_quitBtn", "_continueBtn", "_weaponsCont")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tl8p8")
+_quitBtn = NodePath("MarginContainer/QuitBtn")
+_continueBtn = NodePath("MarginContainer3/ContinueBtn")
+_weaponsCont = NodePath("BoxContainer/MarginContainer/WeaponsBoxContainer")
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -61.0
+offset_right = 61.0
+offset_bottom = 39.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="MarginContainer2"]
+layout_mode = 2
+text = "Game Paused"
+
+[node name="BoxContainer" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+vertical = true
+
+[node name="Label" type="Label" parent="BoxContainer"]
+layout_mode = 2
+text = "Weapons"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="BoxContainer"]
+layout_mode = 2
+
+[node name="WeaponsBoxContainer" type="BoxContainer" parent="BoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -47.0
+offset_right = 127.0
+grow_vertical = 0
+
+[node name="QuitBtn" type="Button" parent="MarginContainer"]
+layout_mode = 2
+text = "Quit to menu"
+
+[node name="MarginContainer3" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -47.5
+offset_top = -47.0
+offset_right = 47.5
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ContinueBtn" type="Button" parent="MarginContainer3"]
+layout_mode = 2
+text = "Continue"

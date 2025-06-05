@@ -14,6 +14,7 @@ public partial class DebugManager : Node2D
 
     public DebugManager()
     {
+        ProcessMode = ProcessModeEnum.Always;
         Instance = this;
 
         // create layer
