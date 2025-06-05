@@ -1,5 +1,3 @@
-using System;
-
 public partial class ProjectileWeapon : BaseWeapon
 {
     public ProjectileWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(entityTrajectory, test_manual)
@@ -14,7 +12,7 @@ public partial class ProjectileWeapon : BaseWeapon
         return new WeaponEntity()
         {
             Damage = 25,
-            Speed = 50,
+            Speed = 75,
             Radius = 2,
             MaxPierceCount = 1,
         };
@@ -26,11 +24,10 @@ public partial class ProjectileWeapon : BaseWeapon
         entity.Position = GlobalPosition;
         entity.Direction = GetTrajectory();
 
-        WeaponEntityManager.SetUpEntity(entity);
-        EntitiesList.Add(entity);
+        WeaponEntityManager.CreateEntity(entity);
 
         // update debug label
-        DebugTryUpdateField("entities_count", EntitiesList.Count.ToString());
+        DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
     }
 
     public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)

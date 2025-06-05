@@ -1,13 +1,8 @@
 using Godot;
 
-public partial class RelativeWeapon : BaseWeapon
+public partial class RelativeWeapon(BaseWeapon.TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : BaseWeapon(entityTrajectory, test_manual)
 {
     public int RelativeOffset = 10;
-
-    public RelativeWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(entityTrajectory, test_manual)
-    {
-        MaxCollisionsPerFrame = 16;
-    }
 
     public override string GetWeaponType() => "Relative";
 
@@ -34,11 +29,10 @@ public partial class RelativeWeapon : BaseWeapon
         entity.Position = _player.Position + entity.Offset;
         entity.Direction = GetTrajectory();
 
-        WeaponEntityManager.SetUpEntity(entity);
-        EntitiesList.Add(entity);
+        WeaponEntityManager.CreateEntity(entity);
 
         // update debug label
-        DebugTryUpdateField("entities_count", EntitiesList.Count.ToString());
+        DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
     }
 
     public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)

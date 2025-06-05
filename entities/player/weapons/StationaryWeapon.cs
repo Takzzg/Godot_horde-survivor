@@ -1,12 +1,7 @@
 using Godot;
 
-public partial class StationaryWeapon : BaseWeapon
+public partial class StationaryWeapon(BaseWeapon.TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : BaseWeapon(entityTrajectory, test_manual)
 {
-    public StationaryWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(entityTrajectory, test_manual)
-    {
-        MaxCollisionsPerFrame = 16;
-    }
-
     public override string GetWeaponType() => "Stationary";
 
     public override WeaponEntity GetBaseEntity()
@@ -33,11 +28,10 @@ public partial class StationaryWeapon : BaseWeapon
             entity.Position = Utils.GetPointArounOrigin(GlobalPosition, distance, angle);
         }
 
-        WeaponEntityManager.SetUpEntity(entity);
-        EntitiesList.Add(entity);
+        WeaponEntityManager.CreateEntity(entity);
 
         // update debug label
-        DebugTryUpdateField("entities_count", EntitiesList.Count.ToString());
+        DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
     }
 
     public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)

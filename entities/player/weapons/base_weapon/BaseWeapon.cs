@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Godot;
 
 public abstract partial class BaseWeapon : DebuggerNode
@@ -9,7 +8,9 @@ public abstract partial class BaseWeapon : DebuggerNode
         TEST_MANUAL = test_manual;
         Trajectory = entityTrajectory;
 
-        CreateEntityManager();
+        // create entity manager
+        WeaponEntityManager = new WeaponEntityManager(MaxCollisionsPerFrame) { TopLevel = true };
+        AddChild(WeaponEntityManager);
 
         if (TEST_MANUAL) return;
         CreateTimer();
@@ -17,7 +18,10 @@ public abstract partial class BaseWeapon : DebuggerNode
 
     public override void _PhysicsProcess(double delta)
     {
-        ProcessEntities(delta);
+        WeaponEntityManager.ProcessEntities(delta, UpdateEntityPosition, OnCollision);
+
+        // update debug label
+        DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -41,12 +45,10 @@ public abstract partial class BaseWeapon : DebuggerNode
     public void OnPlayerDeath()
     {
         TimedSetRunning(false);
-
-        EntitiesList.ForEach(WeaponEntityManager.FreeEntityRids);
-        EntitiesList.Clear();
+        WeaponEntityManager.ClearEntities();
 
         // update debug label
-        DebugTryUpdateField("entities_count", EntitiesList.Count.ToString());
+        DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
     }
 
     // -------------------------------------------- Timer --------------------------------------------
@@ -91,67 +93,12 @@ public abstract partial class BaseWeapon : DebuggerNode
     protected static Vector2 GetRandomTrajectory() { return Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360)); }
 
     // -------------------------------------------- Entities --------------------------------------------
-    public readonly List<WeaponEntity> EntitiesList = [];
     public WeaponEntityManager WeaponEntityManager;
-    public int MaxCollisionsPerFrame;
-    public double EntityTickDelay = 0.5f;
+    public int MaxCollisionsPerFrame = 16;
 
     public abstract void OnCollision(WeaponEntity entity, BasicEnemy enemy);
     public abstract WeaponEntity GetBaseEntity();
     public abstract void UpdateEntityPosition(WeaponEntity entity, double delta);
-
-    public void CreateEntityManager()
-    {
-        // create entity manager
-        WeaponEntityManager = new WeaponEntityManager() { TopLevel = true };
-        AddChild(WeaponEntityManager);
-
-        // clear entities on exit
-        TreeExiting += () => { EntitiesList.ForEach(WeaponEntityManager.FreeEntityRids); };
-    }
-
-    private void DestroyEntity(WeaponEntity entity)
-    {
-        WeaponEntityManager.FreeEntityRids(entity);
-        EntitiesList.Remove(entity);
-
-        // update debug label
-        DebugTryUpdateField("entities_count", EntitiesList.Count.ToString());
-    }
-
-    private void ProcessEntities(double delta)
-    {
-        if (EntitiesList.Count == 0) return;
-
-        // GD.Print($"ProcessEntities()");
-        // GD.Print($"EntitiesList.Count: {EntitiesList.Count}");
-
-        List<WeaponEntity> expiredEntities = [];
-
-        foreach (WeaponEntity entity in EntitiesList)
-        {
-            // move entity
-            UpdateEntityPosition(entity, delta);
-
-            // update entity lifetime
-            entity.LifeTime += delta;
-
-            // check collision
-            WeaponEntityManager.UpdateEntityCollisions(entity, EntityTickDelay, delta);
-            WeaponEntityManager.CheckNewCollisions(entity, MaxCollisionsPerFrame, OnCollision);
-
-            // check expired 
-            if (
-                (entity.MaxPierceCount < 0) || // no pierce left
-                (entity.LifeTime > entity.MaxLifeTime) || // lifetime elapsed
-                (entity.Position.DistanceTo(GlobalPosition) > entity.MaxDistance) // too far
-            )
-            { expiredEntities.Add(entity); }
-        }
-
-        // destroy expired entities
-        if (expiredEntities.Count > 0) { expiredEntities.ForEach(DestroyEntity); }
-    }
 
     // -------------------------------------------- Pause Menu --------------------------------------------
     public abstract string GetWeaponType();
@@ -169,7 +116,7 @@ public abstract partial class BaseWeapon : DebuggerNode
 
         category.CreateDivider("Weapon Stats");
         category.CreateLabelField("entity_trajectory", "Trajectory.", Trajectory.ToString());
-        category.CreateLabelField("entities_count", "Entities", EntitiesList.Count.ToString());
+        category.CreateLabelField("entities_count", "Entities", WeaponEntityManager.EntitiesList.Count.ToString());
         category.CreateLabelField("timer_delay", "Delay", TEST_MANUAL ? "MANUAL" : $"{TimerDelay}s ({1 / TimerDelay}bps)");
 
         WeaponEntity baseEntity = GetBaseEntity();

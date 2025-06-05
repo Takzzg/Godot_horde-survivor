@@ -1,10 +1,74 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 
-public partial class WeaponEntityManager() : Node2D
+public partial class WeaponEntityManager : Node2D
 {
-    public void SetUpEntity(WeaponEntity entity)
+    public readonly List<WeaponEntity> EntitiesList = [];
+    public double EntityTickDelay = 0.5f;
+    public int MaxCollisionsPerFrame;
+
+    public WeaponEntityManager(int maxCollisions)
+    {
+        MaxCollisionsPerFrame = maxCollisions;
+
+        // clear entities on exit
+        TreeExiting += ClearEntities;
+    }
+
+    public void ClearEntities()
+    {
+        EntitiesList.ForEach(FreeEntityRids);
+        EntitiesList.Clear();
+    }
+
+    public void ProcessEntities(double delta, Action<WeaponEntity, double> updatePos, Action<WeaponEntity, BasicEnemy> onCollide)
+    {
+        if (EntitiesList.Count == 0) return;
+
+        // GD.Print($"ProcessEntities()");
+        // GD.Print($"EntitiesList.Count: {EntitiesList.Count}");
+
+        List<WeaponEntity> expiredEntities = [];
+
+        foreach (WeaponEntity entity in EntitiesList)
+        {
+            // move entity
+            updatePos(entity, delta);
+
+            // update entity lifetime
+            entity.LifeTime += delta;
+
+            // check collision
+            UpdateEntityCollisions(entity, EntityTickDelay, delta);
+            CheckNewCollisions(entity, onCollide);
+
+            // check expired 
+            if (
+                (entity.MaxPierceCount < 0) || // no pierce left
+                (entity.LifeTime > entity.MaxLifeTime) || // lifetime elapsed
+                (entity.Position.DistanceTo(GlobalPosition) > entity.MaxDistance) // too far
+            )
+            { expiredEntities.Add(entity); }
+        }
+
+        // destroy expired entities
+        if (expiredEntities.Count > 0) { expiredEntities.ForEach(DestroyEntity); }
+    }
+
+    private void DestroyEntity(WeaponEntity entity)
+    {
+        FreeEntityRids(entity);
+        EntitiesList.Remove(entity);
+    }
+
+    public static void FreeEntityRids(WeaponEntity entity)
+    {
+        RenderingServer.FreeRid(entity.CanvasItemRid);
+    }
+
+    public void CreateEntity(WeaponEntity entity)
     {
         // GD.Print($"Spawning entity at {entity.Position}");
         Transform2D posTransform = new(0, entity.Position);
@@ -15,6 +79,9 @@ public partial class WeaponEntityManager() : Node2D
         RenderingServer.CanvasItemSetZIndex(entity.CanvasItemRid, entity.Foreground ? 30 : 0);
         RenderingServer.CanvasItemSetTransform(entity.CanvasItemRid, posTransform);
         RenderingServer.CanvasItemAddCircle(entity.CanvasItemRid, Vector2.Zero, entity.Radius, Colors.DarkGray);
+
+        // add to list
+        EntitiesList.Add(entity);
     }
 
     public static void MoveEntity(WeaponEntity entity, double delta)
@@ -47,7 +114,7 @@ public partial class WeaponEntityManager() : Node2D
         }
     }
 
-    public void CheckNewCollisions(WeaponEntity entity, int maxColisions, Action<WeaponEntity, BasicEnemy> onCollide)
+    public void CheckNewCollisions(WeaponEntity entity, Action<WeaponEntity, BasicEnemy> onCollide)
     {
         Transform2D posTransform = new(0, entity.Position);
         PhysicsShapeQueryParameters2D query = new()
@@ -59,7 +126,7 @@ public partial class WeaponEntityManager() : Node2D
             Transform = posTransform,
         };
 
-        Array<Dictionary> collisions = GetWorld2D().DirectSpaceState.IntersectShape(query, maxColisions);
+        Array<Dictionary> collisions = GetWorld2D().DirectSpaceState.IntersectShape(query, MaxCollisionsPerFrame);
         if (collisions.Count == 0) return;
 
         // trigger collision callback
@@ -73,10 +140,5 @@ public partial class WeaponEntityManager() : Node2D
             BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByAreaRid(rid);
             onCollide(entity, enemy); // deal damage
         }
-    }
-
-    public static void FreeEntityRids(WeaponEntity entity)
-    {
-        RenderingServer.FreeRid(entity.CanvasItemRid);
     }
 }
