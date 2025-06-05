@@ -63,8 +63,6 @@ public partial class TestScenario : Node2D
 
     public void CreateWeaponTypeOptions()
     {
-        Theme theme = new() { DefaultFontSize = 8 };
-        Vector2 titleSize = new(24, 16);
         int separation = 25;
 
         (string title, Func<BaseWeapon> createWeapon)[] types = [
@@ -80,16 +78,16 @@ public partial class TestScenario : Node2D
         }
 
         // parent node
-        Vector2 parentPosition = new(-(titleSize.X + (separation * (types.Length + 1)) + (_worldCenterSize.X / 2)), -separation);
+        Vector2 parentPosition = new(-((separation * (types.Length + 1)) + (_worldCenterSize.X / 2)), -separation);
         Node2D parent = new() { Position = parentPosition };
         AddChild(parent);
 
         // title
-        WorldTextCentered label = new("Weapon", theme) { Position = new Vector2(titleSize.X / 2, 0) };
+        Label label = new() { Text = "Weapon", Scale = Vector2.One / 2.5f };
         parent.AddChild(label);
 
         // options
-        Vector2 nextPos = new(titleSize.X + separation / 2, 0);
+        Vector2 nextPos = new(separation * 1.5f, 0);
         foreach ((string title, Func<BaseWeapon> createWeapon) in types)
         {
             PlayerTrigger weapon = new(title, (player) => OnCreateWeapon(player, createWeapon)) { Position = nextPos };

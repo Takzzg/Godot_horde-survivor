@@ -14,7 +14,7 @@ public partial class PlayerScene : CharacterBody2D
     public PlayerScene()
     {
         // create camera
-        Camera2D camera = new() { Zoom = new Vector2(2, 2) };
+        Camera2D camera = new() { Zoom = new Vector2(4, 4) };
         AddChild(camera);
 
         // create components        

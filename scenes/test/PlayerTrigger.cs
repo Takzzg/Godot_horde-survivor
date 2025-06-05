@@ -6,7 +6,6 @@ public partial class PlayerTrigger : Node2D
     private Area2D _area;
     private readonly Action<PlayerScene> _playerCallback;
     private Vector2 _rectSize = new(16, 16);
-    private Theme _theme = new() { DefaultFontSize = 4 };
 
     public PlayerTrigger(string title, Action<PlayerScene> callback)
     {
@@ -31,8 +30,13 @@ public partial class PlayerTrigger : Node2D
         };
         AddChild(rect);
 
-        // create label
-        WorldTextCentered label = new(title, _theme);
+        // title
+        Label label = new()
+        {
+            Text = title,
+            Scale = Vector2.One / 3,
+            Position = -_rectSize / 2,
+        };
         AddChild(label);
     }
 
