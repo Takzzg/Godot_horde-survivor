@@ -7,7 +7,7 @@ public partial class ProjectileWeapon : BaseWeapon
         MaxCollisionsPerFrame = 1;
     }
 
-    public override string DebugGetCategoryTitle() => "Projectile";
+    public override string GetWeaponType() => "Projectile";
 
     public override WeaponEntity GetBaseEntity()
     {

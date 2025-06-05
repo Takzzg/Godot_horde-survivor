@@ -48,6 +48,7 @@ public partial class PlayerUI : BasePlayerComponent
         GetTree().Paused = true;
         GameplayUI.Visible = false;
         PauseMenu = ResourcePaths.GetSceneInstanceFromEnum<PauseMenu>(ResourcePaths.ScenePathsEnum.PLAYER_PAUSE_MENU);
+        PauseMenu.SetPlayerReference(_player);
         _layer.AddChild(PauseMenu);
     }
 

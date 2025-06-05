@@ -14,16 +14,13 @@ public partial class DebugCategory : PanelContainer
         BoxContainer boxCont = new() { Vertical = true };
         margin.AddChild(boxCont);
 
-        PanelContainer panel = new() { };
-        boxCont.AddChild(panel);
-
         Label label = new()
         {
             Text = title,
             HorizontalAlignment = HorizontalAlignment.Center,
-            Theme = new Theme() { DefaultFontSize = 16 }
+            Theme = new Theme() { DefaultFontSize = 20 }
         };
-        panel.AddChild(label);
+        boxCont.AddChild(label);
 
         _container = new BoxContainer() { Vertical = true };
         boxCont.AddChild(_container);

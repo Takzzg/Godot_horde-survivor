@@ -2,6 +2,8 @@ using Godot;
 
 public partial class PauseMenu : Panel
 {
+    private PlayerScene _player;
+
     [Export]
     private Button _quitBtn;
     [Export]
@@ -14,16 +16,31 @@ public partial class PauseMenu : Panel
     {
         _quitBtn.Pressed += QuitToMenu;
         _continueBtn.Pressed += ClosePauseMenu;
+
+        RenderWeapons();
     }
 
-    private static void ClosePauseMenu()
+    public void SetPlayerReference(PlayerScene player)
     {
-        GameManager.Instance.Player.PlayerUI.TogglePauseMenu();
+        _player = player;
+    }
+
+    private void ClosePauseMenu()
+    {
+        _player.PlayerUI.TogglePauseMenu();
     }
 
     private void QuitToMenu()
     {
         GetTree().Paused = false;
         SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU);
+    }
+
+    public void RenderWeapons()
+    {
+        _player.PlayerWeapons.WeaponsList.ForEach(weapon =>
+        {
+            _weaponsCont.AddChild(weapon.GetWeaponPanel());
+        });
     }
 }

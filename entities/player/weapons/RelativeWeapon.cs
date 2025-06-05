@@ -9,7 +9,7 @@ public partial class RelativeWeapon : BaseWeapon
         MaxCollisionsPerFrame = 16;
     }
 
-    public override string DebugGetCategoryTitle() => "Relative";
+    public override string GetWeaponType() => "Relative";
 
     public override WeaponEntity GetBaseEntity()
     {

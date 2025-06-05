@@ -29,7 +29,7 @@ public partial class PlayerWeapons(PlayerScene player, bool useDebug = true) : B
         for (int i = 0; i < WeaponsList.Count; i++)
         {
             BaseWeapon weapon = WeaponsList[i];
-            category.CreateLabelField($"weapon_{i}", $"Weapon #{i}", weapon.DebugGetCategoryTitle());
+            category.CreateLabelField($"weapon_{i}", $"Weapon #{i}", weapon.GetWeaponType());
         }
         return category;
     }

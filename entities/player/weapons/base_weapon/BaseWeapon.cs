@@ -53,6 +53,7 @@ public abstract partial class BaseWeapon : DebuggerNode
     protected bool TEST_MANUAL = false;
     private Timer _timer;
     public abstract void OnTrigger();
+    public float TimerDelay = 0.25f;
 
     public void TimedSetRunning(bool state)
     {
@@ -64,7 +65,7 @@ public abstract partial class BaseWeapon : DebuggerNode
 
     public void CreateTimer()
     {
-        _timer = new() { Autostart = true, OneShot = false, WaitTime = 0.25 };
+        _timer = new() { Autostart = true, OneShot = false, WaitTime = TimerDelay };
         _timer.Timeout += OnTrigger;
         AddChild(_timer);
     }
@@ -151,16 +152,24 @@ public abstract partial class BaseWeapon : DebuggerNode
         if (expiredEntities.Count > 0) { expiredEntities.ForEach(DestroyEntity); }
     }
 
-    // -------------------------------------------- Debug --------------------------------------------
-    public abstract string DebugGetCategoryTitle();
+    // -------------------------------------------- Pause Menu --------------------------------------------
+    public abstract string GetWeaponType();
 
+    public Control GetWeaponPanel()
+    {
+        DebugCategory panel = DebugCreateCategory();
+        return panel;
+    }
+
+    // -------------------------------------------- Debug --------------------------------------------
     public override DebugCategory DebugCreateCategory()
     {
-        DebugCategory category = new($"{DebugGetCategoryTitle()} weapon");
+        DebugCategory category = new($"{GetWeaponType()} weapon");
 
         category.CreateDivider("Weapon Stats");
         category.CreateLabelField("entity_trajectory", "Trajectory.", Trajectory.ToString());
         category.CreateLabelField("entities_count", "Entities", EntitiesList.Count.ToString());
+        category.CreateLabelField("timer_delay", "Delay", TEST_MANUAL ? "MANUAL" : $"{TimerDelay}s ({1 / TimerDelay}bps)");
 
         WeaponEntity baseEntity = GetBaseEntity();
 

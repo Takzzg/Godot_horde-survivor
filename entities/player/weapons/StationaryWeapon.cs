@@ -7,7 +7,7 @@ public partial class StationaryWeapon : BaseWeapon
         MaxCollisionsPerFrame = 16;
     }
 
-    public override string DebugGetCategoryTitle() => "Stationary";
+    public override string GetWeaponType() => "Stationary";
 
     public override WeaponEntity GetBaseEntity()
     {
