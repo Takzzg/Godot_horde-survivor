@@ -137,7 +137,8 @@ public abstract partial class BaseWeapon : DebuggerNode
             entity.LifeTime += delta;
 
             // check collision
-            WeaponEntityManager.CheckCollision(entity, MaxCollisionsPerFrame, EntityTickDelay, OnCollision);
+            WeaponEntityManager.UpdateEntityCollisions(entity, EntityTickDelay, delta);
+            WeaponEntityManager.CheckNewCollisions(entity, MaxCollisionsPerFrame, OnCollision);
 
             // check expired 
             if (

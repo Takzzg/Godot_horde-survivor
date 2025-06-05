@@ -38,17 +38,17 @@ public partial class WeaponEntityManager() : Node2D
         RenderingServer.CanvasItemSetTransform(entity.CanvasItemRid, posTransform);
     }
 
-    public void CheckCollision(WeaponEntity entity, int maxColisions, double tickDelay, Action<WeaponEntity, BasicEnemy> onCollide)
+    public void UpdateEntityCollisions(WeaponEntity entity, double tickeDelay, double delta)
     {
-        double currentTime = Time.GetUnixTimeFromSystem();
-
-        // clear expired collisions
         foreach (Rid key in entity.CollidingWith.Keys)
         {
-            if (entity.CollidingWith[key] < currentTime) { entity.CollidingWith.Remove(key); }
+            if (entity.CollidingWith[key] > tickeDelay) { entity.CollidingWith.Remove(key); }
+            else { entity.CollidingWith[key] += delta; }
         }
+    }
 
-        // check collisions
+    public void CheckNewCollisions(WeaponEntity entity, int maxColisions, Action<WeaponEntity, BasicEnemy> onCollide)
+    {
         Transform2D posTransform = new(0, entity.Position);
         PhysicsShapeQueryParameters2D query = new()
         {
@@ -68,7 +68,7 @@ public partial class WeaponEntityManager() : Node2D
             Rid rid = (Rid)col["rid"];
             if (entity.CollidingWith.ContainsKey(rid)) { continue; } // already colliding
 
-            entity.CollidingWith.Add(rid, currentTime + tickDelay);
+            entity.CollidingWith.Add(rid, 0);
 
             BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByAreaRid(rid);
             onCollide(entity, enemy); // deal damage
