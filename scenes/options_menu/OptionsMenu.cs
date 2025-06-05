@@ -12,12 +12,19 @@ public partial class OptionsMenu : Control
     [Export]
     private Button _saveBtn;
 
+    [Export]
+    private OptionButton _fontOptionBtn;
+    [Export]
+    private OptionButton _windowOptionBtn;
+
     public override void _Ready()
     {
-        _cancelBtn.Pressed += QueueFree;
+        _cancelBtn.Pressed += OnCancel;
+        _defatulBtn.Pressed += OnDefault;
+        _saveBtn.Pressed += OnSave;
 
-        SetupOptionBtn_Font();
-        SetupOptionBtn_Window();
+        CreateItems();
+        ReadValuesFromFile();
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -25,66 +32,46 @@ public partial class OptionsMenu : Control
         if (@event.IsActionPressed("back"))
         {
             GetViewport().SetInputAsHandled();
-            QueueFree();
+            OnCancel();
         }
     }
 
-    // -------------------------------------------- Font --------------------------------------------
-
-    [Export]
-    private OptionButton _fontOptionBtn;
-    private Dictionary<string, string> _fontPaths;
-
-    private void SetupOptionBtn_Font()
+    private void CreateItems()
     {
-        // read files from fonst dir
-        string fontsDir = ResourcePaths.AssetPaths[ResourcePaths.AssetPathsEnum.FONTS];
-        _fontPaths = ResourcePaths.GetAllResourcePathsInDirectory(fontsDir);
-
-        // create items
+        // Font
         _fontOptionBtn.AddItem("Default");
-        foreach (string file_name in _fontPaths.Keys) { _fontOptionBtn.AddItem(file_name); }
+        foreach (string file_name in GameManager.Instance.Settings.FontPaths.Keys) { _fontOptionBtn.AddItem(file_name); }
+        _fontOptionBtn.ItemSelected += GameManager.Instance.Settings.ChangeFont;
 
-        // initialize options button
-        _fontOptionBtn.Selected = 0;
-        _fontOptionBtn.ItemSelected += ChangeFont;
+        // Window
+        foreach (DisplayServer.WindowMode mode in GameManager.Instance.Settings.WindowModes) { _windowOptionBtn.AddItem(mode.ToString()); }
+        _windowOptionBtn.ItemSelected += GameManager.Instance.Settings.ChangeWindowMode;
     }
 
-    private void ChangeFont(long index)
+    private void ReadValuesFromFile()
     {
-        Theme theme = ThemeDB.GetProjectTheme();
-        Font font = ThemeDB.FallbackFont;
-
-        if (index != 0)
-        {
-            string file_name = _fontPaths.Keys.ElementAt((Index)(index - 1));
-            font = ResourcePaths.LoadResourceFromPath<Font>(_fontPaths[file_name]);
-        }
-
-        theme.DefaultFont = font;
+        ConfigFile config = UserSettings.GetConfigFile();
+        _fontOptionBtn.Selected = (int)config.GetValue("Display", "Font");
+        _windowOptionBtn.Selected = (int)config.GetValue("Display", "Window");
     }
 
-    // -------------------------------------------- Window --------------------------------------------
-    [Export]
-    private OptionButton _windowOptionBtn;
-    private static List<DisplayServer.WindowMode> _windowModes = [
-        DisplayServer.WindowMode.Windowed,
-        DisplayServer.WindowMode.ExclusiveFullscreen,
-    ];
-
-    private void SetupOptionBtn_Window()
+    private void OnCancel()
     {
-        // create items
-        foreach (DisplayServer.WindowMode mode in _windowModes) { _windowOptionBtn.AddItem(mode.ToString()); }
-
-        // initialize options button
-        _windowOptionBtn.Selected = 0;
-        _windowOptionBtn.ItemSelected += ChangeWindowMode;
+        GameManager.Instance.Settings.LoadSettingsFile();
+        QueueFree();
     }
 
-    private void ChangeWindowMode(long index)
+    private void OnSave()
     {
-        DisplayServer.WindowMode mode = _windowModes.ElementAt((Index)index);
-        DisplayServer.WindowSetMode(mode);
+        UserSettings.SaveSettingsFile(
+            _fontOptionBtn.Selected,
+            _windowOptionBtn.Selected
+        );
+    }
+
+    private void OnDefault()
+    {
+        GameManager.Instance.Settings.DeafultSettingsFile();
+        ReadValuesFromFile();
     }
 }

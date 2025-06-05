@@ -3,42 +3,12 @@ using Godot;
 
 public static class ResourcePaths
 {
-    // public static Dictionary<string, T> LoadAllResourcesFromDirectory<T>(string path) where T : Resource
-    // {
-    //     Dictionary<string, T> resources = [];
-
-    //     DirAccess dir_access = DirAccess.Open(path);
-    //     if (dir_access == null) { return null; }
-
-    //     string[] files = dir_access.GetFiles();
-    //     if (files == null) { return null; }
-
-    //     foreach (string file_name in files)
-    //     {
-    //         if (file_name.EndsWith(".import")) { continue; }
-
-    //         T loaded_resource = GD.Load<T>(path + "/" + file_name);
-    //         if (loaded_resource == null) { continue; }
-
-    //         GD.Print($"resouce loaded: {path + "/" + file_name}, {loaded_resource}");
-    //         resources[file_name] = loaded_resource;
-    //     }
-
-    //     return resources;
-    // }
-
     // -------------------------------------------- Assets --------------------------------------------
     public enum AssetPathsEnum { FONTS }
-    public static Dictionary<AssetPathsEnum, string> AssetPaths = new()
+    public static Dictionary<AssetPathsEnum, string> AssetDirectories = new()
     {
         {AssetPathsEnum.FONTS, "res://assets/fonts"},
     };
-
-    public static T LoadResourceFromPath<T>(string path) where T : Resource
-    {
-        T res = GD.Load<T>(path);
-        return res;
-    }
 
     public static Dictionary<string, string> GetAllResourcePathsInDirectory(string path)
     {
@@ -57,6 +27,12 @@ public static class ResourcePaths
         }
 
         return paths;
+    }
+
+    public static T LoadResourceFromPath<T>(string path) where T : Resource
+    {
+        T res = GD.Load<T>(path);
+        return res;
     }
 
     // -------------------------------------------- Scenes --------------------------------------------
