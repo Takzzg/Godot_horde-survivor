@@ -15,19 +15,23 @@ public partial class PauseMenu : Panel
     public override void _Ready()
     {
         _quitBtn.Pressed += QuitToMenu;
-        _continueBtn.Pressed += ClosePauseMenu;
+        _continueBtn.Pressed += QueueFree;
 
         RenderWeapons();
+    }
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (@event.IsActionPressed("back"))
+        {
+            GetViewport().SetInputAsHandled();
+            QueueFree();
+        }
     }
 
     public void SetPlayerReference(PlayerScene player)
     {
         _player = player;
-    }
-
-    private void ClosePauseMenu()
-    {
-        _player.PlayerUI.TogglePauseMenu();
     }
 
     private void QuitToMenu()

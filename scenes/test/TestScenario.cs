@@ -28,6 +28,9 @@ public partial class TestScenario : Node2D
         // weapon switching
         CreateWeaponTypeOptions();
 
+        // level up
+        CreateLevelUpTrigger();
+
         // spawn enemies
         Ready += TEST_SpawnEnemies;
     }
@@ -70,7 +73,7 @@ public partial class TestScenario : Node2D
         }
 
         // parent node
-        Vector2 parentPosition = new(-((separation * (types.Length + 1)) + (_worldCenterSize.X / 2)), -separation);
+        Vector2 parentPosition = new(-(separation * (types.Length + 1)) / 2, -(_worldCenterSize.Y / 2 + 20));
         Node2D parent = new() { Position = parentPosition };
         AddChild(parent);
 
@@ -86,5 +89,14 @@ public partial class TestScenario : Node2D
             parent.AddChild(weapon);
             nextPos.X += separation;
         }
+    }
+
+    private void CreateLevelUpTrigger()
+    {
+        PlayerTrigger levelUp = new("Level up", (player) => player.PlayerExperience.TriggerLevelUp())
+        {
+            Position = new Vector2(-((_worldCenterSize.X / 2) + 20), 0)
+        };
+        AddChild(levelUp);
     }
 }

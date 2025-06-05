@@ -57,6 +57,7 @@ public partial class PlayerExperience : BasePlayerComponent
 
         // GD.Print($"player level up {PlayerLevel}");
         DebugTryUpdateField("player_level", PlayerLevel.ToString());
+        _player.PlayerUI.ShowLevelUpUI();
     }
 
     public override DebugCategory DebugCreateCategory()
@@ -67,5 +68,10 @@ public partial class PlayerExperience : BasePlayerComponent
         category.CreateLabelField("current_xp", "XP", $"{CurrentExperience} / {RequiredExperience}");
 
         return category;
+    }
+
+    public void TriggerLevelUp()
+    {
+        GainExperience(RequiredExperience);
     }
 }

@@ -36,7 +36,16 @@ public static class ResourcePaths
     }
 
     // -------------------------------------------- Scenes --------------------------------------------
-    public enum ScenePathsEnum { LOADING_SCREEN, MAIN_MENU, OPTIONS_MENU, PLAYER_GAMEPLAY_UI, PLAYER_DEATH_UI, PLAYER_PAUSE_MENU }
+    public enum ScenePathsEnum
+    {
+        LOADING_SCREEN,
+        MAIN_MENU,
+        OPTIONS_MENU,
+        PLAYER_GAMEPLAY_UI,
+        PLAYER_DEATH_UI,
+        PLAYER_PAUSE_MENU,
+        PLAYER_LEVEL_UP,
+    }
     public static Dictionary<ScenePathsEnum, string> ScenePaths = new() {
         {ScenePathsEnum.MAIN_MENU, "res://scenes/main_menu/main_menu.tscn"},
         {ScenePathsEnum.LOADING_SCREEN, "res://scenes/loading_screen/loading_screen.tscn"},
@@ -44,6 +53,7 @@ public static class ResourcePaths
         {ScenePathsEnum.PLAYER_DEATH_UI, "res://entities/player/components/player_ui/death_ui.tscn"},
         {ScenePathsEnum.PLAYER_GAMEPLAY_UI, "res://entities/player/components/player_ui/gameplay_ui/gameplay_ui.tscn"},
         {ScenePathsEnum.PLAYER_PAUSE_MENU, "res://entities/player/components/player_ui/pause_menu/pause_menu.tscn"},
+        {ScenePathsEnum.PLAYER_LEVEL_UP, "res://entities/player/components/player_ui/level_up_ui/level_up_ui.tscn"},
     };
 
     public static T GetSceneInstanceFromEnum<T>(ScenePathsEnum key) where T : Node
