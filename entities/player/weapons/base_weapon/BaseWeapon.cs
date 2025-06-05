@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-public abstract partial class BaseWeapon : DebugNode2D
+public abstract partial class BaseWeapon : DebuggerNode
 {
     // player
     protected PlayerScene _player;

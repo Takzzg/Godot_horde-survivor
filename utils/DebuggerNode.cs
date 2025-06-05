@@ -1,13 +1,13 @@
 using System;
 using Godot;
 
-public abstract partial class DebugNode2D : Node2D
+public abstract partial class DebuggerNode : Control
 {
     private DebugCategory _debug;
 
     public virtual DebugCategory DebugCreateCategory() => throw new NotImplementedException();
 
-    public DebugNode2D(bool useDebug = true)
+    public DebuggerNode(bool useDebug = true)
     {
         if (!useDebug) return;
         Ready += DebugRenderNode;
@@ -29,7 +29,7 @@ public abstract partial class DebugNode2D : Node2D
     {
         if (state == false)
         {
-            _debug.QueueFree();
+            _debug?.QueueFree();
             return;
         }
 

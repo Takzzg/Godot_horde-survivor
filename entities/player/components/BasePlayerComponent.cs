@@ -1,4 +1,4 @@
-public abstract partial class BasePlayerComponent : DebugNode2D
+public abstract partial class BasePlayerComponent : DebuggerNode
 {
     protected PlayerScene _player;
 

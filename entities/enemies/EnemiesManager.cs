@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-public partial class EnemiesManager : DebugNode2D
+public partial class EnemiesManager : DebuggerNode
 {
     // enemies
     public const int MAX_ENEMIES = 1500;

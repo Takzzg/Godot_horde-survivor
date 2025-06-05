@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-public partial class ExperienceManager : DebugNode2D
+public partial class ExperienceManager : DebuggerNode
 {
     // entities
     public int EntitiesCount => _entitiesList.Count;
