@@ -60,10 +60,22 @@ public static class ResourcePaths
         {ScenePathsEnum.WEAPON_DISPLAY, "res://entities/player/weapons/base_weapon/display/weapon_display.tscn"},
     };
 
-    public static T GetSceneInstanceFromEnum<T>(ScenePathsEnum key) where T : Node
+    public static PackedScene GetPackedSceneFromEnum(ScenePathsEnum key)
     {
         PackedScene scene = GD.Load<PackedScene>(ScenePaths[key]);
+        return scene;
+    }
+
+    public static T InstantiatePackedScene<T>(PackedScene scene) where T : Node
+    {
         T instance = scene.Instantiate<T>();
+        return instance;
+    }
+
+    public static T GetSceneInstanceFromEnum<T>(ScenePathsEnum key) where T : Node
+    {
+        PackedScene scene = GetPackedSceneFromEnum(key);
+        T instance = InstantiatePackedScene<T>(scene);
         return instance;
     }
 }

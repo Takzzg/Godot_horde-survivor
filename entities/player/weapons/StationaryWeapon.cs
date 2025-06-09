@@ -28,11 +28,6 @@ public partial class StationaryWeapon(BaseWeapon.TrajectoryStyleEnum entityTraje
             entity.Position = Utils.GetPointArounOrigin(GlobalPosition, distance, angle);
         }
 
-        WeaponEntityManager.CreateEntity(entity);
-
-        // update debug label
-        DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
-
         return entity;
     }
 

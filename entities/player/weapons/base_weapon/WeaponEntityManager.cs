@@ -68,7 +68,7 @@ public partial class WeaponEntityManager : Node2D
         RenderingServer.FreeRid(entity.CanvasItemRid);
     }
 
-    public void CreateEntity(WeaponEntity entity)
+    public void RegisterEntity(WeaponEntity entity)
     {
         // GD.Print($"Spawning entity at {entity.Position}");
         Transform2D posTransform = new(0, entity.Position);

@@ -47,9 +47,15 @@ public abstract partial class BaseWeapon : DebuggerNode
 
     private void OnTrigger()
     {
-        Modifiers.ForEach(mod => mod.BeforeTrigger());
+        // create entity
         WeaponEntity entity = CreateEntity();
-        Modifiers.ForEach(mod => mod.AfterTrigger(entity));
+        // apply modifiers
+        Modifiers.ForEach(mod => mod.OnCreateEntity(entity));
+        // register entity
+        WeaponEntityManager.RegisterEntity(entity);
+
+        // update debug label
+        DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
     }
 
     // -------------------------------------------- Player --------------------------------------------

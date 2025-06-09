@@ -29,11 +29,6 @@ public partial class RelativeWeapon(BaseWeapon.TrajectoryStyleEnum entityTraject
         entity.Position = _player.Position + entity.Offset;
         entity.Direction = GetTrajectory();
 
-        WeaponEntityManager.CreateEntity(entity);
-
-        // update debug label
-        DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
-
         return entity;
     }
 

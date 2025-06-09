@@ -24,11 +24,6 @@ public partial class ProjectileWeapon : BaseWeapon
         entity.Position = GlobalPosition;
         entity.Direction = GetTrajectory();
 
-        WeaponEntityManager.CreateEntity(entity);
-
-        // update debug label
-        DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
-
         return entity;
     }
 

@@ -7,16 +7,6 @@ public abstract partial class BaseModifier : DebuggerNode
     public string Description;
     public List<Control> Effects;
 
-    public virtual void BeforeTrigger()
-    {
-        GD.Print($"Modifier BeforeTrigger");
-    }
-
-    public virtual void AfterTrigger(WeaponEntity entity)
-    {
-        GD.Print($"Modifier AfterTrigger {entity}");
-    }
-
     public Label GetModifierDisplay()
     {
         Label control = new() { Text = ModifierName };
@@ -40,5 +30,11 @@ public abstract partial class BaseModifier : DebuggerNode
             AddThemeColorOverride("font_color", Colors.IndianRed);
             HorizontalAlignment = HorizontalAlignment.Center;
         }
+    }
+
+    // -------------------------------------------- Methods --------------------------------------------
+    public virtual WeaponEntity OnCreateEntity(WeaponEntity entity)
+    {
+        return entity;
     }
 }

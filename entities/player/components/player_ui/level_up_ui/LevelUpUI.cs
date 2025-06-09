@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
-using Godot.Collections;
 
 public partial class LevelUpUI : Panel
 {
@@ -52,15 +50,19 @@ public partial class LevelUpUI : Panel
     {
         foreach (Node node in _optionsCont.GetChildren()) { node.QueueFree(); }
 
-        int MaxOptions = 3;
+        PackedScene optionScene = ResourcePaths.GetPackedSceneFromEnum(ResourcePaths.ScenePathsEnum.LEVEL_UP_OPTION);
 
-        for (int i = 0; i < MaxOptions; i++)
-        {
-            LevelUpOption option = ResourcePaths.GetSceneInstanceFromEnum<LevelUpOption>(ResourcePaths.ScenePathsEnum.LEVEL_UP_OPTION);
-            _optionsCont.AddChild(option);
+        LevelUpOption testOption = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
+        _optionsCont.AddChild(testOption);
+        testOption.UpdateValues(new TestModifier(), SetSelectedOption);
 
-            option.UpdateValues(new TestModifier(), SetSelectedOption);
-        }
+        LevelUpOption growOption = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
+        _optionsCont.AddChild(growOption);
+        growOption.UpdateValues(new SizeModifier(SizeModifier.ModeEnum.GROW), SetSelectedOption);
+
+        LevelUpOption shrinkOption = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
+        _optionsCont.AddChild(shrinkOption);
+        shrinkOption.UpdateValues(new SizeModifier(SizeModifier.ModeEnum.SHRINK), SetSelectedOption);
     }
 
     private void SetSelectedOption(LevelUpOption option)
