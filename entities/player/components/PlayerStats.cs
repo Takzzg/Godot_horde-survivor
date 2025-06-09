@@ -3,8 +3,8 @@ using Godot;
 public partial class PlayerStats(PlayerScene player) : BasePlayerComponent(player)
 {
     public double TimeAlive { get; private set; } = 0;
-    public int DamageReceived { get; private set; } = 0;
-    public int DamageDealt { get; private set; } = 0;
+    public float DamageReceived { get; private set; } = 0;
+    public float DamageDealt { get; private set; } = 0;
     public int KillCount { get; private set; } = 0;
     public float DistanceTraveled { get; private set; } = 0;
     public float ExperienceGathered { get; private set; } = 0;
@@ -39,7 +39,7 @@ public partial class PlayerStats(PlayerScene player) : BasePlayerComponent(playe
         DebugTryUpdateField("damage_received", DamageReceived.ToString());
     }
 
-    public void IncreaseDamageDealt(int count)
+    public void IncreaseDamageDealt(float count)
     {
         DamageDealt += count;
         DebugTryUpdateField("damage_dealt", DamageDealt.ToString());

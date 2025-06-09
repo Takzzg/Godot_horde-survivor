@@ -58,11 +58,11 @@ public partial class LevelUpUI : Panel
 
         LevelUpOption growOption = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
         _optionsCont.AddChild(growOption);
-        growOption.UpdateValues(new SizeModifier(SizeModifier.ModeEnum.GROW), SetSelectedOption);
+        growOption.UpdateValues(new SizeModifier(SizeModifier.ModeEnum.GROW, 5), SetSelectedOption);
 
         LevelUpOption shrinkOption = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
         _optionsCont.AddChild(shrinkOption);
-        shrinkOption.UpdateValues(new SizeModifier(SizeModifier.ModeEnum.SHRINK), SetSelectedOption);
+        shrinkOption.UpdateValues(new SizeModifier(SizeModifier.ModeEnum.SHRINK, 5), SetSelectedOption);
     }
 
     private void SetSelectedOption(LevelUpOption option)

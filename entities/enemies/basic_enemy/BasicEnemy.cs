@@ -13,7 +13,7 @@ public class BasicEnemy
 
     public Vector2 Position;
 
-    public int Health;
+    public float Health;
     public int Speed;
     public int Damage;
     public int ExperienceDropped;

@@ -3,9 +3,9 @@ using Godot.Collections;
 
 public class WeaponEntity
 {
-    public int Damage;
-    public int Speed;
-    public int Radius;
+    public float Damage;
+    public float Speed;
+    public float Radius;
 
     public double LifeTime;
     public Vector2 Position;

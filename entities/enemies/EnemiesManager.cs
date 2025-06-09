@@ -125,7 +125,7 @@ public partial class EnemiesManager : DebuggerNode
         throw new Exception($"no enemy found with BodyRid = {bodyRid}");
     }
 
-    public (bool enemyDied, int damageDealt) EnemyReceiveDamage(BasicEnemy enemy, int damage)
+    public (bool enemyDied, float damageDealt) EnemyReceiveDamage(BasicEnemy enemy, float damage)
     {
         if (enemy.Health - damage > 0)
         {
