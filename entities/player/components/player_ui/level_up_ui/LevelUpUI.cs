@@ -59,7 +59,7 @@ public partial class LevelUpUI : Panel
             LevelUpOption option = ResourcePaths.GetSceneInstanceFromEnum<LevelUpOption>(ResourcePaths.ScenePathsEnum.LEVEL_UP_OPTION);
             _optionsCont.AddChild(option);
 
-            option.UpdateValues(Modifiers.TestMod, SetSelectedOption);
+            option.UpdateValues(new TestModifier(), SetSelectedOption);
         }
     }
 

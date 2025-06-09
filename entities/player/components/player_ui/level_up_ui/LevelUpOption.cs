@@ -27,7 +27,7 @@ public partial class LevelUpOption : PanelContainer
         foreach (Node node in _effectsCont.GetChildren()) { node.QueueFree(); }
 
         _title.Text = mod.ModifierName;
-        mod.Effects.ForEach(effect => _effectsCont.AddChild(effect.Duplicate(0)));
+        mod.Effects.ForEach(effect => _effectsCont.AddChild(effect));
         _descriptionRich.Text = mod.Description;
     }
 

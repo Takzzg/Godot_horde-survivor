@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 using Godot;
 
-public partial class BaseModifier(string name, string desc, List<Control> effects) : DebuggerNode
+public abstract partial class BaseModifier : DebuggerNode
 {
-    public string ModifierName = name;
-    public string Description = desc;
-    public List<Control> Effects = effects;
+    public string ModifierName;
+    public string Description;
+    public List<Control> Effects;
 
-    public void BeforeTrigger()
+    public virtual void BeforeTrigger()
     {
         GD.Print($"Modifier BeforeTrigger");
     }
 
-    public void AfterTrigger(WeaponEntity entity)
+    public virtual void AfterTrigger(WeaponEntity entity)
     {
         GD.Print($"Modifier AfterTrigger {entity}");
     }
