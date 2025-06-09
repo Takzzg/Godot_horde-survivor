@@ -1,0 +1,155 @@
+[gd_scene load_steps=2 format=3 uid="uid://d01jtw6guwx7v"]
+
+[ext_resource type="Script" uid="uid://482l65phgthl" path="res://entities/player/weapons/base_weapon/display/WeaponDisplay.cs" id="1_qelpc"]
+
+[node name="WeaponDisplay" type="PanelContainer" node_paths=PackedStringArray("_weaponName", "_trajectoryLabel", "_delayLabel", "_collisionsLabel", "_damageLabel", "_radiusLabel", "_speedLabel", "_pierceLabel", "_maxDistLabel", "_lifespanLabel", "_modsCont", "_modsCountLabel")]
+offset_right = 121.0
+offset_bottom = 23.0
+script = ExtResource("1_qelpc")
+_weaponName = NodePath("MarginContainer/BoxContainer/WeaponNameLabel")
+_trajectoryLabel = NodePath("MarginContainer/BoxContainer/WeaponDetailsBoxContainer/BoxContainer/TrajectoryLabel")
+_delayLabel = NodePath("MarginContainer/BoxContainer/WeaponDetailsBoxContainer/BoxContainer3/DelayLabel")
+_collisionsLabel = NodePath("MarginContainer/BoxContainer/WeaponDetailsBoxContainer/BoxContainer4/CollisionsLabel")
+_damageLabel = NodePath("MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer4/DamageLabel")
+_radiusLabel = NodePath("MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer5/RadiusLabel")
+_speedLabel = NodePath("MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer2/SpeedLabel")
+_pierceLabel = NodePath("MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer6/PierceLabel")
+_maxDistLabel = NodePath("MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer7/MaxDistLabel")
+_lifespanLabel = NodePath("MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer8/LifespanLabel")
+_modsCont = NodePath("MarginContainer/BoxContainer/ModsBoxContainer")
+_modsCountLabel = NodePath("MarginContainer/BoxContainer/ModsBoxContainer/BoxContainer/ModsLabel")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+vertical = true
+
+[node name="WeaponNameLabel" type="Label" parent="MarginContainer/BoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "WEAPON NAME"
+
+[node name="WeaponDetailsBoxContainer" type="BoxContainer" parent="MarginContainer/BoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="BoxContainer" type="BoxContainer" parent="MarginContainer/BoxContainer/WeaponDetailsBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/WeaponDetailsBoxContainer/BoxContainer"]
+layout_mode = 2
+text = "Trajectory:"
+
+[node name="TrajectoryLabel" type="Label" parent="MarginContainer/BoxContainer/WeaponDetailsBoxContainer/BoxContainer"]
+layout_mode = 2
+text = "XXX"
+
+[node name="BoxContainer3" type="BoxContainer" parent="MarginContainer/BoxContainer/WeaponDetailsBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/WeaponDetailsBoxContainer/BoxContainer3"]
+layout_mode = 2
+text = "Delay:"
+
+[node name="DelayLabel" type="Label" parent="MarginContainer/BoxContainer/WeaponDetailsBoxContainer/BoxContainer3"]
+layout_mode = 2
+text = "XXX"
+
+[node name="BoxContainer4" type="BoxContainer" parent="MarginContainer/BoxContainer/WeaponDetailsBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/WeaponDetailsBoxContainer/BoxContainer4"]
+layout_mode = 2
+text = "Collisions/f:"
+
+[node name="CollisionsLabel" type="Label" parent="MarginContainer/BoxContainer/WeaponDetailsBoxContainer/BoxContainer4"]
+layout_mode = 2
+text = "XXX"
+
+[node name="EntityDetailsBoxContainer" type="BoxContainer" parent="MarginContainer/BoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="BoxContainer4" type="BoxContainer" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer4"]
+layout_mode = 2
+text = "Damage:"
+
+[node name="DamageLabel" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer4"]
+layout_mode = 2
+text = "XXX"
+
+[node name="BoxContainer5" type="BoxContainer" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer5"]
+layout_mode = 2
+text = "Radius:"
+
+[node name="RadiusLabel" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer5"]
+layout_mode = 2
+text = "XXX"
+
+[node name="BoxContainer2" type="BoxContainer" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer2"]
+layout_mode = 2
+text = "Speed:"
+
+[node name="SpeedLabel" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer2"]
+layout_mode = 2
+text = "XXX"
+
+[node name="BoxContainer6" type="BoxContainer" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer6"]
+layout_mode = 2
+text = "Pierce:"
+
+[node name="PierceLabel" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer6"]
+layout_mode = 2
+text = "XXX"
+
+[node name="BoxContainer7" type="BoxContainer" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer7"]
+layout_mode = 2
+text = "Max dist.:"
+
+[node name="MaxDistLabel" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer7"]
+layout_mode = 2
+text = "XXX"
+
+[node name="BoxContainer8" type="BoxContainer" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer8"]
+layout_mode = 2
+text = "Lifespan:"
+
+[node name="LifespanLabel" type="Label" parent="MarginContainer/BoxContainer/EntityDetailsBoxContainer/BoxContainer8"]
+layout_mode = 2
+text = "XXX"
+
+[node name="ModsBoxContainer" type="BoxContainer" parent="MarginContainer/BoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="BoxContainer" type="BoxContainer" parent="MarginContainer/BoxContainer/ModsBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/BoxContainer/ModsBoxContainer/BoxContainer"]
+layout_mode = 2
+text = "Mods:"
+
+[node name="ModsLabel" type="Label" parent="MarginContainer/BoxContainer/ModsBoxContainer/BoxContainer"]
+layout_mode = 2
+text = "XXX"

@@ -1,17 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://ckdij626lkav1"]
+[gd_scene load_steps=4 format=3 uid="uid://ckdij626lkav1"]
 
 [ext_resource type="Script" uid="uid://brdfeuh3p45s0" path="res://entities/player/components/player_ui/level_up_ui/LevelUpUI.cs" id="1_eadi1"]
 [ext_resource type="PackedScene" uid="uid://52hvgpwltlx0" path="res://entities/player/components/player_ui/level_up_ui/level_up_option.tscn" id="1_ywv2a"]
+[ext_resource type="PackedScene" uid="uid://d01jtw6guwx7v" path="res://entities/player/weapons/base_weapon/display/weapon_display.tscn" id="3_g7qjj"]
 
-[node name="LevelUpUI" type="Panel" node_paths=PackedStringArray("_options", "_close")]
+[node name="LevelUpUI" type="Panel" node_paths=PackedStringArray("_optionsCont", "_weaponsCont", "_confirm", "_close")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_eadi1")
-_options = [NodePath("BoxContainer/BoxContainer/LevelUpOption"), NodePath("BoxContainer/BoxContainer/LevelUpOption2"), NodePath("BoxContainer/BoxContainer/LevelUpOption3")]
-_close = NodePath("CloseButton")
+_optionsCont = NodePath("BoxContainer/OptionsBoxContainer")
+_weaponsCont = NodePath("BoxContainer/WeaponsBoxContainer")
+_confirm = NodePath("BoxContainer/BoxContainer/ConfirmButton")
+_close = NodePath("BoxContainer/BoxContainer/CloseButton")
 
 [node name="BoxContainer" type="BoxContainer" parent="."]
 layout_mode = 1
@@ -20,10 +23,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -401.0
-offset_top = -179.0
-offset_right = 401.0
-offset_bottom = 179.0
+offset_left = -326.0
+offset_top = -154.0
+offset_right = 326.0
+offset_bottom = 154.0
 grow_horizontal = 2
 grow_vertical = 2
 vertical = true
@@ -37,29 +40,41 @@ theme_override_font_sizes/font_size = 24
 text = "Level Up"
 horizontal_alignment = 1
 
-[node name="BoxContainer" type="BoxContainer" parent="BoxContainer"]
+[node name="OptionsBoxContainer" type="BoxContainer" parent="BoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
+alignment = 1
 
-[node name="LevelUpOption" parent="BoxContainer/BoxContainer" instance=ExtResource("1_ywv2a")]
+[node name="LevelUpOption" parent="BoxContainer/OptionsBoxContainer" instance=ExtResource("1_ywv2a")]
 layout_mode = 2
 
-[node name="LevelUpOption2" parent="BoxContainer/BoxContainer" instance=ExtResource("1_ywv2a")]
+[node name="LevelUpOption2" parent="BoxContainer/OptionsBoxContainer" instance=ExtResource("1_ywv2a")]
 layout_mode = 2
 
-[node name="LevelUpOption3" parent="BoxContainer/BoxContainer" instance=ExtResource("1_ywv2a")]
+[node name="LevelUpOption3" parent="BoxContainer/OptionsBoxContainer" instance=ExtResource("1_ywv2a")]
 layout_mode = 2
 
-[node name="CloseButton" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -4.0
-offset_top = -8.0
-offset_right = 4.0
-grow_horizontal = 2
-grow_vertical = 0
+[node name="WeaponsBoxContainer" type="BoxContainer" parent="BoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="WeaponDisplay" parent="BoxContainer/WeaponsBoxContainer" instance=ExtResource("3_g7qjj")]
+layout_mode = 2
+
+[node name="WeaponDisplay2" parent="BoxContainer/WeaponsBoxContainer" instance=ExtResource("3_g7qjj")]
+layout_mode = 2
+
+[node name="WeaponDisplay3" parent="BoxContainer/WeaponsBoxContainer" instance=ExtResource("3_g7qjj")]
+layout_mode = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="BoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="CloseButton" type="Button" parent="BoxContainer/BoxContainer"]
+layout_mode = 2
 text = "CLOSE"
+
+[node name="ConfirmButton" type="Button" parent="BoxContainer/BoxContainer"]
+layout_mode = 2
+text = "Confirm"

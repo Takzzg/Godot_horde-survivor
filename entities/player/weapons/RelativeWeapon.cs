@@ -17,7 +17,7 @@ public partial class RelativeWeapon(BaseWeapon.TrajectoryStyleEnum entityTraject
         };
     }
 
-    public override void OnTrigger()
+    public override WeaponEntity CreateEntity()
     {
         WeaponEntity entity = GetBaseEntity();
         if (TEST_MANUAL) { entity.Offset = new Vector2(RelativeOffset, 0); }
@@ -33,6 +33,8 @@ public partial class RelativeWeapon(BaseWeapon.TrajectoryStyleEnum entityTraject
 
         // update debug label
         DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
+
+        return entity;
     }
 
     public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)

@@ -44,7 +44,7 @@ public partial class PauseMenu : Panel
     {
         _player.PlayerWeapons.WeaponsList.ForEach(weapon =>
         {
-            _weaponsCont.AddChild(weapon.GetWeaponPanel());
+            _weaponsCont.AddChild(weapon.GetWeaponDisplay());
         });
     }
 }

@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 
 public abstract partial class BaseWeapon : DebuggerNode
 {
+    public abstract string GetWeaponType();
+
     public BaseWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false)
     {
         TEST_MANUAL = test_manual;
@@ -34,6 +37,21 @@ public abstract partial class BaseWeapon : DebuggerNode
         }
     }
 
+    // -------------------------------------------- Modifiers --------------------------------------------
+    public readonly List<BaseModifier> Modifiers = [];
+
+    public void AddModifier(BaseModifier mod)
+    {
+        Modifiers.Add(mod);
+    }
+
+    private void OnTrigger()
+    {
+        Modifiers.ForEach(mod => mod.BeforeTrigger());
+        WeaponEntity entity = CreateEntity();
+        Modifiers.ForEach(mod => mod.AfterTrigger(entity));
+    }
+
     // -------------------------------------------- Player --------------------------------------------
     protected PlayerScene _player;
 
@@ -54,7 +72,7 @@ public abstract partial class BaseWeapon : DebuggerNode
     // -------------------------------------------- Timer --------------------------------------------
     protected bool TEST_MANUAL = false;
     private Timer _timer;
-    public abstract void OnTrigger();
+    public abstract WeaponEntity CreateEntity();
     public float TimerDelay = 0.25f;
 
     public void TimedSetRunning(bool state)
@@ -100,13 +118,13 @@ public abstract partial class BaseWeapon : DebuggerNode
     public abstract WeaponEntity GetBaseEntity();
     public abstract void UpdateEntityPosition(WeaponEntity entity, double delta);
 
-    // -------------------------------------------- Pause Menu --------------------------------------------
-    public abstract string GetWeaponType();
+    // -------------------------------------------- Display --------------------------------------------
 
-    public Control GetWeaponPanel()
+    public WeaponDisplay GetWeaponDisplay(Action<WeaponDisplay> onClick = null)
     {
-        DebugCategory panel = DebugCreateCategory();
-        return panel;
+        WeaponDisplay display = ResourcePaths.GetSceneInstanceFromEnum<WeaponDisplay>(ResourcePaths.ScenePathsEnum.WEAPON_DISPLAY);
+        display.Ready += () => display.UpdateValues(this, onClick);
+        return display;
     }
 
     // -------------------------------------------- Debug --------------------------------------------
@@ -118,6 +136,7 @@ public abstract partial class BaseWeapon : DebuggerNode
         category.CreateLabelField("entity_trajectory", "Trajectory.", Trajectory.ToString());
         category.CreateLabelField("entities_count", "Entities", WeaponEntityManager.EntitiesList.Count.ToString());
         category.CreateLabelField("timer_delay", "Delay", TEST_MANUAL ? "MANUAL" : $"{TimerDelay}s ({1 / TimerDelay}bps)");
+        category.CreateLabelField("collisions_per_frame", "Collisions/f", MaxCollisionsPerFrame.ToString());
 
         WeaponEntity baseEntity = GetBaseEntity();
 
@@ -125,9 +144,9 @@ public abstract partial class BaseWeapon : DebuggerNode
         category.CreateLabelField("entity_damage", "Damage", baseEntity.Damage.ToString());
         category.CreateLabelField("entity_radius", "Radius", baseEntity.Radius.ToString());
         category.CreateLabelField("entity_speed", "Speed", baseEntity.Speed.ToString());
+        category.CreateLabelField("entity_pierce_count", "Pierce", baseEntity.MaxPierceCount.ToString());
         category.CreateLabelField("entity_max_dist", "Max dist.", baseEntity.MaxDistance.ToString());
         category.CreateLabelField("entity_max_lifetime", "Lifespan", baseEntity.MaxLifeTime.ToString());
-        category.CreateLabelField("entity_pierce_count", "Pierce", baseEntity.MaxPierceCount.ToString());
 
         return category;
     }

@@ -18,7 +18,7 @@ public partial class ProjectileWeapon : BaseWeapon
         };
     }
 
-    public override void OnTrigger()
+    public override WeaponEntity CreateEntity()
     {
         WeaponEntity entity = GetBaseEntity();
         entity.Position = GlobalPosition;
@@ -28,6 +28,8 @@ public partial class ProjectileWeapon : BaseWeapon
 
         // update debug label
         DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
+
+        return entity;
     }
 
     public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)

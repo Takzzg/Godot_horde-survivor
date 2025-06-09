@@ -16,7 +16,7 @@ public partial class StationaryWeapon(BaseWeapon.TrajectoryStyleEnum entityTraje
         };
     }
 
-    public override void OnTrigger()
+    public override WeaponEntity CreateEntity()
     {
         WeaponEntity entity = GetBaseEntity();
 
@@ -32,6 +32,8 @@ public partial class StationaryWeapon(BaseWeapon.TrajectoryStyleEnum entityTraje
 
         // update debug label
         DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
+
+        return entity;
     }
 
     public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)

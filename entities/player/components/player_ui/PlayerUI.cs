@@ -65,6 +65,9 @@ public partial class PlayerUI : BasePlayerComponent
         LevelUpUI = ResourcePaths.GetSceneInstanceFromEnum<LevelUpUI>(ResourcePaths.ScenePathsEnum.PLAYER_LEVEL_UP);
         _layer.AddChild(LevelUpUI);
 
+        LevelUpUI.UpdateOptions();
+        LevelUpUI.UpdateWeapons(_player.PlayerWeapons.WeaponsList);
+
         GameplayUI.Visible = false;
         LevelUpUI.TreeExiting += () =>
         {
