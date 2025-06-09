@@ -17,16 +17,16 @@ public partial class SizeModifier : BaseModifier
         {
             Description = "Bigger but slower bullets";
             Effects = [
-                new PositiveEffect($"{_percent}% bullet size"),
-                new NegativeEffect($"{_percent}% bullet speed"),
+                new Effect(Effect.TypeEnum.POSITIVE, $"{_percent}% bullet size"),
+                new Effect(Effect.TypeEnum.NEGATIVE, $"{_percent}% bullet speed"),
             ];
         }
         else
         {
             Description = "Smaller but faster bullets";
             Effects = [
-                new PositiveEffect($"{_percent}% bullet speed"),
-                new NegativeEffect($"{_percent}% bullet size"),
+                new Effect(Effect.TypeEnum.POSITIVE, $"{_percent}% bullet speed"),
+                new Effect(Effect.TypeEnum.NEGATIVE, $"{_percent}% bullet size"),
             ];
         }
     }

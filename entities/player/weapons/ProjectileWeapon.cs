@@ -2,10 +2,9 @@ public partial class ProjectileWeapon : BaseWeapon
 {
     public ProjectileWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(entityTrajectory, test_manual)
     {
+        Type = TypeEnum.PROJECTILE;
         MaxCollisionsPerFrame = 1;
     }
-
-    public override string GetWeaponType() => "Projectile";
 
     public override WeaponEntity GetBaseEntity()
     {

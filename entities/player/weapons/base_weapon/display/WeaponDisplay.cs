@@ -41,7 +41,7 @@ public partial class WeaponDisplay : PanelContainer
         _onClick = onClick;
 
         // weapon
-        _weaponName.Text = weapon.GetWeaponType();
+        _weaponName.Text = $"{weapon.Type.ToString().Capitalize()} weapon";
 
         _trajectoryLabel.Text = weapon.Trajectory.ToString();
         _delayLabel.Text = weapon.TimerDelay.ToString();

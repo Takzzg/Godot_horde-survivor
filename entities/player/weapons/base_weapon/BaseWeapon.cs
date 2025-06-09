@@ -4,7 +4,8 @@ using Godot;
 
 public abstract partial class BaseWeapon : DebuggerNode
 {
-    public abstract string GetWeaponType();
+    public enum TypeEnum { PROJECTILE, STATIONARY, RELATIVE }
+    public TypeEnum Type;
 
     public BaseWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false)
     {
@@ -136,7 +137,7 @@ public abstract partial class BaseWeapon : DebuggerNode
     // -------------------------------------------- Debug --------------------------------------------
     public override DebugCategory DebugCreateCategory()
     {
-        DebugCategory category = new($"{GetWeaponType()} weapon");
+        DebugCategory category = new($"{Type.ToString().Capitalize()} weapon");
 
         category.CreateDivider("Weapon Stats");
         category.CreateLabelField("entity_trajectory", "Trajectory.", Trajectory.ToString());

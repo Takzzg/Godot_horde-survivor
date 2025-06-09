@@ -1,8 +1,11 @@
 using Godot;
 
-public partial class StationaryWeapon(BaseWeapon.TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : BaseWeapon(entityTrajectory, test_manual)
+public partial class StationaryWeapon : BaseWeapon
 {
-    public override string GetWeaponType() => "Stationary";
+    public StationaryWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(entityTrajectory, test_manual)
+    {
+        Type = TypeEnum.STATIONARY;
+    }
 
     public override WeaponEntity GetBaseEntity()
     {

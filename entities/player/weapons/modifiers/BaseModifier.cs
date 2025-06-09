@@ -13,21 +13,13 @@ public abstract partial class BaseModifier : DebuggerNode
         return control;
     }
 
-    public partial class PositiveEffect : Label
+    public partial class Effect : Label
     {
-        public PositiveEffect(string text) : base()
+        public enum TypeEnum { NEGATIVE, POSITIVE }
+        public Effect(TypeEnum type, string text) : base()
         {
-            Text = $"+ {text}";
-            AddThemeColorOverride("font_color", Colors.LightGreen);
-            HorizontalAlignment = HorizontalAlignment.Center;
-        }
-    }
-    public partial class NegativeEffect : Label
-    {
-        public NegativeEffect(string text) : base()
-        {
-            Text = $"- {text}";
-            AddThemeColorOverride("font_color", Colors.IndianRed);
+            Text = $"{(type == TypeEnum.POSITIVE ? "+" : "-")} {text}";
+            AddThemeColorOverride("font_color", type == TypeEnum.POSITIVE ? Colors.LightGreen : Colors.IndianRed);
             HorizontalAlignment = HorizontalAlignment.Center;
         }
     }

@@ -1,10 +1,13 @@
 using Godot;
 
-public partial class RelativeWeapon(BaseWeapon.TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : BaseWeapon(entityTrajectory, test_manual)
+public partial class RelativeWeapon : BaseWeapon
 {
     public int RelativeOffset = 10;
 
-    public override string GetWeaponType() => "Relative";
+    public RelativeWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(entityTrajectory, test_manual)
+    {
+        Type = TypeEnum.RELATIVE;
+    }
 
     public override WeaponEntity GetBaseEntity()
     {
