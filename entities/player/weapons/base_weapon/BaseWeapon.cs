@@ -22,7 +22,7 @@ public abstract partial class BaseWeapon : DebuggerNode
 
     public override void _PhysicsProcess(double delta)
     {
-        WeaponEntityManager.ProcessEntities(delta, UpdateEntityPosition, OnCollision);
+        WeaponEntityManager.ProcessEntities(delta, GlobalPosition, UpdateEntityPosition, OnCollision);
 
         // update debug label
         DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());

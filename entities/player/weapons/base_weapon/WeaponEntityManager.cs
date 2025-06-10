@@ -23,7 +23,7 @@ public partial class WeaponEntityManager : Node2D
         EntitiesList.Clear();
     }
 
-    public void ProcessEntities(double delta, Action<WeaponEntity, double> updatePos, Action<WeaponEntity, BasicEnemy> onCollide)
+    public void ProcessEntities(double delta, Vector2 WeaponPos, Action<WeaponEntity, double> updatePos, Action<WeaponEntity, BasicEnemy> onCollide)
     {
         if (EntitiesList.Count == 0) return;
 
@@ -48,7 +48,7 @@ public partial class WeaponEntityManager : Node2D
             if (
                 (entity.MaxPierceCount < 0) || // no pierce left
                 (entity.LifeTime > entity.MaxLifeTime) || // lifetime elapsed
-                (entity.Position.DistanceTo(GlobalPosition) > entity.MaxDistance) // too far
+                (entity.Position.DistanceTo(WeaponPos) > entity.MaxDistance) // too far
             )
             { expiredEntities.Add(entity); }
         }
