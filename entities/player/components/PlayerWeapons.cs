@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Godot;
 
 public partial class PlayerWeapons(PlayerScene player, bool useDebug = true) : BasePlayerComponent(player, useDebug)
 {
@@ -29,7 +28,7 @@ public partial class PlayerWeapons(PlayerScene player, bool useDebug = true) : B
         for (int i = 0; i < WeaponsList.Count; i++)
         {
             BaseWeapon weapon = WeaponsList[i];
-            category.CreateLabelField($"weapon_{i}", $"Weapon #{i}", weapon.GetWeaponType());
+            category.CreateLabelField($"weapon_{i}", $"Weapon #{i}", weapon.Type.ToString());
         }
         return category;
     }

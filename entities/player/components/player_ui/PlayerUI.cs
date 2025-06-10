@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 public partial class PlayerUI : BasePlayerComponent
@@ -65,7 +66,9 @@ public partial class PlayerUI : BasePlayerComponent
         LevelUpUI = ResourcePaths.GetSceneInstanceFromEnum<LevelUpUI>(ResourcePaths.ScenePathsEnum.PLAYER_LEVEL_UP);
         _layer.AddChild(LevelUpUI);
 
-        LevelUpUI.UpdateOptions();
+        List<BaseModifier> options = _player.PlayerModifierGenerator.GetModifierOptions();
+        LevelUpUI.UpdateOptions(options);
+
         LevelUpUI.UpdateWeapons(_player.PlayerWeapons.WeaponsList);
 
         GameplayUI.Visible = false;

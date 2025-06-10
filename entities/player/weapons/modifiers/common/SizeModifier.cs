@@ -6,10 +6,10 @@ public partial class SizeModifier : BaseModifier
     private ModeEnum _mode;
     private float _percent;
 
-    public SizeModifier(ModeEnum mode, float percent)
+    public SizeModifier(RarityEnum rarity, ModeEnum mode) : base(rarity, ModifierEnum.SIZE_MOD)
     {
         _mode = mode;
-        _percent = percent;
+        GetPercentageByRarity();
 
         ModifierName = $"Size Modifier ({_mode.ToString().ToLower()})";
 
@@ -47,5 +47,49 @@ public partial class SizeModifier : BaseModifier
         }
 
         return entity;
+    }
+
+    private void GetPercentageByRarity()
+    {
+        int minValue;
+        int maxValue;
+
+        switch (Rarity)
+        {
+            case RarityEnum.COMMON:
+                minValue = 1;
+                maxValue = 2;
+                break;
+
+            case RarityEnum.UNCOMMON:
+                minValue = 2;
+                maxValue = 5;
+                break;
+
+            case RarityEnum.RARE:
+                minValue = 5;
+                maxValue = 8;
+                break;
+
+            case RarityEnum.EPIC:
+                minValue = 8;
+                maxValue = 12;
+                break;
+
+            case RarityEnum.LEGENDARY:
+                minValue = 12;
+                maxValue = 16;
+                break;
+
+            case RarityEnum.UNIQUE:
+                minValue = 16;
+                maxValue = 20;
+                break;
+
+            default:
+                throw new NotImplementedException();
+        }
+
+        _percent = GameManager.Instance.RNG.RandiRange(minValue, maxValue);
     }
 }

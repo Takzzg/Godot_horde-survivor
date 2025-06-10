@@ -9,6 +9,7 @@ public partial class PlayerScene : CharacterBody2D
     public PlayerDraw PlayerDraw;
     public PlayerExperience PlayerExperience;
     public PlayerWeapons PlayerWeapons;
+    public PlayerModifierGenerator PlayerModifierGenerator;
     public PlayerUI PlayerUI;
 
     public PlayerScene()
@@ -24,6 +25,7 @@ public partial class PlayerScene : CharacterBody2D
         PlayerHealth = new PlayerHealth(this);
         PlayerExperience = new PlayerExperience(this);
         PlayerWeapons = new PlayerWeapons(this);
+        PlayerModifierGenerator = new PlayerModifierGenerator(this);
         PlayerUI = new PlayerUI(this);
     }
 }

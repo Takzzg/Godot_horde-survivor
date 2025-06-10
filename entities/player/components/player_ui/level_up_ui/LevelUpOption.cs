@@ -8,6 +8,9 @@ public partial class LevelUpOption : PanelContainer
 
     [Export]
     private Label _title;
+
+    [Export]
+    private Label _rarity;
     [Export]
     private BoxContainer _effectsCont;
     [Export]
@@ -27,6 +30,7 @@ public partial class LevelUpOption : PanelContainer
         foreach (Node node in _effectsCont.GetChildren()) { node.QueueFree(); }
 
         _title.Text = mod.ModifierName;
+        _rarity.Text = mod.Rarity.ToString().Capitalize();
         mod.Effects.ForEach(effect => _effectsCont.AddChild(effect));
         _descriptionRich.Text = mod.Description;
     }

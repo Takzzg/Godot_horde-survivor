@@ -46,23 +46,17 @@ public partial class LevelUpUI : Panel
     }
 
     // -------------------------------------------- Options --------------------------------------------
-    public void UpdateOptions()
+    public void UpdateOptions(List<BaseModifier> modifiers)
     {
         foreach (Node node in _optionsCont.GetChildren()) { node.QueueFree(); }
 
         PackedScene optionScene = ResourcePaths.GetPackedSceneFromEnum(ResourcePaths.ScenePathsEnum.LEVEL_UP_OPTION);
-
-        LevelUpOption testOption = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
-        _optionsCont.AddChild(testOption);
-        testOption.UpdateValues(new TestModifier(), SetSelectedOption);
-
-        LevelUpOption growOption = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
-        _optionsCont.AddChild(growOption);
-        growOption.UpdateValues(new SizeModifier(SizeModifier.ModeEnum.GROW, 5), SetSelectedOption);
-
-        LevelUpOption shrinkOption = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
-        _optionsCont.AddChild(shrinkOption);
-        shrinkOption.UpdateValues(new SizeModifier(SizeModifier.ModeEnum.SHRINK, 5), SetSelectedOption);
+        modifiers.ForEach(mod =>
+        {
+            LevelUpOption option = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
+            _optionsCont.AddChild(option);
+            option.UpdateValues(mod, SetSelectedOption);
+        });
     }
 
     private void SetSelectedOption(LevelUpOption option)

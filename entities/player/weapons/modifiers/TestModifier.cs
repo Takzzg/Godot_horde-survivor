@@ -3,7 +3,7 @@ using Godot;
 
 public partial class TestModifier : BaseModifier
 {
-    public TestModifier()
+    public TestModifier() : base(RarityEnum.TEST, ModifierEnum.TEST_MOD)
     {
         ModifierName = "Test Option";
         Description = "This is the test option. Grants you a [color=lightgreen]positive effect[/color] and a [color=indianred]negative effect[/color]";
