@@ -47,8 +47,11 @@ public partial class WeaponDisplay : PanelContainer
         _delayLabel.Text = weapon.TimerDelay.ToString();
         _collisionsLabel.Text = weapon.MaxCollisionsPerFrame.ToString();
 
-        // entity
-        WeaponEntity baseEntity = weapon.GetBaseEntity();
+        // create entity
+        WeaponEntity baseEntity = weapon.CreateEntity();
+        // apply modifiers
+        weapon.Modifiers.ForEach(mod => mod.OnCreateEntity(baseEntity));
+
         _damageLabel.Text = baseEntity.Damage.ToString();
         _radiusLabel.Text = baseEntity.Radius.ToString();
         _speedLabel.Text = baseEntity.Speed.ToString();

@@ -44,6 +44,7 @@ public abstract partial class BaseWeapon : DebuggerNode
     public void AddModifier(BaseModifier mod)
     {
         Modifiers.Add(mod);
+        DebugUpdateEntityDetails();
     }
 
     private void OnTrigger()
@@ -156,5 +157,20 @@ public abstract partial class BaseWeapon : DebuggerNode
         category.CreateLabelField("entity_max_lifetime", "Lifespan", baseEntity.MaxLifeTime.ToString());
 
         return category;
+    }
+
+    private void DebugUpdateEntityDetails()
+    {
+        // create entity
+        WeaponEntity entity = CreateEntity();
+        // apply modifiers
+        Modifiers.ForEach(mod => mod.OnCreateEntity(entity));
+
+        DebugTryUpdateField("entity_damage", entity.Damage.ToString());
+        DebugTryUpdateField("entity_radius", entity.Radius.ToString());
+        DebugTryUpdateField("entity_speed", entity.Speed.ToString());
+        DebugTryUpdateField("entity_pierce_count", entity.MaxPierceCount.ToString());
+        DebugTryUpdateField("entity_max_dist", entity.MaxDistance.ToString());
+        DebugTryUpdateField("entity_max_lifetime", entity.MaxLifeTime.ToString());
     }
 }
