@@ -5,8 +5,10 @@ using Godot.Collections;
 public partial class PlayerHealth : BasePlayerComponent
 {
     public bool Alive = false;
-    public int Health = 50;
-    public int MaxHealth = 50;
+    private static readonly int _startingHealth = 10;
+    public int Health = _startingHealth;
+    public int MaxHealth = _startingHealth;
+
     public double InvulnerableLength = 0.25;
     public Timer InvulnerableTimer;
 

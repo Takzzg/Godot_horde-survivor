@@ -10,7 +10,7 @@ public partial class ProjectileWeapon : BaseWeapon
     {
         return new WeaponEntity()
         {
-            Damage = 25,
+            Damage = 5,
             Speed = 75,
             Radius = 2,
             MaxPierceCount = 1,

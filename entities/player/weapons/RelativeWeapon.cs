@@ -13,7 +13,7 @@ public partial class RelativeWeapon : BaseWeapon
     {
         return new WeaponEntity()
         {
-            Damage = 15,
+            Damage = 2,
             Speed = 0,
             Radius = 10,
             MaxLifeTime = 5,

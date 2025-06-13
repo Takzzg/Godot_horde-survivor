@@ -20,7 +20,8 @@ public partial class MainGame : Node2D
         GameManager.Instance.Player.PlayerWeapons.CreateWeapon(weapon);
 
         // create EnemiesManager
-        GameManager.Instance.EnemiesManager = new EnemiesManager(6);
+        GameManager.Instance.EnemiesManager = new EnemiesManager();
+        GameManager.Instance.EnemiesManager.SetEnemyStats(6, 10, 25, 1, 1);
         AddChild(GameManager.Instance.EnemiesManager);
 
         // create ExperienceManager

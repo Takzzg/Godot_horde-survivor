@@ -4,28 +4,8 @@ using Godot;
 
 public partial class EnemiesManager : DebuggerNode
 {
-    // enemies
-    public const int MAX_ENEMIES = 1500;
-    public List<BasicEnemy> EnemiesList = [];
-
-    // shared resources
-    public int SharedHitBoxSize;
-    public int SharedHurtBoxSize;
-    public CircleShape2D SharedHitBox;
-    public CircleShape2D SharedHurtBox;
-
-    // spawner
-    private Timer Timer;
-    public double TimerDelay = 0.125;
-
-    public EnemiesManager(int size)
+    public EnemiesManager()
     {
-        SharedHitBoxSize = size;
-        SharedHurtBoxSize = size + 4;
-
-        SharedHitBox = new CircleShape2D() { Radius = SharedHitBoxSize };
-        SharedHurtBox = new CircleShape2D() { Radius = SharedHurtBoxSize };
-
         TreeExiting += () => { EnemiesList.ForEach(FreeEnemyEntityRids); };
     }
 
@@ -34,6 +14,10 @@ public partial class EnemiesManager : DebuggerNode
         MoveEnemies();
     }
 
+    // -------------------------------------------- Timer --------------------------------------------
+    private Timer Timer;
+    public double TimerDelay = 0.125;
+
     public void StartSpawnerTimer()
     {
         Timer = new Timer() { Autostart = true, OneShot = false, WaitTime = TimerDelay };
@@ -41,17 +25,75 @@ public partial class EnemiesManager : DebuggerNode
         AddChild(Timer);
     }
 
-    public override DebugCategory DebugCreateCategory()
+    // -------------------------------------------- Player --------------------------------------------
+    public void OnPlayerDeath()
     {
-        DebugCategory category = new("Enemies Manager");
-        category.CreateLabelField("enemies_count", "Count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
-        return category;
+        Timer?.Stop();
+
+        EnemiesList.ForEach((enemy) =>
+        {
+            PhysicsServer2D.BodySetMode(enemy.BodyRid, PhysicsServer2D.BodyMode.Static);
+            Timer timer = new() { Autostart = true, OneShot = true, WaitTime = GameManager.Instance.RNG.RandfRange(0.5f, 1.5f) };
+            timer.Timeout += () =>
+            {
+                FreeEnemyEntityRids(enemy);
+                timer.QueueFree();
+            };
+            AddChild(timer);
+        });
+
+        EnemiesList.Clear();
+
+        // update debug label
+        DebugTryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
+    }
+
+    // -------------------------------------------- Shared Resources --------------------------------------------
+    public int SharedHitBoxSize;
+    public int SharedHurtBoxSize;
+    public CircleShape2D SharedHitBox;
+    public CircleShape2D SharedHurtBox;
+
+    public void CreateSharedShape()
+    {
+        SharedHitBoxSize = _enemyRadius;
+        SharedHurtBoxSize = _enemyRadius + 4;
+
+        SharedHitBox = new CircleShape2D() { Radius = SharedHitBoxSize };
+        SharedHurtBox = new CircleShape2D() { Radius = SharedHurtBoxSize };
+    }
+
+    // -------------------------------------------- Enemies --------------------------------------------
+    public const int MAX_ENEMIES = 1500;
+    public List<BasicEnemy> EnemiesList = [];
+
+    private static int _enemyRadius;
+    private static int _enemyHealth;
+    private static int _enemySpeed;
+    private static int _enemyDamage;
+    private static int _enemyXP;
+
+    public void SetEnemyStats(int radius, int health, int speed, int damage, int xp)
+    {
+        _enemyRadius = radius;
+        _enemyHealth = health;
+        _enemySpeed = speed;
+        _enemyDamage = damage;
+        _enemyXP = xp;
+
+        CreateSharedShape();
+    }
+
+    public static BasicEnemy GetNewEnemyEntity(Vector2 pos)
+    {
+        BasicEnemy enemy = new(pos, _enemyHealth, _enemySpeed, _enemyDamage, _enemyXP);
+        return enemy;
     }
 
     public void SpawnEnemyAroundPlayer()
     {
         Vector2 pos = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
-        BasicEnemy enemy = new(pos, 50, 25, 5, 1);
+        BasicEnemy enemy = GetNewEnemyEntity(pos);
         SpawnEnemy(enemy);
         DebugTryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
     }
@@ -155,25 +197,11 @@ public partial class EnemiesManager : DebuggerNode
         RenderingServer.FreeRid(enemy.CanvasItemRid);
     }
 
-    public void OnPlayerDeath()
+    // -------------------------------------------- DEBUG --------------------------------------------
+    public override DebugCategory DebugCreateCategory()
     {
-        Timer?.Stop();
-
-        EnemiesList.ForEach((enemy) =>
-        {
-            PhysicsServer2D.BodySetMode(enemy.BodyRid, PhysicsServer2D.BodyMode.Static);
-            Timer timer = new() { Autostart = true, OneShot = true, WaitTime = GameManager.Instance.RNG.RandfRange(0.5f, 1.5f) };
-            timer.Timeout += () =>
-            {
-                FreeEnemyEntityRids(enemy);
-                timer.QueueFree();
-            };
-            AddChild(timer);
-        });
-
-        EnemiesList.Clear();
-
-        // update debug label
-        DebugTryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
+        DebugCategory category = new("Enemies Manager");
+        category.CreateLabelField("enemies_count", "Count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
+        return category;
     }
 }

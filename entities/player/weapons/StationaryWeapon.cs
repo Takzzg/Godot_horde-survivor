@@ -11,7 +11,7 @@ public partial class StationaryWeapon : BaseWeapon
     {
         return new WeaponEntity()
         {
-            Damage = 10,
+            Damage = 4,
             Speed = 0,
             Radius = 20,
             MaxLifeTime = 10,
