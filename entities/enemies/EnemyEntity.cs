@@ -73,7 +73,7 @@ public class EnemyEntity
     public void ReceiveDamage(float amount)
     {
         Health -= amount;
-        if (Health < 0) OnDeath();
+        if (Health <= 0) OnDeath();
     }
 
     public void OnDeath()
