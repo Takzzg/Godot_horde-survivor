@@ -34,15 +34,6 @@ public partial class StationaryWeapon : BaseWeapon
         return entity;
     }
 
-    public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)
-    {
-        var (enemyDied, damage_dealt) = GameManager.Instance.EnemiesManager.EnemyReceiveDamage(enemy, entity.Damage);
-
-        // increase stats
-        _player.PlayerStats.IncreaseDamageDealt(damage_dealt);
-        if (enemyDied) _player.PlayerStats.IncreaseKillCount(1);
-    }
-
     public override void UpdateEntityPosition(WeaponEntity entity, double delta)
     {
         if (Trajectory == TrajectoryStyleEnum.NONE || entity.Speed == 0) return;

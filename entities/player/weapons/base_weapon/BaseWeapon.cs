@@ -22,7 +22,7 @@ public abstract partial class BaseWeapon : DebuggerNode
 
     public override void _PhysicsProcess(double delta)
     {
-        WeaponEntityManager.ProcessEntities(delta, GlobalPosition, UpdateEntityPosition, OnCollision);
+        WeaponEntityManager.ProcessEntities(delta, GlobalPosition, UpdateEntityPosition, ProcessCollision);
 
         // update debug label
         DebugTryUpdateField("entities_count", WeaponEntityManager.EntitiesList.Count.ToString());
@@ -122,9 +122,19 @@ public abstract partial class BaseWeapon : DebuggerNode
     public WeaponEntityManager WeaponEntityManager;
     public int MaxCollisionsPerFrame = 16;
 
-    public abstract void OnCollision(WeaponEntity entity, BasicEnemy enemy);
     public abstract WeaponEntity GetBaseEntity();
     public abstract void UpdateEntityPosition(WeaponEntity entity, double delta);
+    public virtual void OnCollision(WeaponEntity entity, Rid areaRid) { }
+
+    public void ProcessCollision(WeaponEntity entity, Rid areaRid)
+    {
+        OnCollision(entity, areaRid);
+        EnemyEntity enemy = GameManager.Instance.EnemiesManager.EnemyReceiveDamage(areaRid, entity.Damage);
+
+        // increase stats
+        _player.PlayerStats.IncreaseDamageDealt(entity.Damage);
+        if (!enemy.Alive) _player.PlayerStats.IncreaseKillCount(1);
+    }
 
     // -------------------------------------------- Display --------------------------------------------
 

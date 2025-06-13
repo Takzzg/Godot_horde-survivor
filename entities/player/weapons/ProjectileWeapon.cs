@@ -1,3 +1,5 @@
+using Godot;
+
 public partial class ProjectileWeapon : BaseWeapon
 {
     public ProjectileWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(entityTrajectory, test_manual)
@@ -26,14 +28,9 @@ public partial class ProjectileWeapon : BaseWeapon
         return entity;
     }
 
-    public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)
+    public override void OnCollision(WeaponEntity entity, Rid areaRid)
     {
         entity.MaxPierceCount -= 1;
-        var (enemyDied, damage_dealt) = GameManager.Instance.EnemiesManager.EnemyReceiveDamage(enemy, entity.Damage);
-
-        // increase stats
-        _player.PlayerStats.IncreaseDamageDealt(damage_dealt);
-        if (enemyDied) _player.PlayerStats.IncreaseKillCount(1);
     }
 
     public override void UpdateEntityPosition(WeaponEntity entity, double delta)

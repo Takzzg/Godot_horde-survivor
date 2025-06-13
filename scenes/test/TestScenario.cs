@@ -20,7 +20,6 @@ public partial class TestScenario : Node2D
 
         // create EnemiesManager
         GameManager.Instance.EnemiesManager = new EnemiesManager();
-        GameManager.Instance.EnemiesManager.SetEnemyStats(_enemyRadius, 10, 0, 1, 1);
         AddChild(GameManager.Instance.EnemiesManager);
 
         // create ExperienceManager
@@ -47,7 +46,7 @@ public partial class TestScenario : Node2D
         {
             for (int j = 0; j < enemiesPerRow; j++)
             {
-                BasicEnemy enemy = EnemiesManager.GetNewEnemyEntity(pos);
+                BasicEnemy enemy = new() { Speed = 0, Position = pos };
                 GameManager.Instance.EnemiesManager.SpawnEnemy(enemy);
                 pos.X += _enemyRadius * 2;
             }

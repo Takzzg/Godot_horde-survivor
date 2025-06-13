@@ -1,24 +1,12 @@
-using Godot;
-
-public class BasicEnemy
+public partial class BasicEnemy : EnemyEntity
 {
-    public BasicEnemy(Vector2 pos, int health, int speed, int damage, int xp)
+    public BasicEnemy()
     {
-        Position = pos;
-        Health = health;
-        Speed = speed;
-        Damage = damage;
-        ExperienceDropped = xp;
+        Speed = 25;
+        Damage = 1;
+        ExperienceDropped = 1;
+
+        HitboxRadius = 6;
+        HurtboxRadius = 10;
     }
-
-    public Vector2 Position;
-
-    public float Health;
-    public int Speed;
-    public int Damage;
-    public int ExperienceDropped;
-
-    public Rid CanvasItemRid;
-    public Rid BodyRid;
-    public Rid HurtboxRid;
 }

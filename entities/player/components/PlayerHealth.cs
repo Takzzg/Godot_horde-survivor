@@ -66,7 +66,7 @@ public partial class PlayerHealth : BasePlayerComponent
     {
         if (!InvulnerableTimer.IsStopped()) return;
 
-        BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByBodyRid((Rid)collision["rid"]);
+        EnemyEntity enemy = GameManager.Instance.EnemiesManager.FindEnemyByBodyRid((Rid)collision["rid"]);
         ReceiveDamage(enemy.Damage);
     }
 

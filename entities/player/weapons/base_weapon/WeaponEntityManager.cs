@@ -23,7 +23,7 @@ public partial class WeaponEntityManager : Node2D
         EntitiesList.Clear();
     }
 
-    public void ProcessEntities(double delta, Vector2 WeaponPos, Action<WeaponEntity, double> updatePos, Action<WeaponEntity, BasicEnemy> onCollide)
+    public void ProcessEntities(double delta, Vector2 WeaponPos, Action<WeaponEntity, double> updatePos, Action<WeaponEntity, Rid> processCollision)
     {
         if (EntitiesList.Count == 0) return;
 
@@ -42,7 +42,7 @@ public partial class WeaponEntityManager : Node2D
 
             // check collision
             UpdateEntityCollisions(entity, EntityTickDelay, delta);
-            CheckNewCollisions(entity, onCollide);
+            CheckNewCollisions(entity, processCollision);
 
             // check expired 
             if (
@@ -114,7 +114,7 @@ public partial class WeaponEntityManager : Node2D
         }
     }
 
-    public void CheckNewCollisions(WeaponEntity entity, Action<WeaponEntity, BasicEnemy> onCollide)
+    public void CheckNewCollisions(WeaponEntity entity, Action<WeaponEntity, Rid> processCollision)
     {
         Transform2D posTransform = new(0, entity.Position);
         PhysicsShapeQueryParameters2D query = new()
@@ -136,9 +136,7 @@ public partial class WeaponEntityManager : Node2D
             if (entity.CollidingWith.ContainsKey(rid)) { continue; } // already colliding
 
             entity.CollidingWith.Add(rid, 0);
-
-            BasicEnemy enemy = GameManager.Instance.EnemiesManager.FindEnemyByAreaRid(rid);
-            onCollide(entity, enemy); // deal damage
+            processCollision(entity, rid); // deal damage
         }
     }
 }

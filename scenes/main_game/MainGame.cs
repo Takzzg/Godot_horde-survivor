@@ -21,13 +21,12 @@ public partial class MainGame : Node2D
 
         // create EnemiesManager
         GameManager.Instance.EnemiesManager = new EnemiesManager();
-        GameManager.Instance.EnemiesManager.SetEnemyStats(6, 10, 25, 1, 1);
         AddChild(GameManager.Instance.EnemiesManager);
 
         // create ExperienceManager
         GameManager.Instance.ExperienceManager = new ExperienceManager();
         AddChild(GameManager.Instance.ExperienceManager);
 
-        GameManager.Instance.EnemiesManager.StartSpawnerTimer();
+        GameManager.Instance.EnemiesManager.Spawner.StartTimer();
     }
 }

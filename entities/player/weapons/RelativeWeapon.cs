@@ -35,15 +35,6 @@ public partial class RelativeWeapon : BaseWeapon
         return entity;
     }
 
-    public override void OnCollision(WeaponEntity entity, BasicEnemy enemy)
-    {
-        var (enemyDied, damage_dealt) = GameManager.Instance.EnemiesManager.EnemyReceiveDamage(enemy, entity.Damage);
-
-        // increase stats
-        _player.PlayerStats.IncreaseDamageDealt(damage_dealt);
-        if (enemyDied) _player.PlayerStats.IncreaseKillCount(1);
-    }
-
     public override void UpdateEntityPosition(WeaponEntity entity, double delta)
     {
         WeaponEntityManager.SetEntityPosition(entity, _player.Position + entity.Offset);
