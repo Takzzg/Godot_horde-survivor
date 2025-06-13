@@ -13,8 +13,8 @@ public partial class LevelUpUI : Panel
     [Export]
     private Button _close;
 
-    private LevelUpOption _selectedOption = null;
-    private WeaponDisplay _selectedWeapon = null;
+    private LevelUpOption _selectedModOption = null;
+    private WeaponDisplay _selectedWeaponDisplay = null;
 
     public override void _Ready()
     {
@@ -36,12 +36,24 @@ public partial class LevelUpUI : Panel
 
     private void CheckSelection()
     {
-        _confirm.Disabled = _selectedOption == null || _selectedWeapon == null;
+        if (_selectedModOption == null || _selectedWeaponDisplay == null)
+        {
+            _confirm.Disabled = true;
+            return;
+        }
+
+        if (_selectedModOption.Modifier.IncompatibleWeapons.Contains(_selectedWeaponDisplay.Weapon.Type))
+        {
+            SetSelectedWeapon(null);
+            return;
+        }
+
+        _confirm.Disabled = false;
     }
 
     private void OnConfirm()
     {
-        _selectedWeapon.Weapon.AddModifier(_selectedOption.Modifier);
+        _selectedWeaponDisplay.Weapon.AddModifier(_selectedModOption.Modifier);
         QueueFree();
     }
 
@@ -61,13 +73,13 @@ public partial class LevelUpUI : Panel
 
     private void SetSelectedOption(LevelUpOption option)
     {
-        if (_selectedOption != null) { _selectedOption.Scale = Vector2.One; }
-        if (option == _selectedOption) { _selectedOption = null; }
+        if (_selectedModOption != null) { _selectedModOption.Scale = Vector2.One; }
+        if (option == _selectedModOption) { _selectedModOption = null; }
         else
         {
-            _selectedOption = option;
-            _selectedOption.PivotOffset = _selectedOption.Size / 2;
-            _selectedOption.Scale = new Vector2(1.1f, 1.1f);
+            _selectedModOption = option;
+            _selectedModOption.PivotOffset = _selectedModOption.Size / 2;
+            _selectedModOption.Scale = new Vector2(1.1f, 1.1f);
         }
 
         CheckSelection();
@@ -86,13 +98,13 @@ public partial class LevelUpUI : Panel
 
     private void SetSelectedWeapon(WeaponDisplay weapon)
     {
-        if (_selectedWeapon != null) { _selectedWeapon.Scale = Vector2.One; }
-        if (weapon == _selectedWeapon) { _selectedWeapon = null; }
+        if (_selectedWeaponDisplay != null) { _selectedWeaponDisplay.Scale = Vector2.One; }
+        if (weapon == _selectedWeaponDisplay || weapon == null) { _selectedWeaponDisplay = null; }
         else
         {
-            _selectedWeapon = weapon;
-            _selectedWeapon.PivotOffset = _selectedWeapon.Size / 2;
-            _selectedWeapon.Scale = new Vector2(1.1f, 1.1f);
+            _selectedWeaponDisplay = weapon;
+            _selectedWeaponDisplay.PivotOffset = _selectedWeaponDisplay.Size / 2;
+            _selectedWeaponDisplay.Scale = new Vector2(1.1f, 1.1f);
         }
 
         CheckSelection();

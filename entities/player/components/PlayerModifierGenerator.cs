@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Godot;
 using static BaseModifier;
 
 public partial class PlayerModifierGenerator(PlayerScene player) : BasePlayerComponent(player, false)
@@ -16,14 +15,20 @@ public partial class PlayerModifierGenerator(PlayerScene player) : BasePlayerCom
         {RarityEnum.UNIQUE, 0},
     };
 
+    private static readonly List<ModifierEnum> _allMods = [
+        // ModifierEnum.TEST_MOD,
+        ModifierEnum.SIZE_MOD,
+        ModifierEnum.PIERCE_MOD,
+    ];
+
     public Dictionary<RarityEnum, List<ModifierEnum>> RarityPools = new()
     {
-        {RarityEnum.COMMON, [ModifierEnum.SIZE_MOD ]},
-        {RarityEnum.UNCOMMON, [ModifierEnum.SIZE_MOD ]},
-        {RarityEnum.RARE, [ModifierEnum.SIZE_MOD ]},
-        {RarityEnum.EPIC, [ModifierEnum.SIZE_MOD ]},
-        {RarityEnum.LEGENDARY, [ModifierEnum.SIZE_MOD ]},
-        {RarityEnum.UNIQUE, [ModifierEnum.SIZE_MOD ]},
+        {RarityEnum.COMMON, _allMods},
+        {RarityEnum.UNCOMMON, _allMods},
+        {RarityEnum.RARE, _allMods},
+        {RarityEnum.EPIC, _allMods},
+        {RarityEnum.LEGENDARY, _allMods},
+        {RarityEnum.UNIQUE, _allMods},
     };
 
     public static BaseModifier CreateModifier(ModifierEnum type, RarityEnum rarity)
@@ -31,6 +36,7 @@ public partial class PlayerModifierGenerator(PlayerScene player) : BasePlayerCom
         return type switch
         {
             ModifierEnum.SIZE_MOD => GetSizeModifier(rarity),
+            ModifierEnum.PIERCE_MOD => GetPierceModifier(rarity),
             _ => throw new NotImplementedException(),
         };
     }
@@ -68,15 +74,27 @@ public partial class PlayerModifierGenerator(PlayerScene player) : BasePlayerCom
         return picked;
     }
 
+    private static T GetRandomEnumValue<T>()
+    {
+        Array allValues = Enum.GetValues(typeof(T));
+        int randIdx = GameManager.Instance.RNG.RandiRange(0, allValues.Length - 1);
+        return (T)allValues.GetValue(randIdx);
+    }
+
+    // ------------- Size -------------
     private static SizeModifier GetSizeModifier(RarityEnum rarity)
     {
-        Array values = Enum.GetValues(typeof(SizeModifier.ModeEnum));
-        int randIdx = GameManager.Instance.RNG.RandiRange(0, values.Length - 1);
-        SizeModifier.ModeEnum mode = (SizeModifier.ModeEnum)values.GetValue(randIdx);
-
-        float percent = GameManager.Instance.RNG.RandiRange(5, 10);
-
+        SizeModifier.ModeEnum mode = GetRandomEnumValue<SizeModifier.ModeEnum>();
         SizeModifier mod = new(rarity, mode);
         return mod;
     }
+
+    // ------------- Pierce -------------
+    private static PierceModifier GetPierceModifier(RarityEnum rarity)
+    {
+        PierceModifier.ModeEnum mode = GetRandomEnumValue<PierceModifier.ModeEnum>();
+        PierceModifier mod = new(rarity, mode);
+        return mod;
+    }
+
 }
