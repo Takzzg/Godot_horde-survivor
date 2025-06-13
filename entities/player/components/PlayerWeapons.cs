@@ -9,12 +9,14 @@ public partial class PlayerWeapons(PlayerScene player, bool useDebug = true) : B
         weapon.SetPlayerReference(_player);
         WeaponsList.Add(weapon);
         AddChild(weapon);
+        DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
     }
 
     public void DestroyWeapon(BaseWeapon weapon)
     {
         WeaponsList.Remove(weapon);
         weapon.QueueFree();
+        DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
     }
 
     public void OnPlayerDeath()
@@ -25,11 +27,7 @@ public partial class PlayerWeapons(PlayerScene player, bool useDebug = true) : B
     public override DebugCategory DebugCreateCategory()
     {
         DebugCategory category = new("Player Weapons");
-        for (int i = 0; i < WeaponsList.Count; i++)
-        {
-            BaseWeapon weapon = WeaponsList[i];
-            category.CreateLabelField($"weapon_{i}", $"Weapon #{i}", weapon.Type.ToString());
-        }
+        category.CreateLabelField("weapon_count", "Count", WeaponsList.Count.ToString());
         return category;
     }
 }
