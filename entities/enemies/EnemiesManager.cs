@@ -157,7 +157,7 @@ public partial class EnemiesManager : DebuggerNode
 
     public void OnPlayerDeath()
     {
-        Timer.Stop();
+        Timer?.Stop();
 
         EnemiesList.ForEach((enemy) =>
         {
