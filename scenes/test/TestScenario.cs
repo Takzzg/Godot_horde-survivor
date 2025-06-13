@@ -3,7 +3,8 @@ using Godot;
 
 public partial class TestScenario : Node2D
 {
-    private Vector2 _worldCenterSize = new(64, 64);
+    private static Vector2 _worldCenterSize = new(64, 64);
+    private static readonly int _enemyRadius = 6;
 
     public TestScenario()
     {
@@ -18,7 +19,7 @@ public partial class TestScenario : Node2D
         AddChild(GameManager.Instance.Player);
 
         // create EnemiesManager
-        GameManager.Instance.EnemiesManager = new EnemiesManager(6);
+        GameManager.Instance.EnemiesManager = new EnemiesManager(_enemyRadius);
         AddChild(GameManager.Instance.EnemiesManager);
 
         // create ExperienceManager
@@ -37,22 +38,20 @@ public partial class TestScenario : Node2D
 
     public static void TEST_SpawnEnemies()
     {
-        Vector2[] positions = [
-            new Vector2(100, 0),
-            new Vector2(100, 50),
-            new Vector2(110, 50),
-            new Vector2(120, 50),
-            new Vector2(100, 100),
-            new Vector2(110, 100),
-            new Vector2(120, 100),
-            new Vector2(130, 100),
-            new Vector2(140, 100),
-        ];
+        int enemyRows = 4;
+        int enemiesPerRow = 8;
+        Vector2 pos = new(_worldCenterSize.X / 2 + 16, -(enemyRows * _enemyRadius));
 
-        foreach (Vector2 pos in positions)
+        for (int i = 0; i < enemyRows; i++)
         {
-            BasicEnemy enemy = new(pos, 50, 0, 1, 1);
-            GameManager.Instance.EnemiesManager.SpawnEnemy(enemy);
+            for (int j = 0; j < enemiesPerRow; j++)
+            {
+                BasicEnemy enemy = new(pos, 50, 0, 1, 1);
+                GameManager.Instance.EnemiesManager.SpawnEnemy(enemy);
+                pos.X += _enemyRadius * 2;
+            }
+            pos.X = _worldCenterSize.X / 2 + 16;
+            pos.Y += _enemyRadius * 2;
         }
     }
 
