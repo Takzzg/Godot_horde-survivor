@@ -23,13 +23,9 @@ public partial class StationaryWeapon : BaseWeapon
     {
         WeaponEntity entity = GetBaseEntity();
 
-        if (TEST_MANUAL) { entity.Position = GlobalPosition + (Vector2.Right * 100); }
-        else
-        {
-            float distance = GameManager.Instance.RNG.RandfRange(50, 150);
-            float angle = GameManager.Instance.RNG.RandfRange(0, 360);
-            entity.Position = Utils.GetPointArounOrigin(GlobalPosition, distance, angle);
-        }
+        float distance = GameManager.Instance.RNG.RandfRange(50, 150);
+        float angle = Vector2.Right.AngleTo(GetTrajectory());
+        entity.Position = Utils.GetPointArounOrigin(GlobalPosition, distance, angle);
 
         return entity;
     }

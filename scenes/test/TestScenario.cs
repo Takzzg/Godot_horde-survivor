@@ -114,10 +114,9 @@ public partial class TestScenario : Node2D
     private void CreateOptionsWeaponAiming(Vector2 pos)
     {
         (string title, Action<BaseWeapon> changeAiming)[] types = [
-            new("None", (weapon) => weapon.Trajectory = BaseWeapon.TrajectoryStyleEnum.NONE),
-            new("Random", (weapon) => weapon.Trajectory = BaseWeapon.TrajectoryStyleEnum.RANDOM),
-            new("Facing", (weapon) => weapon.Trajectory = BaseWeapon.TrajectoryStyleEnum.FACING),
-            new("Fixed", (weapon) => weapon.Trajectory = BaseWeapon.TrajectoryStyleEnum.FIXED),
+            new("None", (weapon) => weapon.SetTrajectoryStyle(BaseWeapon.TrajectoryStyleEnum.NONE)),
+            new("Random", (weapon) => weapon.SetTrajectoryStyle(BaseWeapon.TrajectoryStyleEnum.RANDOM)),
+            new("Facing", (weapon) => weapon.SetTrajectoryStyle(BaseWeapon.TrajectoryStyleEnum.FACING)),
         ];
 
         // parent node

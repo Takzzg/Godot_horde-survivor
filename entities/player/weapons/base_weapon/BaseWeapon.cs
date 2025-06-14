@@ -99,8 +99,16 @@ public abstract partial class BaseWeapon : DebuggerNode
     }
 
     // -------------------------------------------- Trajectory --------------------------------------------
-    public enum TrajectoryStyleEnum { NONE, RANDOM, FACING, FIXED }
-    public TrajectoryStyleEnum Trajectory;
+    public enum TrajectoryStyleEnum { NONE, RANDOM, FACING }
+    public TrajectoryStyleEnum Trajectory { get; private set; }
+
+    public void SetTrajectoryStyle(TrajectoryStyleEnum style)
+    {
+        if (style == Trajectory) { return; }
+
+        Trajectory = style;
+        DebugTryUpdateField("entity_trajectory", Trajectory.ToString().Capitalize());
+    }
 
     public Vector2 GetTrajectory()
     {
@@ -108,7 +116,6 @@ public abstract partial class BaseWeapon : DebuggerNode
         {
             TrajectoryStyleEnum.RANDOM => GetRandomTrajectory(),
             TrajectoryStyleEnum.FACING => GetFacingTrajectory(),
-            TrajectoryStyleEnum.FIXED => GetFixedTrajectory(),
             TrajectoryStyleEnum.NONE => Vector2.Zero,
             _ => throw new NotImplementedException(),
         };
@@ -116,7 +123,6 @@ public abstract partial class BaseWeapon : DebuggerNode
 
     protected static Vector2 GetRandomTrajectory() { return Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360)); }
     public Vector2 GetFacingTrajectory() { return _player.PlayerMovement.FacingDirection; }
-    public virtual Vector2 GetFixedTrajectory() { throw new NotImplementedException(); }
 
     // -------------------------------------------- Entities --------------------------------------------
     public WeaponEntityManager WeaponEntityManager;
@@ -151,10 +157,11 @@ public abstract partial class BaseWeapon : DebuggerNode
         DebugCategory category = new($"{Type.ToString().Capitalize()} weapon");
 
         category.CreateDivider("Weapon Stats");
-        category.CreateLabelField("entity_trajectory", "Trajectory.", Trajectory.ToString());
+        category.CreateLabelField("entity_trajectory", "Trajectory", Trajectory.ToString().Capitalize());
         category.CreateLabelField("entities_count", "Entities", WeaponEntityManager.EntitiesList.Count.ToString());
         category.CreateLabelField("timer_delay", "Delay", TEST_MANUAL ? "MANUAL" : $"{TimerDelay}s ({1 / TimerDelay}bps)");
         category.CreateLabelField("collisions_per_frame", "Collisions/f", MaxCollisionsPerFrame.ToString());
+        category.CreateLabelField("collisions_delay", "Collision delay", WeaponEntityManager.EntityTickDelay.ToString());
 
         WeaponEntity baseEntity = GetBaseEntity();
 

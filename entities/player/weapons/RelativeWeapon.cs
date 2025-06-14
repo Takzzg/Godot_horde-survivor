@@ -23,14 +23,10 @@ public partial class RelativeWeapon : BaseWeapon
     public override WeaponEntity CreateEntity()
     {
         WeaponEntity entity = GetBaseEntity();
-        if (TEST_MANUAL) { entity.Offset = new Vector2(RelativeOffset, 0); }
-        else
-        {
-            float angle = GameManager.Instance.RNG.RandfRange(0, 360);
-            entity.Offset = Utils.GetPointArounOrigin(_player.Position, RelativeOffset, angle);
-        }
+
+        float angle = Vector2.Right.AngleTo(GetTrajectory());
+        entity.Offset = Utils.GetPointArounOrigin(Vector2.Zero, RelativeOffset, angle);
         entity.Position = _player.Position + entity.Offset;
-        entity.Direction = GetTrajectory();
 
         return entity;
     }
