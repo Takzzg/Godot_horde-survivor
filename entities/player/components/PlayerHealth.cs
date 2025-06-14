@@ -1,4 +1,3 @@
-using System.Linq;
 using Godot;
 using Godot.Collections;
 
@@ -45,7 +44,7 @@ public partial class PlayerHealth : BasePlayerComponent
 
         InvulnerableTimer.Start();
 
-        DebugTryUpdateField("current_health", $"{Health} / {MaxHealth}");
+        _player.DebugTryUpdateField("current_health", $"{Health} / {MaxHealth}");
     }
 
     private void PlayerDie()
@@ -59,7 +58,7 @@ public partial class PlayerHealth : BasePlayerComponent
 
         GameManager.Instance.EnemiesManager.OnPlayerDeath();
 
-        DebugTryUpdateField("player_alive", Alive ? "Alive" : "Dead");
+        _player.DebugTryUpdateField("player_alive", Alive ? "Alive" : "Dead");
     }
 
     public void OnCollision(Dictionary collision)
@@ -70,11 +69,11 @@ public partial class PlayerHealth : BasePlayerComponent
         ReceiveDamage(enemy.Damage);
     }
 
-    public override DebugCategory DebugCreateCategory()
+    // -------------------------------------------- Debug --------------------------------------------
+    public override void DebugCreateSubCategory(DebugCategory category)
     {
-        DebugCategory category = new("Player Health");
+        category.CreateDivider("Health");
         category.CreateLabelField("current_health", "HP", $"{Health} / {MaxHealth}");
         category.CreateLabelField("player_alive", "State", Alive ? "Alive" : "Dead");
-        return category;
     }
 }

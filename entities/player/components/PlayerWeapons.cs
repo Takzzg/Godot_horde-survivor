@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public partial class PlayerWeapons(PlayerScene player, bool useDebug = true) : BasePlayerComponent(player, useDebug)
+public partial class PlayerWeapons(PlayerScene player) : BasePlayerComponent(player)
 {
     public readonly List<BaseWeapon> WeaponsList = [];
 
@@ -9,14 +9,16 @@ public partial class PlayerWeapons(PlayerScene player, bool useDebug = true) : B
         weapon.SetPlayerReference(_player);
         WeaponsList.Add(weapon);
         AddChild(weapon);
-        DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
+
+        _player.DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
     }
 
     public void DestroyWeapon(BaseWeapon weapon)
     {
         WeaponsList.Remove(weapon);
         weapon.QueueFree();
-        DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
+
+        _player.DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
     }
 
     public void OnPlayerDeath()
@@ -24,10 +26,11 @@ public partial class PlayerWeapons(PlayerScene player, bool useDebug = true) : B
         WeaponsList.ForEach(weapon => weapon.OnPlayerDeath());
     }
 
-    public override DebugCategory DebugCreateCategory()
+    // -------------------------------------------- Debug --------------------------------------------
+
+    public override void DebugCreateSubCategory(DebugCategory category)
     {
-        DebugCategory category = new("Player Weapons");
+        category.CreateDivider("Weapons");
         category.CreateLabelField("weapon_count", "Count", WeaponsList.Count.ToString());
-        return category;
     }
 }

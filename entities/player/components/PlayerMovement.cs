@@ -43,25 +43,23 @@ public partial class PlayerMovement : BasePlayerComponent
             (float)(inputDirection.Y * Speed * delta)
         );
 
-        FacingDirection = inputDirection;
         _player.Position += offset;
+        FacingDirection = inputDirection;
+
         _player.PlayerStats.IncreaseDistanceTraveled(offset.Length());
-
-        DebugTryUpdateField("player_pos", _player.Position.ToString("0.0"));
-    }
-
-    public override DebugCategory DebugCreateCategory()
-    {
-        DebugCategory category = new("Player Movement");
-        category.CreateLabelField("player_speed", "Speed", Speed.ToString());
-        category.CreateLabelField("player_pos", "Pos", _player.Position.ToString("0.0"));
-
-        return category;
+        _player.DebugTryUpdateField("player_pos", _player.Position.ToString("0.0"));
     }
 
     public static Vector2 GetInputVector()
     {
         Vector2 inputDirection = Input.GetVector("left", "right", "up", "down");
         return inputDirection;
+    }
+
+    // -------------------------------------------- Debug --------------------------------------------
+    public override void DebugCreateSubCategory(DebugCategory category)
+    {
+        category.CreateDivider("Movement");
+        category.CreateLabelField("player_speed", "Speed", Speed.ToString());
     }
 }

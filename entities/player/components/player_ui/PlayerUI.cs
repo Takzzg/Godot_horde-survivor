@@ -10,7 +10,7 @@ public partial class PlayerUI : BasePlayerComponent
     public Control DeathUI;
     public LevelUpUI LevelUpUI;
 
-    public PlayerUI(PlayerScene player) : base(player, false)
+    public PlayerUI(PlayerScene player) : base(player)
     {
         ProcessMode = ProcessModeEnum.Always;
 

@@ -46,7 +46,7 @@ public partial class PlayerExperience : BasePlayerComponent
         // GD.Print($"player gain experience {amount} ({CurrentExperience}/{ExperienceToNextLevel})");
         if (CurrentExperience >= RequiredExperience) LevelUp();
 
-        DebugTryUpdateField("current_xp", $"{CurrentExperience} / {RequiredExperience}");
+        _player.DebugTryUpdateField("current_xp", $"{CurrentExperience} / {RequiredExperience}");
         _player.PlayerUI.GameplayUI.UpdateExperienceBar(CurrentExperience, RequiredExperience);
     }
 
@@ -56,22 +56,20 @@ public partial class PlayerExperience : BasePlayerComponent
         CurrentExperience = 0;
 
         // GD.Print($"player level up {PlayerLevel}");
-        DebugTryUpdateField("player_level", PlayerLevel.ToString());
+        _player.DebugTryUpdateField("player_level", PlayerLevel.ToString());
         _player.PlayerUI.ShowLevelUpUI();
-    }
-
-    public override DebugCategory DebugCreateCategory()
-    {
-        DebugCategory category = new("Player Experience");
-
-        category.CreateLabelField("player_level", "Level", PlayerLevel.ToString());
-        category.CreateLabelField("current_xp", "XP", $"{CurrentExperience} / {RequiredExperience}");
-
-        return category;
     }
 
     public void TriggerLevelUp()
     {
         GainExperience(RequiredExperience);
+    }
+
+    // -------------------------------------------- Debug --------------------------------------------
+    public override void DebugCreateSubCategory(DebugCategory category)
+    {
+        category.CreateDivider("Experience");
+        category.CreateLabelField("player_level", "Level", PlayerLevel.ToString());
+        category.CreateLabelField("current_xp", "XP", $"{CurrentExperience} / {RequiredExperience}");
     }
 }

@@ -4,7 +4,7 @@ public partial class PlayerDraw : BasePlayerComponent
 {
     private Rid _canvasItemRid;
 
-    public PlayerDraw(PlayerScene player) : base(player, false)
+    public PlayerDraw(PlayerScene player) : base(player)
     {
         Transform2D posTransform = new(0, Position);
 
