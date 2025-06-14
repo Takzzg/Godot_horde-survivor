@@ -13,7 +13,7 @@ public partial class EM_Spawner(EnemiesManager manager) : EM_BaseComponent(manag
         AddChild(Timer);
 
         Running = true;
-        DebugTryUpdateField("timer_running", Running ? "ON" : "OFF");
+        _manager.DebugTryUpdateField("timer_running", Running ? "ON" : "OFF");
     }
 
     public void SpawnAroundPlayer()
@@ -22,12 +22,5 @@ public partial class EM_Spawner(EnemiesManager manager) : EM_BaseComponent(manag
 
         BasicEnemy enemy = new() { Position = pos };
         _manager.SpawnEnemy(enemy);
-    }
-
-    public override DebugCategory DebugCreateCategory()
-    {
-        DebugCategory category = new("EM spawner");
-        category.CreateLabelField("timer_running", "Timer", Running ? "ON" : "OFF");
-        return category;
     }
 }

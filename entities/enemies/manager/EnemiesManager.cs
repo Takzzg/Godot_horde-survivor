@@ -110,6 +110,15 @@ public partial class EnemiesManager : DebuggerNode
     {
         DebugCategory category = new("Enemies Manager (EM)");
         category.CreateLabelField("enemies_count", "Count", $"{EnemiesList.Count}/{MAX_ENEMIES}");
+
+        category.CreateDivider("Spawner");
+        category.CreateLabelField("timer_running", "Timer", Spawner.Running ? "ON" : "OFF");
+        category.CreateLabelField("timer_delay", "Delay", Spawner.TimerDelay.ToString());
+
+        category.CreateDivider("Shared resources");
+        category.CreateLabelField("registered_count", "Count", "0");
+        category.CreateLabelField("registered_radii", "Radii", "-");
+
         return category;
     }
 }

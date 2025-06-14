@@ -1,4 +1,6 @@
-public abstract partial class EM_BaseComponent : DebuggerNode
+using Godot;
+
+public abstract partial class EM_BaseComponent : Node2D
 {
     protected EnemiesManager _manager;
 
