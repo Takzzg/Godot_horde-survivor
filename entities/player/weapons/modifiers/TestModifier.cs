@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Godot;
+using static Utils;
 
 public partial class TestModifier : BaseModifier
 {
@@ -7,9 +8,9 @@ public partial class TestModifier : BaseModifier
     {
         ModifierName = "Test Option";
         Description = "This is the test option. Grants you a [color=lightgreen]positive effect[/color] and a [color=indianred]negative effect[/color]";
-        Effects = new List<Control>() {
-            { new Effect( Effect.TypeEnum.POSITIVE, "Positive effect") },
-            { new Effect( Effect.TypeEnum.NEGATIVE, "Negative effect") }
+        Effects = new List<EffectLabel>() {
+            { new EffectLabel(EffectLabel.TypeEnum.POSITIVE, "Positive effect") },
+            { new EffectLabel(EffectLabel.TypeEnum.NEGATIVE, "Negative effect") }
         };
     }
 }

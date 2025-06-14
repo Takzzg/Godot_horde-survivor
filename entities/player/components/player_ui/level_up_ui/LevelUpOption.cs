@@ -1,10 +1,14 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using static Utils;
 
-public partial class LevelUpOption : PanelContainer
+public partial class LevelUpOption : SelectablePanel
 {
+    public enum OptionTypeEnum { WEAPON, MODIFIER }
+    public OptionTypeEnum Type;
+    public BaseWeapon Weapon;
     public BaseModifier Modifier;
-    private Action<LevelUpOption> _onClick;
 
     [Export]
     private Label _title;
@@ -16,37 +20,54 @@ public partial class LevelUpOption : PanelContainer
     [Export]
     private RichTextLabel _descriptionRich;
 
+    public Action OnConfirm;
 
     public override void _Ready()
     {
         _descriptionRich.MouseFilter = MouseFilterEnum.Ignore;
     }
 
-    public void UpdateValues(BaseModifier mod, Action<LevelUpOption> onClick = null)
+    private void SetUpOption(OptionTypeEnum type, Action onSelect, Action onConfirm, string title, RarityEnum rarity, List<EffectLabel> effects, string desc)
     {
-        Modifier = mod;
-        _onClick = onClick;
+        Type = type;
+        _onSelect = onSelect;
+        OnConfirm = onConfirm;
 
         foreach (Node node in _effectsCont.GetChildren()) { node.QueueFree(); }
 
-        _title.Text = mod.ModifierName;
-        _rarity.Text = mod.Rarity.ToString().Capitalize();
-        mod.Effects.ForEach(effect => _effectsCont.AddChild(effect));
-        _descriptionRich.Text = mod.Description;
+        _title.Text = title;
+        _rarity.Text = rarity.ToString().Capitalize();
+        effects.ForEach(effect => _effectsCont.AddChild(effect));
+        _descriptionRich.Text = desc;
     }
 
-    public override void _GuiInput(InputEvent @event)
+    public void UpdateValues(BaseModifier mod, Action onSelect, Action onConfirm)
     {
-        if (@event is InputEventMouseButton mouseButton)
-        {
-            if (mouseButton.ButtonIndex == MouseButton.Left && mouseButton.Pressed)
-            {
-                if (_onClick != null)
-                {
-                    _onClick(this);
-                    GetViewport().SetInputAsHandled();
-                }
-            }
-        }
+        Modifier = mod;
+
+        SetUpOption(
+            OptionTypeEnum.MODIFIER,
+            onSelect,
+            onConfirm,
+            mod.ModifierName,
+            mod.Rarity,
+            mod.Effects,
+            mod.Description
+        );
+    }
+
+    public void UpdateValues(BaseWeapon weapon, Action onSelect, Action onConfirm)
+    {
+        Weapon = weapon;
+
+        SetUpOption(
+            OptionTypeEnum.WEAPON,
+            onSelect,
+            onConfirm,
+            weapon.Type.ToString().Capitalize(),
+            weapon.Rarity,
+            [new EffectLabel(EffectLabel.TypeEnum.POSITIVE, "New weapon!")],
+            weapon.Description
+        );
     }
 }

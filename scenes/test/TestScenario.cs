@@ -81,9 +81,9 @@ public partial class TestScenario : Node2D
     private void CreateOptionsWeaponType(Vector2 pos)
     {
         (string title, Func<BaseWeapon> createWeapon)[] types = [
-            new("Projectile", () => new ProjectileWeapon(BaseWeapon.TrajectoryStyleEnum.RANDOM, true)),
-            new("Stationary", () => new StationaryWeapon(BaseWeapon.TrajectoryStyleEnum.RANDOM, true)),
-            new("Relative", () => new RelativeWeapon(BaseWeapon.TrajectoryStyleEnum.RANDOM, true)),
+            new("Projectile", () => new ProjectileWeapon(Utils.RarityEnum.COMMON ,BaseWeapon.TrajectoryStyleEnum.RANDOM, true)),
+            new("Stationary", () => new StationaryWeapon(Utils.RarityEnum.COMMON ,BaseWeapon.TrajectoryStyleEnum.RANDOM, true)),
+            new("Relative", () => new RelativeWeapon(Utils.RarityEnum.COMMON ,BaseWeapon.TrajectoryStyleEnum.RANDOM, true)),
         ];
 
         // parent node

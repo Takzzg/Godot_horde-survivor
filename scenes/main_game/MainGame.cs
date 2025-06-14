@@ -15,10 +15,6 @@ public partial class MainGame : Node2D
         GameManager.Instance.Player = new PlayerScene();
         AddChild(GameManager.Instance.Player);
 
-        // create basic weapon
-        ProjectileWeapon weapon = new(BaseWeapon.TrajectoryStyleEnum.RANDOM);
-        GameManager.Instance.Player.PlayerWeapons.CreateWeapon(weapon);
-
         // create EnemiesManager
         GameManager.Instance.EnemiesManager = new EnemiesManager();
         AddChild(GameManager.Instance.EnemiesManager);
@@ -27,6 +23,10 @@ public partial class MainGame : Node2D
         GameManager.Instance.ExperienceManager = new ExperienceManager();
         AddChild(GameManager.Instance.ExperienceManager);
 
-        GameManager.Instance.EnemiesManager.Spawner.StartTimer();
+        Ready += () =>
+        {
+            GameManager.Instance.EnemiesManager.Spawner.StartTimer();
+            GameManager.Instance.Player.PlayerExperience.TriggerLevelUp();
+        };
     }
 }

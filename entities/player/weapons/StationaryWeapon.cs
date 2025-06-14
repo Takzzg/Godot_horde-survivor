@@ -1,10 +1,12 @@
 using Godot;
+using static Utils;
 
 public partial class StationaryWeapon : BaseWeapon
 {
-    public StationaryWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(entityTrajectory, test_manual)
+    public StationaryWeapon(RarityEnum rarity, TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(rarity, entityTrajectory, test_manual)
     {
         Type = TypeEnum.STATIONARY;
+        TimerDelay = 0.75f;
     }
 
     public override WeaponEntity GetBaseEntity()
@@ -14,7 +16,7 @@ public partial class StationaryWeapon : BaseWeapon
             Damage = 4,
             Speed = 0,
             Radius = 20,
-            MaxLifeTime = 10,
+            MaxLifeTime = 1.5f,
             Foreground = false,
         };
     }

@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using static Utils;
 
 public abstract partial class BaseModifier
 {
     public string ModifierName;
     public string Description;
-    public List<Control> Effects;
+    public List<EffectLabel> Effects;
     public List<BaseWeapon.TypeEnum> IncompatibleWeapons = [];
 
-    public enum RarityEnum { TEST, COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, UNIQUE }
     public RarityEnum Rarity;
 
     public enum ModifierEnum
@@ -32,16 +32,6 @@ public abstract partial class BaseModifier
         return control;
     }
 
-    public partial class Effect : Label
-    {
-        public enum TypeEnum { NEGATIVE, POSITIVE }
-        public Effect(TypeEnum type, string text) : base()
-        {
-            Text = $"{(type == TypeEnum.POSITIVE ? "+" : "-")} {text}";
-            AddThemeColorOverride("font_color", type == TypeEnum.POSITIVE ? Colors.LightGreen : Colors.IndianRed);
-            HorizontalAlignment = HorizontalAlignment.Center;
-        }
-    }
 
     // -------------------------------------------- Methods --------------------------------------------
     public virtual WeaponEntity OnCreateEntity(WeaponEntity entity)

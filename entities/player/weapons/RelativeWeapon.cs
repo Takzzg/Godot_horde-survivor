@@ -1,12 +1,14 @@
 using Godot;
+using static Utils;
 
 public partial class RelativeWeapon : BaseWeapon
 {
     public int RelativeOffset = 10;
 
-    public RelativeWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(entityTrajectory, test_manual)
+    public RelativeWeapon(RarityEnum rarity, TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(rarity, entityTrajectory, test_manual)
     {
         Type = TypeEnum.RELATIVE;
+        TimerDelay = 0.5f;
     }
 
     public override WeaponEntity GetBaseEntity()
@@ -16,7 +18,7 @@ public partial class RelativeWeapon : BaseWeapon
             Damage = 2,
             Speed = 0,
             Radius = 10,
-            MaxLifeTime = 5,
+            MaxLifeTime = 0.25f,
         };
     }
 

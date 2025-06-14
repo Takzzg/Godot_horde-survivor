@@ -1,11 +1,13 @@
 using Godot;
+using static Utils;
 
 public partial class ProjectileWeapon : BaseWeapon
 {
-    public ProjectileWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(entityTrajectory, test_manual)
+    public ProjectileWeapon(RarityEnum rarity, TrajectoryStyleEnum entityTrajectory, bool test_manual = false) : base(rarity, entityTrajectory, test_manual)
     {
         Type = TypeEnum.PROJECTILE;
         MaxCollisionsPerFrame = 1;
+        TimerDelay = 0.25f;
     }
 
     public override WeaponEntity GetBaseEntity()
@@ -16,6 +18,7 @@ public partial class ProjectileWeapon : BaseWeapon
             Speed = 75,
             Radius = 2,
             MaxPierceCount = 1,
+            MaxLifeTime = 10
         };
     }
 

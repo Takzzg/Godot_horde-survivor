@@ -13,7 +13,7 @@ public partial class LevelUpUI : Panel
     [Export]
     private Button _close;
 
-    private LevelUpOption _selectedModOption = null;
+    private LevelUpOption _selectedOption = null;
     private WeaponDisplay _selectedWeaponDisplay = null;
 
     public override void _Ready()
@@ -36,13 +36,33 @@ public partial class LevelUpUI : Panel
 
     private void CheckSelection()
     {
-        if (_selectedModOption == null || _selectedWeaponDisplay == null)
+        // ------------- choosing weapon -------------
+        if (_selectedOption == null)
         {
             _confirm.Disabled = true;
             return;
         }
 
-        if (_selectedModOption.Modifier.IncompatibleWeapons.Contains(_selectedWeaponDisplay.Weapon.Type))
+        if (_selectedOption.Type == LevelUpOption.OptionTypeEnum.WEAPON)
+        {
+            if (_selectedWeaponDisplay != null)
+            {
+                SetSelectedWeapon(null);
+                return;
+            }
+
+            _confirm.Disabled = false;
+            return;
+        }
+
+        // ------------- choosing mod -------------
+        if (_selectedWeaponDisplay == null)
+        {
+            _confirm.Disabled = true;
+            return;
+        }
+
+        if (_selectedOption.Modifier.IncompatibleWeapons.Contains(_selectedWeaponDisplay.Weapon.Type))
         {
             SetSelectedWeapon(null);
             return;
@@ -53,8 +73,15 @@ public partial class LevelUpUI : Panel
 
     private void OnConfirm()
     {
-        _selectedWeaponDisplay.Weapon.AddModifier(_selectedModOption.Modifier);
+        _selectedOption.OnConfirm();
         QueueFree();
+    }
+
+    // -------------------------------------------- Player --------------------------------------------
+    private PlayerScene _player;
+    public void SetPlayerReference(PlayerScene player)
+    {
+        _player = player;
     }
 
     // -------------------------------------------- Options --------------------------------------------
@@ -67,19 +94,40 @@ public partial class LevelUpUI : Panel
         {
             LevelUpOption option = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
             _optionsCont.AddChild(option);
-            option.UpdateValues(mod, SetSelectedOption);
+            option.UpdateValues(
+                mod,
+                () => SetSelectedOption(option),
+                () => _selectedWeaponDisplay.Weapon.AddModifier(_selectedOption.Modifier)
+            );
+        });
+    }
+
+    public void UpdateOptions(List<BaseWeapon> weapons)
+    {
+        foreach (Node node in _optionsCont.GetChildren()) { node.QueueFree(); }
+
+        PackedScene optionScene = ResourcePaths.GetPackedSceneFromEnum(ResourcePaths.ScenePathsEnum.LEVEL_UP_OPTION);
+        weapons.ForEach(weapon =>
+        {
+            LevelUpOption option = ResourcePaths.InstantiatePackedScene<LevelUpOption>(optionScene);
+            _optionsCont.AddChild(option);
+            option.UpdateValues(
+                weapon,
+                () => SetSelectedOption(option),
+                () => _player.PlayerWeapons.CreateWeapon(option.Weapon)
+            );
         });
     }
 
     private void SetSelectedOption(LevelUpOption option)
     {
-        if (_selectedModOption != null) { _selectedModOption.Scale = Vector2.One; }
-        if (option == _selectedModOption) { _selectedModOption = null; }
+        if (_selectedOption != null) { _selectedOption.Scale = Vector2.One; }
+        if (option == _selectedOption) { _selectedOption = null; }
         else
         {
-            _selectedModOption = option;
-            _selectedModOption.PivotOffset = _selectedModOption.Size / 2;
-            _selectedModOption.Scale = new Vector2(1.1f, 1.1f);
+            _selectedOption = option;
+            _selectedOption.PivotOffset = _selectedOption.Size / 2;
+            _selectedOption.Scale = new Vector2(1.1f, 1.1f);
         }
 
         CheckSelection();

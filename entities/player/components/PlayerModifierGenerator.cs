@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static BaseModifier;
+using static Utils;
 
 public partial class PlayerModifierGenerator(PlayerScene player) : BasePlayerComponent(player)
 {

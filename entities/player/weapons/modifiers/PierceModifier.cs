@@ -1,4 +1,5 @@
 using System;
+using static Utils;
 
 public partial class PierceModifier : BaseModifier
 {
@@ -21,16 +22,16 @@ public partial class PierceModifier : BaseModifier
         {
             Description = "Bullets pierce one more enemy, and deal a bit more damage";
             Effects = [
-                new Effect(Effect.TypeEnum.POSITIVE, $"{_pierceCount} bullet pierce"),
-                new Effect(Effect.TypeEnum.POSITIVE, $"{_percent}% bullet damage"),
+                new EffectLabel(EffectLabel.TypeEnum.POSITIVE, $"{_pierceCount} bullet pierce"),
+                new EffectLabel(EffectLabel.TypeEnum.POSITIVE, $"{_percent}% bullet damage"),
             ];
         }
         else
         {
             Description = $"Bullets pierce one less enemy, but deal more damage (pierce can't go below {_minimumEntityPierce})";
             Effects = [
-                new Effect(Effect.TypeEnum.POSITIVE, $"{_percent}% bullet damage"),
-                new Effect(Effect.TypeEnum.NEGATIVE, $"{_pierceCount} bullet pierce"),
+                new EffectLabel(EffectLabel.TypeEnum.POSITIVE, $"{_percent}% bullet damage"),
+                new EffectLabel(EffectLabel.TypeEnum.NEGATIVE, $"{_pierceCount} bullet pierce"),
             ];
         }
     }

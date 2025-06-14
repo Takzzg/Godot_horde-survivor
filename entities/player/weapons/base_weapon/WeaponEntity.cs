@@ -13,8 +13,8 @@ public class WeaponEntity
     public Vector2 Direction;
 
     public int MaxDistance = GameManager.RENDER_DISTANCE;
-    public int MaxPierceCount = 0;
-    public double MaxLifeTime = 10;
+    public int MaxPierceCount;
+    public double MaxLifeTime;
 
     public bool Foreground = true;
 

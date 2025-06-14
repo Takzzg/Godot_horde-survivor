@@ -1,23 +1,28 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using static Utils;
 
 public abstract partial class BaseWeapon : DebuggerNode
 {
     public enum TypeEnum { PROJECTILE, STATIONARY, RELATIVE }
     public TypeEnum Type;
+    public RarityEnum Rarity;
+    public string Description;
 
-    public BaseWeapon(TrajectoryStyleEnum entityTrajectory, bool test_manual = false)
+    public BaseWeapon(RarityEnum rarity, TrajectoryStyleEnum entityTrajectory, bool test_manual = false)
     {
-        TEST_MANUAL = test_manual;
+        Rarity = rarity;
         Trajectory = entityTrajectory;
 
         // create entity manager
         WeaponEntityManager = new WeaponEntityManager(MaxCollisionsPerFrame) { TopLevel = true };
         AddChild(WeaponEntityManager);
 
+        TEST_MANUAL = test_manual;
         if (TEST_MANUAL) return;
-        CreateTimer();
+
+        Ready += CreateTimer;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -81,7 +86,7 @@ public abstract partial class BaseWeapon : DebuggerNode
     protected bool TEST_MANUAL = false;
     private Timer _timer;
     public abstract WeaponEntity CreateEntity();
-    public float TimerDelay = 0.25f;
+    public float TimerDelay;
 
     public void TimedSetRunning(bool state)
     {

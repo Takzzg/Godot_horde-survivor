@@ -62,13 +62,31 @@ public partial class PlayerUI : BasePlayerComponent
 
     public void ShowLevelUpUI()
     {
+        // pause game
         GetTree().Paused = true;
+
+        // create ui
         LevelUpUI = ResourcePaths.GetSceneInstanceFromEnum<LevelUpUI>(ResourcePaths.ScenePathsEnum.PLAYER_LEVEL_UP);
+        LevelUpUI.SetPlayerReference(_player);
         _layer.AddChild(LevelUpUI);
 
-        List<BaseModifier> options = _player.PlayerModifierGenerator.GetModifierOptions();
-        LevelUpUI.UpdateOptions(options);
+        // get options
+        if (_player.PlayerWeapons.WeaponsList.Count == 0 || _player.PlayerExperience.PlayerLevel % 5 == 0)
+        {
+            List<BaseWeapon> weapons = [
+                new ProjectileWeapon(Utils.RarityEnum.COMMON, BaseWeapon.TrajectoryStyleEnum.RANDOM),
+                new StationaryWeapon(Utils.RarityEnum.COMMON, BaseWeapon.TrajectoryStyleEnum.RANDOM),
+                new RelativeWeapon(Utils.RarityEnum.COMMON, BaseWeapon.TrajectoryStyleEnum.RANDOM),
+            ];
+            LevelUpUI.UpdateOptions(weapons);
+        }
+        else
+        {
+            List<BaseModifier> mods = _player.PlayerModifierGenerator.GetModifierOptions();
+            LevelUpUI.UpdateOptions(mods);
+        }
 
+        // show current weapons
         LevelUpUI.UpdateWeapons(_player.PlayerWeapons.WeaponsList);
 
         GameplayUI.Visible = false;

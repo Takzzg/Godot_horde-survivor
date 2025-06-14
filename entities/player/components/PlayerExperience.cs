@@ -62,7 +62,8 @@ public partial class PlayerExperience : BasePlayerComponent
 
     public void TriggerLevelUp()
     {
-        GainExperience(RequiredExperience);
+        if (RequiredExperience == 0) { LevelUp(); }
+        else { GainExperience(RequiredExperience); }
     }
 
     // -------------------------------------------- Debug --------------------------------------------

@@ -1,4 +1,4 @@
-using System;
+using static Utils;
 
 public partial class SizeModifier : BaseModifier
 {
@@ -18,16 +18,16 @@ public partial class SizeModifier : BaseModifier
         {
             Description = $"Bullets are bigger but slower (speed can't go below {_minimumEntitySpeed})";
             Effects = [
-                new Effect(Effect.TypeEnum.POSITIVE, $"{_percent}% bullet size"),
-                new Effect(Effect.TypeEnum.NEGATIVE, $"{_percent}% bullet speed"),
+                new EffectLabel(EffectLabel.TypeEnum.POSITIVE, $"{_percent}% bullet size"),
+                new EffectLabel(EffectLabel.TypeEnum.NEGATIVE, $"{_percent}% bullet speed"),
             ];
         }
         else
         {
             Description = "Bullets are smaller but faster";
             Effects = [
-                new Effect(Effect.TypeEnum.POSITIVE, $"{_percent}% bullet speed"),
-                new Effect(Effect.TypeEnum.NEGATIVE, $"{_percent}% bullet size"),
+                new EffectLabel(EffectLabel.TypeEnum.POSITIVE, $"{_percent}% bullet speed"),
+                new EffectLabel(EffectLabel.TypeEnum.NEGATIVE, $"{_percent}% bullet size"),
             ];
         }
     }
