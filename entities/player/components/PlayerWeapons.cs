@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Godot;
 
 public partial class PlayerWeapons(PlayerScene player) : BasePlayerComponent(player)
 {
@@ -11,6 +13,7 @@ public partial class PlayerWeapons(PlayerScene player) : BasePlayerComponent(pla
         AddChild(weapon);
 
         _player.DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
+        DebugUpdateWeaponTypes();
     }
 
     public void DestroyWeapon(BaseWeapon weapon)
@@ -19,6 +22,7 @@ public partial class PlayerWeapons(PlayerScene player) : BasePlayerComponent(pla
         weapon.QueueFree();
 
         _player.DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
+        DebugUpdateWeaponTypes();
     }
 
     public void OnPlayerDeath()
@@ -32,5 +36,16 @@ public partial class PlayerWeapons(PlayerScene player) : BasePlayerComponent(pla
     {
         category.CreateDivider("Weapons");
         category.CreateLabelField("weapon_count", "Count", WeaponsList.Count.ToString());
+
+        List<string> types = [];
+        WeaponsList.ForEach(weapon => types.Add(weapon.Type.ToString().Capitalize()));
+        category.CreateLabelField("weapon_types", "Types", types.ToArray().Join(", "));
+    }
+
+    private void DebugUpdateWeaponTypes()
+    {
+        List<string> types = [];
+        WeaponsList.ForEach(weapon => types.Add(weapon.Type.ToString().Capitalize()));
+        _player.DebugTryUpdateField("weapon_types", types.ToArray().Join(", "));
     }
 }
