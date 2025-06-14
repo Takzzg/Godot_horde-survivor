@@ -105,6 +105,13 @@ public partial class EnemiesManager : DebuggerNode
         DebugTryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
     }
 
+    public void DestroyAllEnemies()
+    {
+        EnemiesList.ForEach(enemy => enemy.FreeEntityRids());
+        EnemiesList.Clear();
+        DebugTryUpdateField("enemies_count", $"{EnemiesList.Count} / {MAX_ENEMIES}");
+    }
+
     // -------------------------------------------- DEBUG --------------------------------------------
     public override DebugCategory DebugCreateCategory()
     {

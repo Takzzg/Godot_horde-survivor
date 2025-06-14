@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using Godot;
 
 public partial class TestScenario : Node2D
 {
     private static Vector2 _worldCenterSize = new(64, 64);
     private static readonly int _enemyRadius = 6;
+    private int _gap = 25;
 
     public TestScenario()
     {
@@ -26,18 +28,39 @@ public partial class TestScenario : Node2D
         GameManager.Instance.ExperienceManager = new ExperienceManager();
         AddChild(GameManager.Instance.ExperienceManager);
 
-        // weapon switching
-        CreateWeaponTypeOptions();
-
+        // ------------- triggers -------------
         // level up
-        CreateLevelUpTrigger();
+        Vector2 lvlUpPos = new(-_gap, -(_worldCenterSize.Y / 2 + _gap));
+        CreateTriggerLevelUp(lvlUpPos);
 
         // spawn enemies
-        Ready += TEST_SpawnEnemies;
+        Vector2 spawnPos = new(_gap, -(_worldCenterSize.Y / 2 + _gap));
+        CreateTriggerSpawnEnemies(spawnPos);
+
+        // chage weapon
+        Vector2 weaponTypesPos = new(-((_worldCenterSize.X / 2) + _gap), -_gap);
+        CreateOptionsWeaponType(weaponTypesPos);
+
+        Vector2 weaponAimingPos = new(-((_worldCenterSize.X / 2) + _gap), _gap);
+        CreateOptionsWeaponAiming(weaponAimingPos);
     }
 
-    public static void TEST_SpawnEnemies()
+    private void CreateTriggerLevelUp(Vector2 pos)
     {
+        PlayerTrigger levelUp = new("Level up", (player) => player.PlayerExperience.TriggerLevelUp()) { Position = pos };
+        AddChild(levelUp);
+    }
+
+    private void CreateTriggerSpawnEnemies(Vector2 pos)
+    {
+        PlayerTrigger spawnEnemies = new("Spawn Enemies", (_) => CallDeferred(MethodName.TEST_SpawnEnemies)) { Position = pos };
+        AddChild(spawnEnemies);
+    }
+
+    private static void TEST_SpawnEnemies()
+    {
+        GameManager.Instance.EnemiesManager.DestroyAllEnemies();
+
         int enemyRows = 4;
         int enemiesPerRow = 8;
         Vector2 pos = new(_worldCenterSize.X / 2 + 16, -(enemyRows * _enemyRadius));
@@ -55,24 +78,16 @@ public partial class TestScenario : Node2D
         }
     }
 
-    public void CreateWeaponTypeOptions()
+    private void CreateOptionsWeaponType(Vector2 pos)
     {
-        int separation = 25;
-
         (string title, Func<BaseWeapon> createWeapon)[] types = [
-            new("Projectile", () => new ProjectileWeapon(BaseWeapon.TrajectoryStyleEnum.FACING, true)),
-            new("Stationary", () => new StationaryWeapon(BaseWeapon.TrajectoryStyleEnum.NONE, true)),
-            new("Relative", () => new RelativeWeapon(BaseWeapon.TrajectoryStyleEnum.NONE, true)),
+            new("Projectile", () => new ProjectileWeapon(BaseWeapon.TrajectoryStyleEnum.RANDOM, true)),
+            new("Stationary", () => new StationaryWeapon(BaseWeapon.TrajectoryStyleEnum.RANDOM, true)),
+            new("Relative", () => new RelativeWeapon(BaseWeapon.TrajectoryStyleEnum.RANDOM, true)),
         ];
 
-        static void OnCreateWeapon(PlayerScene player, Func<BaseWeapon> createWeapon)
-        {
-            if (player.PlayerWeapons.WeaponsList.Count > 0) player.PlayerWeapons.DestroyWeapon(player.PlayerWeapons.WeaponsList[0]);
-            player.PlayerWeapons.CreateWeapon(createWeapon());
-        }
-
         // parent node
-        Vector2 parentPosition = new(-(separation * (types.Length + 1)) / 2, -(_worldCenterSize.Y / 2 + 20));
+        Vector2 parentPosition = pos with { X = pos.X + -(_gap * (types.Length + 1)) };
         Node2D parent = new() { Position = parentPosition };
         AddChild(parent);
 
@@ -81,21 +96,52 @@ public partial class TestScenario : Node2D
         parent.AddChild(label);
 
         // options
-        Vector2 nextPos = new(separation * 1.5f, 0);
+        static void OnCreateWeapon(PlayerScene player, Func<BaseWeapon> createWeapon)
+        {
+            if (player.PlayerWeapons.WeaponsList.Count > 0) player.PlayerWeapons.DestroyWeapon(player.PlayerWeapons.WeaponsList[0]);
+            player.PlayerWeapons.CreateWeapon(createWeapon());
+        }
+
+        Vector2 nextPos = new(_gap * 1.5f, 0);
         foreach ((string title, Func<BaseWeapon> createWeapon) in types)
         {
             PlayerTrigger weapon = new(title, (player) => OnCreateWeapon(player, createWeapon)) { Position = nextPos };
             parent.AddChild(weapon);
-            nextPos.X += separation;
+            nextPos.X += _gap;
         }
     }
 
-    private void CreateLevelUpTrigger()
+    private void CreateOptionsWeaponAiming(Vector2 pos)
     {
-        PlayerTrigger levelUp = new("Level up", (player) => player.PlayerExperience.TriggerLevelUp())
+        (string title, Action<BaseWeapon> changeAiming)[] types = [
+            new("None", (weapon) => weapon.Trajectory = BaseWeapon.TrajectoryStyleEnum.NONE),
+            new("Random", (weapon) => weapon.Trajectory = BaseWeapon.TrajectoryStyleEnum.RANDOM),
+            new("Facing", (weapon) => weapon.Trajectory = BaseWeapon.TrajectoryStyleEnum.FACING),
+            new("Fixed", (weapon) => weapon.Trajectory = BaseWeapon.TrajectoryStyleEnum.FIXED),
+        ];
+
+        // parent node
+        Vector2 parentPosition = pos with { X = pos.X + -(_gap * (types.Length + 1)) };
+        Node2D parent = new() { Position = parentPosition };
+        AddChild(parent);
+
+        // title
+        Label label = new() { Text = "Aiming", Scale = Vector2.One / 2.5f };
+        parent.AddChild(label);
+
+        // options
+        static void OnChangeWeaponAiming(PlayerScene player, Action<BaseWeapon> changeAiming)
         {
-            Position = new Vector2(-((_worldCenterSize.X / 2) + 20), 0)
-        };
-        AddChild(levelUp);
+            BaseWeapon weapon = player.PlayerWeapons.WeaponsList.First();
+            changeAiming(weapon);
+        }
+
+        Vector2 nextPos = new(_gap * 1.5f, 0);
+        foreach ((string title, Action<BaseWeapon> changeAiming) in types)
+        {
+            PlayerTrigger weapon = new(title, (player) => OnChangeWeaponAiming(player, changeAiming)) { Position = nextPos };
+            parent.AddChild(weapon);
+            nextPos.X += _gap;
+        }
     }
 }

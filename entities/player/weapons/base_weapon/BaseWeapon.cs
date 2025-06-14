@@ -114,9 +114,9 @@ public abstract partial class BaseWeapon : DebuggerNode
         };
     }
 
-    public Func<Vector2> GetFixedTrajectory = () => throw new NotImplementedException();
-    public Vector2 GetFacingTrajectory() { return _player.PlayerMovement.FacingDirection; }
     protected static Vector2 GetRandomTrajectory() { return Vector2.One.Rotated(GameManager.Instance.RNG.RandfRange(0, 360)); }
+    public Vector2 GetFacingTrajectory() { return _player.PlayerMovement.FacingDirection; }
+    public virtual Vector2 GetFixedTrajectory() { throw new NotImplementedException(); }
 
     // -------------------------------------------- Entities --------------------------------------------
     public WeaponEntityManager WeaponEntityManager;
