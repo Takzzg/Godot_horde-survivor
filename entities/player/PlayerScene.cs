@@ -38,7 +38,6 @@ public partial class PlayerScene : CharacterBody2D
     public DebugCategory DebugCreateCategory()
     {
         DebugCategory category = new("Player");
-        category.CreateLabelField("player_pos", "Pos", Position.ToString("0.0"));
 
         PlayerHealth.DebugCreateSubCategory(category);
         PlayerExperience.DebugCreateSubCategory(category);

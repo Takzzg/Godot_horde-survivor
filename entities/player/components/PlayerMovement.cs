@@ -60,6 +60,7 @@ public partial class PlayerMovement : BasePlayerComponent
     public override void DebugCreateSubCategory(DebugCategory category)
     {
         category.CreateDivider("Movement");
+        category.CreateLabelField("player_pos", "Pos", _player.Position.ToString("0.0"));
         category.CreateLabelField("player_speed", "Speed", Speed.ToString());
     }
 }
