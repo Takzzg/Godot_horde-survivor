@@ -63,6 +63,7 @@ public partial class PlayerHealth : BaseComponent<PlayerScene>
 
     public void OnCollision(Dictionary collision)
     {
+        if (!Alive) return;
         if (!InvulnerableTimer.IsStopped()) return;
 
         EnemyEntity enemy = GameManager.Instance.EnemiesManager.FindEnemyByBodyRid((Rid)collision["rid"]);
