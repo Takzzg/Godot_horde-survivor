@@ -30,12 +30,14 @@ public partial class EnemiesManager : DebuggerNode
         EnemiesList.ForEach((enemy) =>
         {
             PhysicsServer2D.BodySetMode(enemy.BodyRid, PhysicsServer2D.BodyMode.Static);
-            Timer timer = new() { Autostart = true, OneShot = true, WaitTime = GameManager.Instance.RNG.RandfRange(0.5f, 1.5f) };
-            timer.Timeout += () =>
+            Timer timer = new()
             {
-                enemy.FreeEntityRids();
-                timer.QueueFree();
+                Autostart = true,
+                OneShot = true,
+                WaitTime = GameManager.Instance.RNG.RandfRange(0.5f, 1.5f)
             };
+            timer.Timeout += timer.QueueFree;
+            timer.TreeExiting += enemy.FreeEntityRids;
             AddChild(timer);
         });
 
