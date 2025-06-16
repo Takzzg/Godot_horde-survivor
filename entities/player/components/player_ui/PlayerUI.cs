@@ -71,7 +71,7 @@ public partial class PlayerUI : BaseComponent<PlayerScene>
         _layer.AddChild(LevelUpUI);
 
         // get options
-        if (Parent.PlayerWeapons.WeaponsList.Count == 0 || Parent.PlayerExperience.PlayerLevel % 5 == 0)
+        if (Parent.PlayerWeapons.WeaponsList.Count == 0 || Parent.PlayerExperience.PlayerLevel % 10 == 0)
         {
             List<BaseWeapon> weapons = [
                 new ProjectileWeapon(Utils.RarityEnum.COMMON, BaseWeapon.TrajectoryStyleEnum.RANDOM),
