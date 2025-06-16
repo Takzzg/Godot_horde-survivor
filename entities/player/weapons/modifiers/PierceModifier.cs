@@ -43,7 +43,7 @@ public partial class PierceModifier : BaseModifier
         if (_mode == ModeEnum.SHARP)
         {
             entity.MaxPierceCount += _pierceCount;
-            entity.Damage += (float)(entity.Damage * Math.Floor(percentage / 4));
+            entity.Damage += entity.Damage * (percentage / 4);
         }
         else
         {
