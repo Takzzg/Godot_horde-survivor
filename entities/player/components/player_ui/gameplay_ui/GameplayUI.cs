@@ -11,7 +11,7 @@ public partial class GameplayUI : Control
     [Export]
     private ProgressBar _experienceBar;
 
-    public void UpdateHealthBar(int current, int max)
+    public void UpdateHealthBar(float current, int max)
     {
         _healthBar.UpdateValue(current, max);
     }
@@ -24,9 +24,7 @@ public partial class GameplayUI : Control
 
     public void UpdateTimeLabel(double time)
     {
-        int minutes = (int)(time / 60);
-        int seconds = (int)(time % 60);
-        _timeLabel.Text = $"{minutes:00}:{seconds:00}";
+        _timeLabel.Text = Utils.DeltaToTimeString(time);
     }
 
     public void UpdateKillCount(int count)

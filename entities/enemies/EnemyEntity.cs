@@ -7,7 +7,7 @@ public class EnemyEntity
     public bool Alive = true;
     public float Health;
     public float Speed;
-    public int Damage;
+    public float Damage;
 
     public float HurtboxRadius;
     public float HitboxRadius;

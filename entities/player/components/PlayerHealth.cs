@@ -5,7 +5,7 @@ public partial class PlayerHealth : BaseComponent<PlayerScene>
 {
     public bool Alive = false;
     private static readonly int _startingHealth = 10;
-    public int Health = _startingHealth;
+    public float Health = _startingHealth;
     public int MaxHealth = _startingHealth;
 
     public double InvulnerableLength = 0.25;
@@ -26,7 +26,7 @@ public partial class PlayerHealth : BaseComponent<PlayerScene>
         Parent.PlayerStats.IncreaseTimeAlive(delta);
     }
 
-    private void ReceiveDamage(int amount)
+    private void ReceiveDamage(float amount)
     {
         if (!Alive) return;
 

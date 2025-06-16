@@ -13,13 +13,10 @@ public partial class PlayerStats(PlayerScene player) : BaseComponent<PlayerScene
     {
         TimeAlive += delta;
         Parent.PlayerUI.GameplayUI.UpdateTimeLabel(TimeAlive);
-
-        int minutes = (int)(TimeAlive / 60);
-        int seconds = (int)(TimeAlive % 60);
-        Parent.DebugTryUpdateField("time_alive", $"{minutes:00}:{seconds:00}");
+        Parent.DebugTryUpdateField("time_alive", Utils.DeltaToTimeString(TimeAlive));
     }
 
-    public void IncreaseDamageReceived(int count)
+    public void IncreaseDamageReceived(float count)
     {
         DamageReceived += count;
         Parent.DebugTryUpdateField("damage_received", DamageReceived.ToString());

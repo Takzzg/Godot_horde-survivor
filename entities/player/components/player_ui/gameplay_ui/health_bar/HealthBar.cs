@@ -10,7 +10,7 @@ public partial class HealthBar : Control
     [Export]
     public Label MaxLabel;
 
-    public void UpdateValue(int current, int max)
+    public void UpdateValue(float current, int max)
     {
         float percentage = current * 100 / max;
 

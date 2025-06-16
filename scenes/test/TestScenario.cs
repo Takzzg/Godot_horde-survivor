@@ -70,7 +70,7 @@ public partial class TestScenario : Node2D
             for (int j = 0; j < enemiesPerRow; j++)
             {
                 BasicEnemy enemy = new() { Speed = 0, Position = pos };
-                GameManager.Instance.EnemiesManager.SpawnEnemy(enemy);
+                GameManager.Instance.EnemiesManager.Spawner.SpawnEnemy(enemy);
                 pos.X += _enemyRadius * 2;
             }
             pos.X = _worldCenterSize.X / 2 + 16;

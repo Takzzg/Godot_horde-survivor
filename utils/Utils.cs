@@ -29,4 +29,11 @@ public partial class Utils : Node
         float angle = GameManager.Instance.RNG.RandiRange(0, 359);
         return GetPointArounOrigin(center, radius, angle);
     }
+
+    public static string DeltaToTimeString(double delta)
+    {
+        int minutes = (int)(delta / 60);
+        int seconds = (int)(delta % 60);
+        return $"{minutes:00}:{seconds:00}";
+    }
 }
