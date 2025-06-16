@@ -58,6 +58,7 @@ public class EnemyEntity
         RenderingServer.CanvasItemAddCircle(CanvasItemRid, Vector2.Zero, HitboxRadius, Colors.Black);
     }
 
+    // -------------------------------------------- Movement --------------------------------------------
     public void MoveTowardsTaget(Vector2 target)
     {
         Vector2 dir = (Speed == 0) ? Vector2.Zero : Position.DirectionTo(target).Normalized() * Speed;
@@ -70,6 +71,7 @@ public class EnemyEntity
         Position = posTransform.Origin;
     }
 
+    // -------------------------------------------- Damage --------------------------------------------
     public void ReceiveDamage(float amount)
     {
         Health -= amount;

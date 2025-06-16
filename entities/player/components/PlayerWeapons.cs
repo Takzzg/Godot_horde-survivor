@@ -2,17 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-public partial class PlayerWeapons(PlayerScene player) : BasePlayerComponent(player)
+public partial class PlayerWeapons(PlayerScene player) : BaseComponent<PlayerScene>(player)
 {
     public readonly List<BaseWeapon> WeaponsList = [];
 
     public void CreateWeapon(BaseWeapon weapon)
     {
-        weapon.SetPlayerReference(_player);
+        weapon.SetPlayerReference(Parent);
         WeaponsList.Add(weapon);
         AddChild(weapon);
 
-        _player.DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
+        Parent.DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
         DebugUpdateWeaponTypes();
     }
 
@@ -21,7 +21,7 @@ public partial class PlayerWeapons(PlayerScene player) : BasePlayerComponent(pla
         WeaponsList.Remove(weapon);
         weapon.QueueFree();
 
-        _player.DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
+        Parent.DebugTryUpdateField("weapon_count", WeaponsList.Count.ToString());
         DebugUpdateWeaponTypes();
     }
 
@@ -46,6 +46,6 @@ public partial class PlayerWeapons(PlayerScene player) : BasePlayerComponent(pla
     {
         List<string> types = [];
         WeaponsList.ForEach(weapon => types.Add(weapon.Type.ToString().Capitalize()));
-        _player.DebugTryUpdateField("weapon_types", types.ToArray().Join(", "));
+        Parent.DebugTryUpdateField("weapon_types", types.ToArray().Join(", "));
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-public partial class EM_SharedResources(EnemiesManager manager) : EM_BaseComponent(manager)
+public partial class EM_SharedResources(EnemiesManager manager) : BaseComponent<EnemiesManager>(manager)
 {
     private readonly Dictionary<float, CircleShape2D> _registeredShapes = [];
 
@@ -13,8 +13,8 @@ public partial class EM_SharedResources(EnemiesManager manager) : EM_BaseCompone
         {
             _registeredShapes.Add(radius, new CircleShape2D() { Radius = radius });
 
-            _manager.DebugTryUpdateField("registered_count", _registeredShapes.Keys.Count.ToString());
-            _manager.DebugTryUpdateField("registered_radii", _registeredShapes.Keys.ToArray().Join(", "));
+            Parent.DebugTryUpdateField("registered_count", _registeredShapes.Keys.Count.ToString());
+            Parent.DebugTryUpdateField("registered_radii", _registeredShapes.Keys.ToArray().Join(", "));
         }
         return _registeredShapes[radius];
     }
@@ -24,13 +24,20 @@ public partial class EM_SharedResources(EnemiesManager manager) : EM_BaseCompone
         if (!_registeredShapes.ContainsKey(radius)) { throw new NotImplementedException(); }
         _registeredShapes.Remove(radius);
 
-        _manager.DebugTryUpdateField("registered_count", _registeredShapes.Keys.Count.ToString());
-        _manager.DebugTryUpdateField("registered_radii", _registeredShapes.Keys.ToArray().Join(", "));
+        Parent.DebugTryUpdateField("registered_count", _registeredShapes.Keys.Count.ToString());
+        Parent.DebugTryUpdateField("registered_radii", _registeredShapes.Keys.ToArray().Join(", "));
     }
 
     public CircleShape2D GetShape(float radius)
     {
         if (!_registeredShapes.ContainsKey(radius)) { throw new NotImplementedException(); }
         return _registeredShapes[radius];
+    }
+
+    public override void DebugCreateSubCategory(DebugCategory category)
+    {
+        category.CreateDivider("Shared resources");
+        category.CreateLabelField("registered_count", "Count", _registeredShapes.Count.ToString());
+        category.CreateLabelField("registered_radii", "Radii", _registeredShapes.Keys.ToArray().Join(", "));
     }
 }

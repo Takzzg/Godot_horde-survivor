@@ -1,7 +1,7 @@
 using Godot;
 using Godot.Collections;
 
-public partial class PlayerHealth : BasePlayerComponent
+public partial class PlayerHealth : BaseComponent<PlayerScene>
 {
     public bool Alive = false;
     private static readonly int _startingHealth = 10;
@@ -23,7 +23,7 @@ public partial class PlayerHealth : BasePlayerComponent
     public override void _PhysicsProcess(double delta)
     {
         if (!Alive) return;
-        _player.PlayerStats.IncreaseTimeAlive(delta);
+        Parent.PlayerStats.IncreaseTimeAlive(delta);
     }
 
     private void ReceiveDamage(int amount)
@@ -33,8 +33,8 @@ public partial class PlayerHealth : BasePlayerComponent
         // GD.Print($"player received {amount} damage");
         Health -= amount;
 
-        _player.PlayerStats.IncreaseDamageReceived(amount);
-        _player.PlayerUI.GameplayUI.UpdateHealthBar(Health, MaxHealth);
+        Parent.PlayerStats.IncreaseDamageReceived(amount);
+        Parent.PlayerUI.GameplayUI.UpdateHealthBar(Health, MaxHealth);
 
         if (Health <= 0)
         {
@@ -44,7 +44,7 @@ public partial class PlayerHealth : BasePlayerComponent
 
         InvulnerableTimer.Start();
 
-        _player.DebugTryUpdateField("current_health", $"{Health} / {MaxHealth}");
+        Parent.DebugTryUpdateField("current_health", $"{Health} / {MaxHealth}");
     }
 
     private void PlayerDie()
@@ -52,13 +52,13 @@ public partial class PlayerHealth : BasePlayerComponent
         GD.Print($"PlayerScene OnPlayerDeath()");
 
         Alive = false;
-        _player.PlayerMovement.SetPhysicsProcess(false);
-        _player.PlayerUI.ShowDeathUI();
-        _player.PlayerWeapons.OnPlayerDeath();
+        Parent.PlayerMovement.SetPhysicsProcess(false);
+        Parent.PlayerUI.ShowDeathUI();
+        Parent.PlayerWeapons.OnPlayerDeath();
 
         GameManager.Instance.EnemiesManager.OnPlayerDeath();
 
-        _player.DebugTryUpdateField("player_alive", Alive ? "Alive" : "Dead");
+        Parent.DebugTryUpdateField("player_alive", Alive ? "Alive" : "Dead");
     }
 
     public void OnCollision(Dictionary collision)

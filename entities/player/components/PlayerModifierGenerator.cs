@@ -4,7 +4,7 @@ using System.Linq;
 using static BaseModifier;
 using static Utils;
 
-public partial class PlayerModifierGenerator(PlayerScene player) : BasePlayerComponent(player)
+public partial class PlayerModifierGenerator(PlayerScene player) : BaseComponent<PlayerScene>(player)
 {
     public Dictionary<RarityEnum, int> RarityWeights = new()
     {

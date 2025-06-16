@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-public partial class PlayerUI : BasePlayerComponent
+public partial class PlayerUI : BaseComponent<PlayerScene>
 {
     private CanvasLayer _layer;
 
@@ -24,8 +24,8 @@ public partial class PlayerUI : BasePlayerComponent
     {
         if (@event.IsActionPressed("back"))
         {
-            if (!_player.PlayerHealth.Alive) { SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU); }
-            else { _player.PlayerUI.ShowPauseMenu(); }
+            if (!Parent.PlayerHealth.Alive) { SceneManager.Instance.ChangeScene(SceneManager.EnumScenes.MAIN_MENU); }
+            else { Parent.PlayerUI.ShowPauseMenu(); }
             GetViewport().SetInputAsHandled();
         }
     }
@@ -33,7 +33,7 @@ public partial class PlayerUI : BasePlayerComponent
     public void ShowGameplayUI()
     {
         GameplayUI = ResourcePaths.GetSceneInstanceFromEnum<GameplayUI>(ResourcePaths.ScenePathsEnum.PLAYER_GAMEPLAY_UI);
-        GameplayUI.UpdateValues(_player);
+        GameplayUI.UpdateValues(Parent);
         _layer.AddChild(GameplayUI);
     }
 
@@ -43,7 +43,7 @@ public partial class PlayerUI : BasePlayerComponent
         GameplayUI.Visible = false;
 
         PauseMenu = ResourcePaths.GetSceneInstanceFromEnum<PauseMenu>(ResourcePaths.ScenePathsEnum.PLAYER_PAUSE_MENU);
-        PauseMenu.SetPlayerReference(_player);
+        PauseMenu.SetPlayerReference(Parent);
         _layer.AddChild(PauseMenu);
 
         PauseMenu.TreeExiting += () =>
@@ -67,11 +67,11 @@ public partial class PlayerUI : BasePlayerComponent
 
         // create ui
         LevelUpUI = ResourcePaths.GetSceneInstanceFromEnum<LevelUpUI>(ResourcePaths.ScenePathsEnum.PLAYER_LEVEL_UP);
-        LevelUpUI.SetPlayerReference(_player);
+        LevelUpUI.SetPlayerReference(Parent);
         _layer.AddChild(LevelUpUI);
 
         // get options
-        if (_player.PlayerWeapons.WeaponsList.Count == 0 || _player.PlayerExperience.PlayerLevel % 5 == 0)
+        if (Parent.PlayerWeapons.WeaponsList.Count == 0 || Parent.PlayerExperience.PlayerLevel % 5 == 0)
         {
             List<BaseWeapon> weapons = [
                 new ProjectileWeapon(Utils.RarityEnum.COMMON, BaseWeapon.TrajectoryStyleEnum.RANDOM),
@@ -82,12 +82,12 @@ public partial class PlayerUI : BasePlayerComponent
         }
         else
         {
-            List<BaseModifier> mods = _player.PlayerModifierGenerator.GetModifierOptions();
+            List<BaseModifier> mods = Parent.PlayerModifierGenerator.GetModifierOptions();
             LevelUpUI.UpdateOptions(mods);
         }
 
         // show current weapons
-        LevelUpUI.UpdateWeapons(_player.PlayerWeapons.WeaponsList);
+        LevelUpUI.UpdateWeapons(Parent.PlayerWeapons.WeaponsList);
 
         GameplayUI.Visible = false;
         LevelUpUI.TreeExiting += () =>

@@ -1,7 +1,7 @@
 using Godot;
 using Godot.Collections;
 
-public partial class PlayerExperience : BasePlayerComponent
+public partial class PlayerExperience : BaseComponent<PlayerScene>
 {
     public int PlayerLevel = 1;
     public int CurrentExperience = 0;
@@ -20,7 +20,7 @@ public partial class PlayerExperience : BasePlayerComponent
         PhysicsShapeQueryParameters2D query = new()
         {
             Shape = ExperiencePickUpShape,
-            Transform = new(0, _player.Position),
+            Transform = new(0, Parent.Position),
             CollisionMask = 16, // 16 = experience layer
             CollideWithAreas = true,
             CollideWithBodies = false,
@@ -41,13 +41,13 @@ public partial class PlayerExperience : BasePlayerComponent
         int experienceGained = (amount > xpRequired) ? xpRequired : amount;
 
         CurrentExperience += experienceGained;
-        _player.PlayerStats.IncreaseExperienceGathered(experienceGained);
+        Parent.PlayerStats.IncreaseExperienceGathered(experienceGained);
 
         // GD.Print($"player gain experience {amount} ({CurrentExperience}/{ExperienceToNextLevel})");
         if (CurrentExperience >= RequiredExperience) LevelUp();
 
-        _player.DebugTryUpdateField("current_xp", $"{CurrentExperience} / {RequiredExperience}");
-        _player.PlayerUI.GameplayUI.UpdateExperienceBar(CurrentExperience, RequiredExperience);
+        Parent.DebugTryUpdateField("current_xp", $"{CurrentExperience} / {RequiredExperience}");
+        Parent.PlayerUI.GameplayUI.UpdateExperienceBar(CurrentExperience, RequiredExperience);
     }
 
     private void LevelUp()
@@ -56,8 +56,8 @@ public partial class PlayerExperience : BasePlayerComponent
         CurrentExperience = 0;
 
         // GD.Print($"player level up {PlayerLevel}");
-        _player.DebugTryUpdateField("player_level", PlayerLevel.ToString());
-        _player.PlayerUI.ShowLevelUpUI();
+        Parent.DebugTryUpdateField("player_level", PlayerLevel.ToString());
+        Parent.PlayerUI.ShowLevelUpUI();
     }
 
     public void TriggerLevelUp()

@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class EM_Spawner(EnemiesManager manager) : EM_BaseComponent(manager)
+public partial class EM_Spawner(EnemiesManager manager) : BaseComponent<EnemiesManager>(manager)
 {
     public bool Running { get; private set; } = false;
     public Timer Timer;
@@ -13,7 +13,7 @@ public partial class EM_Spawner(EnemiesManager manager) : EM_BaseComponent(manag
         AddChild(Timer);
 
         Running = true;
-        _manager.DebugTryUpdateField("timer_running", Running ? "ON" : "OFF");
+        Parent.DebugTryUpdateField("timer_running", Running ? "ON" : "OFF");
     }
 
     public void SpawnAroundPlayer()
@@ -21,6 +21,13 @@ public partial class EM_Spawner(EnemiesManager manager) : EM_BaseComponent(manag
         Vector2 pos = Utils.GetRandomPointOnCircle(GameManager.Instance.Player.Position, GameManager.RENDER_DISTANCE);
 
         BasicEnemy enemy = new() { Position = pos };
-        _manager.SpawnEnemy(enemy);
+        Parent.SpawnEnemy(enemy);
+    }
+
+    public override void DebugCreateSubCategory(DebugCategory category)
+    {
+        category.CreateDivider("Spawner");
+        category.CreateLabelField("timer_running", "Timer", Running ? "ON" : "OFF");
+        category.CreateLabelField("timer_delay", "Delay", TimerDelay.ToString());
     }
 }

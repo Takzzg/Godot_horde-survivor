@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class PlayerDraw : BasePlayerComponent
+public partial class PlayerDraw : BaseComponent<PlayerScene>
 {
     private Rid _canvasItemRid;
 

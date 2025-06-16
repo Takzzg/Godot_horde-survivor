@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class PlayerStats(PlayerScene player) : BasePlayerComponent(player)
+public partial class PlayerStats(PlayerScene player) : BaseComponent<PlayerScene>(player)
 {
     public double TimeAlive { get; private set; } = 0;
     public float DamageReceived { get; private set; } = 0;
@@ -12,42 +12,42 @@ public partial class PlayerStats(PlayerScene player) : BasePlayerComponent(playe
     public void IncreaseTimeAlive(double delta)
     {
         TimeAlive += delta;
-        _player.PlayerUI.GameplayUI.UpdateTimeLabel(TimeAlive);
+        Parent.PlayerUI.GameplayUI.UpdateTimeLabel(TimeAlive);
 
         int minutes = (int)(TimeAlive / 60);
         int seconds = (int)(TimeAlive % 60);
-        _player.DebugTryUpdateField("time_alive", $"{minutes:00}:{seconds:00}");
+        Parent.DebugTryUpdateField("time_alive", $"{minutes:00}:{seconds:00}");
     }
 
     public void IncreaseDamageReceived(int count)
     {
         DamageReceived += count;
-        _player.DebugTryUpdateField("damage_received", DamageReceived.ToString());
+        Parent.DebugTryUpdateField("damage_received", DamageReceived.ToString());
     }
 
     public void IncreaseDamageDealt(float count)
     {
         DamageDealt += count;
-        _player.DebugTryUpdateField("damage_dealt", DamageDealt.ToString());
+        Parent.DebugTryUpdateField("damage_dealt", DamageDealt.ToString());
     }
 
     public void IncreaseKillCount(int count)
     {
         KillCount += count;
-        _player.PlayerUI.GameplayUI.UpdateKillCount(KillCount);
-        _player.DebugTryUpdateField("kill_count", KillCount.ToString());
+        Parent.PlayerUI.GameplayUI.UpdateKillCount(KillCount);
+        Parent.DebugTryUpdateField("kill_count", KillCount.ToString());
     }
 
     public void IncreaseDistanceTraveled(float distance)
     {
         DistanceTraveled += distance;
-        _player.DebugTryUpdateField("dist_traveled", DistanceTraveled.ToString("0.0"));
+        Parent.DebugTryUpdateField("dist_traveled", DistanceTraveled.ToString("0.0"));
     }
 
     public void IncreaseExperienceGathered(float distance)
     {
         ExperienceGathered += distance;
-        _player.DebugTryUpdateField("exp_gained", ExperienceGathered.ToString());
+        Parent.DebugTryUpdateField("exp_gained", ExperienceGathered.ToString());
     }
 
     // -------------------------------------------- Debug --------------------------------------------
