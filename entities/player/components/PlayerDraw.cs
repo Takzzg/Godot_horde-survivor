@@ -12,6 +12,6 @@ public partial class PlayerDraw : BaseComponent<PlayerScene>
         RenderingServer.CanvasItemSetParent(_canvasItemRid, GetCanvasItem());
         RenderingServer.CanvasItemSetZIndex(_canvasItemRid, 20);
         RenderingServer.CanvasItemSetTransform(_canvasItemRid, posTransform);
-        RenderingServer.CanvasItemAddCircle(_canvasItemRid, Vector2.Zero, 5, Colors.SlateGray);
+        RenderingServer.CanvasItemAddCircle(_canvasItemRid, Vector2.Zero, 5, new Color("#121212"));
     }
 }

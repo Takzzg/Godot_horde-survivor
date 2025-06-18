@@ -6,11 +6,6 @@ public partial class MainGame : Node2D
     {
         GD.Print($"MainGame ready!");
 
-        // world center reference
-        Vector2 squareSize = new(64, 64);
-        ColorRect worldCenter = new() { Color = Colors.DimGray, Size = squareSize, Position = -squareSize / 2 };
-        AddChild(worldCenter);
-
         // create player
         GameManager.Instance.Player = new PlayerScene();
         AddChild(GameManager.Instance.Player);

@@ -13,7 +13,12 @@ public partial class TestScenario : Node2D
         GD.Print($"TestScenario ready!");
 
         // world center ref
-        ColorRect worldCenter = new() { Color = Colors.DimGray, Size = _worldCenterSize, Position = -_worldCenterSize / 2 };
+        ColorRect worldCenter = new()
+        {
+            Color = new Color("#161616"),
+            Size = _worldCenterSize,
+            Position = -_worldCenterSize / 2
+        };
         AddChild(worldCenter);
 
         // create player
